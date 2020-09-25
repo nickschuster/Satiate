@@ -1,0 +1,16 @@
+.placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #e22635;
+    text-align: center;
+    padding: 20px;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px;
+}
+
+.textholder {
+    color: white;
+    font-family: Noto Sans JP;
+}
