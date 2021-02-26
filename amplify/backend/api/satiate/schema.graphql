@@ -1,0 +1,20 @@
+type Day @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  name: String!
+  meals: [Meal] @connection(keyName: "byDay", fields: ["id"])
+}
+
+type Meal @model @key(name: "byDay", fields: ["dayID"]) @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  title: String!
+  dayID: ID!
+  day: Day @connection(fields: ["dayID"])
+  comments: [Ingredient] @connection(keyName: "byMeal", fields: ["id"])
+}
+
+type Ingredient @model @key(name: "byMeal", fields: ["mealID", "content"]) @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  mealID: ID!
+  meal: Meal @connection(fields: ["mealID"])
+  content: String!
+}
