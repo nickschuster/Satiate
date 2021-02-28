@@ -6,6 +6,7 @@ export const onCreateDay = /* GraphQL */ `
     onCreateDay(owner: $owner) {
       id
       name
+      goal
       meals {
         items {
           id
@@ -28,6 +29,7 @@ export const onUpdateDay = /* GraphQL */ `
     onUpdateDay(owner: $owner) {
       id
       name
+      goal
       meals {
         items {
           id
@@ -50,6 +52,7 @@ export const onDeleteDay = /* GraphQL */ `
     onDeleteDay(owner: $owner) {
       id
       name
+      goal
       meals {
         items {
           id
@@ -76,6 +79,7 @@ export const onCreateMeal = /* GraphQL */ `
       day {
         id
         name
+        goal
         meals {
           nextToken
         }
@@ -83,11 +87,14 @@ export const onCreateMeal = /* GraphQL */ `
         updatedAt
         owner
       }
-      comments {
+      ingredients {
         items {
           id
           mealID
           content
+          protein
+          fat
+          carbs
           createdAt
           updatedAt
           owner
@@ -109,6 +116,7 @@ export const onUpdateMeal = /* GraphQL */ `
       day {
         id
         name
+        goal
         meals {
           nextToken
         }
@@ -116,11 +124,14 @@ export const onUpdateMeal = /* GraphQL */ `
         updatedAt
         owner
       }
-      comments {
+      ingredients {
         items {
           id
           mealID
           content
+          protein
+          fat
+          carbs
           createdAt
           updatedAt
           owner
@@ -142,6 +153,7 @@ export const onDeleteMeal = /* GraphQL */ `
       day {
         id
         name
+        goal
         meals {
           nextToken
         }
@@ -149,11 +161,14 @@ export const onDeleteMeal = /* GraphQL */ `
         updatedAt
         owner
       }
-      comments {
+      ingredients {
         items {
           id
           mealID
           content
+          protein
+          fat
+          carbs
           createdAt
           updatedAt
           owner
@@ -178,11 +193,12 @@ export const onCreateIngredient = /* GraphQL */ `
         day {
           id
           name
+          goal
           createdAt
           updatedAt
           owner
         }
-        comments {
+        ingredients {
           nextToken
         }
         createdAt
@@ -190,6 +206,9 @@ export const onCreateIngredient = /* GraphQL */ `
         owner
       }
       content
+      protein
+      fat
+      carbs
       createdAt
       updatedAt
       owner
@@ -208,11 +227,12 @@ export const onUpdateIngredient = /* GraphQL */ `
         day {
           id
           name
+          goal
           createdAt
           updatedAt
           owner
         }
-        comments {
+        ingredients {
           nextToken
         }
         createdAt
@@ -220,6 +240,9 @@ export const onUpdateIngredient = /* GraphQL */ `
         owner
       }
       content
+      protein
+      fat
+      carbs
       createdAt
       updatedAt
       owner
@@ -238,11 +261,12 @@ export const onDeleteIngredient = /* GraphQL */ `
         day {
           id
           name
+          goal
           createdAt
           updatedAt
           owner
         }
-        comments {
+        ingredients {
           nextToken
         }
         createdAt
@@ -250,6 +274,9 @@ export const onDeleteIngredient = /* GraphQL */ `
         owner
       }
       content
+      protein
+      fat
+      carbs
       createdAt
       updatedAt
       owner

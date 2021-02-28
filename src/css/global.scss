@@ -1,8 +1,57 @@
 // Global styling.
 
+@import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+
+html {
+  background-color: #e22635;
+}
+
+.controls-container {
+  max-width: 500px;
+  min-width: 320px;
+  padding-bottom: 20px;
+}
+
+.meal-container {
+  margin: auto;
+  width: 70vw;
+  height: 50vh;
+  overflow-y: scroll;
+  margin-bottom: 20px;
+}
+
+.add-meal-container {
+  padding-bottom: 20px;
+}
+
+.macro-container {
+  width: 320px;
+  background-color: white;
+  border-radius: 15px;
+}
+
+.default-text {
+  color: white;
+}
+
+.macro-text {
+  margin-top: 16px
+}
+
+.protein-text {
+  color: #e27e26;
+}
+
+.fat-text {
+  color: #2645e2;
+}
+
+.carbs-text {
+  color: #36e226;
+}
+
 .placeholder {
   position: absolute;
-  display: block;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

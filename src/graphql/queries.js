@@ -6,6 +6,7 @@ export const getDay = /* GraphQL */ `
     getDay(id: $id) {
       id
       name
+      goal
       meals {
         items {
           id
@@ -33,6 +34,7 @@ export const listDays = /* GraphQL */ `
       items {
         id
         name
+        goal
         meals {
           nextToken
         }
@@ -53,6 +55,7 @@ export const getMeal = /* GraphQL */ `
       day {
         id
         name
+        goal
         meals {
           nextToken
         }
@@ -60,11 +63,14 @@ export const getMeal = /* GraphQL */ `
         updatedAt
         owner
       }
-      comments {
+      ingredients {
         items {
           id
           mealID
           content
+          protein
+          fat
+          carbs
           createdAt
           updatedAt
           owner
@@ -91,11 +97,12 @@ export const listMeals = /* GraphQL */ `
         day {
           id
           name
+          goal
           createdAt
           updatedAt
           owner
         }
-        comments {
+        ingredients {
           nextToken
         }
         createdAt
@@ -118,11 +125,12 @@ export const getIngredient = /* GraphQL */ `
         day {
           id
           name
+          goal
           createdAt
           updatedAt
           owner
         }
-        comments {
+        ingredients {
           nextToken
         }
         createdAt
@@ -130,6 +138,9 @@ export const getIngredient = /* GraphQL */ `
         owner
       }
       content
+      protein
+      fat
+      carbs
       createdAt
       updatedAt
       owner
@@ -155,6 +166,9 @@ export const listIngredients = /* GraphQL */ `
           owner
         }
         content
+        protein
+        fat
+        carbs
         createdAt
         updatedAt
         owner
