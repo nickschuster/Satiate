@@ -1,5 +1,5 @@
 import * as React from "react";
-import Amplify, { Auth } from "aws-amplify";
+import Amplify from "aws-amplify";
 import awsconfig from "../aws-exports.js";
 import App from "../components/App";
 

@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "satiate35e0cc66_identitypool_35e0cc66",
+    "identityPoolName": "testAuthIdentityPool",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "satiat35e0cc66",
-    "userPoolName": "satiate35e0cc66_userpool_35e0cc66",
+    "resourceNameTruncated": "satiat48eb2cb4",
+    "userPoolName": "Satiate",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -20,18 +20,14 @@
     "requiredAttributes": [
         "email"
     ],
-    "userpoolClientGenerateSecret": true,
+    "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
-    "userpoolClientWriteAttributes": [
-        "email"
-    ],
-    "userpoolClientReadAttributes": [
-        "email"
-    ],
-    "userpoolClientLambdaRole": "satiat35e0cc66_userpoolclient_lambda_role",
+    "userpoolClientWriteAttributes": [],
+    "userpoolClientReadAttributes": [],
+    "userpoolClientLambdaRole": "Satiat48eb2cb4_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "35e0cc66",
-    "resourceName": "satiate35e0cc66",
+    "sharedId": "48eb2cb4",
+    "resourceName": "Satiate",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -45,11 +41,15 @@
             "Arn"
         ]
     },
-    "useDefault": "default",
+    "serviceName": "Cognito",
     "usernameAttributes": [
         "email"
     ],
+    "useDefault": "manual",
+    "userPoolGroups": false,
     "userPoolGroupList": [],
-    "serviceName": "Cognito",
+    "adminQueries": false,
+    "thirdPartyAuth": false,
+    "authProviders": [],
     "dependsOn": []
 }
