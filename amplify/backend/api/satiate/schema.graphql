@@ -18,6 +18,7 @@ type Ingredient @model @key(name: "byMeal", fields: ["mealID", "content"]) @auth
   mealID: ID!
   meal: Meal @connection(fields: ["mealID"])
   content: String!
+  calories: Int
   protein: Int
   fat: Int
   carbs: Int

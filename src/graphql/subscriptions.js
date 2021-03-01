@@ -92,6 +92,7 @@ export const onCreateMeal = /* GraphQL */ `
           id
           mealID
           content
+          calories
           protein
           fat
           carbs
@@ -129,6 +130,7 @@ export const onUpdateMeal = /* GraphQL */ `
           id
           mealID
           content
+          calories
           protein
           fat
           carbs
@@ -166,6 +168,7 @@ export const onDeleteMeal = /* GraphQL */ `
           id
           mealID
           content
+          calories
           protein
           fat
           carbs
@@ -206,6 +209,7 @@ export const onCreateIngredient = /* GraphQL */ `
         owner
       }
       content
+      calories
       protein
       fat
       carbs
@@ -240,6 +244,7 @@ export const onUpdateIngredient = /* GraphQL */ `
         owner
       }
       content
+      calories
       protein
       fat
       carbs
@@ -274,6 +279,7 @@ export const onDeleteIngredient = /* GraphQL */ `
         owner
       }
       content
+      calories
       protein
       fat
       carbs

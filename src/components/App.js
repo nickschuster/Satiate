@@ -11,6 +11,9 @@ import {
   Form,
 } from "react-bootstrap";
 import moment from "moment";
+import { API, graphqlOperation } from "aws-amplify";
+import { getDay } from "../graphql/queries";
+import { createDay, createMeal, createIngredient } from "../graphql/mutations";
 
 const App = () => {
   const [formMeal, setFormMeal] = useState({
@@ -27,11 +30,47 @@ const App = () => {
   });
   const [meals, setMeals] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [currentDay, setCurrentDay] = useState();
+  const [lastUpdate, setLastUpdate] = useState();
 
-  // Control the saving of meal details to user account.
+  // Make sure a day exists to save meals to.
   useEffect(() => {
-    console.log("change");
-  }, [meals]);
+    (async () => {
+      try {
+        if (!currentDay) {
+          // Determine the day. Get the correct day. Create a day if one
+          // does not exist.
+          const dayID = parseInt(moment().unix() / 86400);
+          let day = await API.graphql(
+            graphqlOperation(
+              getDay,
+              { id: dayID },
+              { variables: { id: "some id" } }
+            )
+          );
+          if (!day.data.getDay) {
+            day = await API.graphql(
+              graphqlOperation(createDay, {
+                input: {
+                  id: dayID,
+                  name: moment().format("LL"),
+                },
+              })
+            );
+            day = day.data.createDay;
+          } else {
+            day = day.data.getDay;
+          }
+
+          setCurrentDay({ ...day });
+        }
+
+        updateMeals();
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, [currentDay]);
 
   // Start editing a new meal.
   function createNewMeal() {
@@ -84,6 +123,9 @@ const App = () => {
         return [...prevState];
       });
     }
+
+    // Save meal for user.
+    saveMealForUser();
   }
 
   // Get the total of a particular property in a meal.
@@ -115,6 +157,8 @@ const App = () => {
       prevState.splice(key, 1);
       return [...prevState];
     });
+
+    // Delete meal for user.
   }
 
   // Edit a meal entry.
@@ -149,18 +193,95 @@ const App = () => {
     event.preventDefault();
   }
 
+  // Save the meal to the day for a user.
+  async function saveMealForUser() {
+    // Create the meal.
+    // Use the meal ID to create the ingredients.
+
+    try {
+      const meal = await API.graphql(
+        graphqlOperation(createMeal, {
+          input: {
+            dayID: currentDay.id,
+            title: formMeal.name,
+          },
+        })
+      );
+      formMeal.ingredients.forEach(async (ing) => {
+        const ingResult = await API.graphql(
+          graphqlOperation(createIngredient, {
+            input: {
+              mealID: meal.data.createMeal.id,
+              content: ing.name,
+              protein: ing.protein,
+              calories: ing.calories,
+              fat: ing.fat,
+              carbs: ing.carbs,
+            },
+          })
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  // Delete the meal from the day for a user.
+  function deleteMealForUser() {}
+
+  // Transform the saved meals to display meals
+  function updateMeals() {
+    currentDay.meals.items.forEach((meal) => {
+      // name: "",
+      // ingredients: [
+      //   {
+      //     name: "",
+      //     calories: 0,
+      //     protein: 0,
+      //     fat: 0,
+      //     carbs: 0,
+      //   },
+      // ],
+
+      const newMeal = {
+        name: meal.title,
+        ingredients: [],
+      };
+
+      meal.ingredients.items.forEach((ing) => {
+        newMeal.ingredients.push({
+          name: ing.content,
+          calories: ing.calories,
+          fat: ing.fat,
+          protein: ing.protein,
+          carbs: ing.carbs,
+        });
+      });
+
+      setMeals((prevState) => {
+        prevState.push(newMeal);
+
+        return [...prevState];
+      });
+    });
+  }
+
   return (
     <>
       <Container fluid>
         <Row className="controls-container m-auto">
           <Col xs="4">
-            <Button variant="light">Prev</Button>
+            <Button variant="light" disabled>
+              Prev
+            </Button>
           </Col>
           <Col xs="4">
-            <p className="default-text">{moment().format("LL")}</p>
+            <p className="default-text">{currentDay ? currentDay.name : ""}</p>
           </Col>
           <Col xs="4">
-            <Button variant="light">Next</Button>
+            <Button variant="light" disabled>
+              Next
+            </Button>
           </Col>
         </Row>
         <Row className="meal-container">

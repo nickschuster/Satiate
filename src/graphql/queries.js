@@ -15,6 +15,20 @@ export const getDay = /* GraphQL */ `
           createdAt
           updatedAt
           owner
+          ingredients {
+            items {
+              calories
+              carbs
+              content
+              fat
+              id
+              owner
+              protein
+              updatedAt
+              createdAt
+              mealID
+            }
+          }
         }
         nextToken
       }
@@ -68,6 +82,7 @@ export const getMeal = /* GraphQL */ `
           id
           mealID
           content
+          calories
           protein
           fat
           carbs
@@ -138,6 +153,7 @@ export const getIngredient = /* GraphQL */ `
         owner
       }
       content
+      calories
       protein
       fat
       carbs
@@ -166,6 +182,7 @@ export const listIngredients = /* GraphQL */ `
           owner
         }
         content
+        calories
         protein
         fat
         carbs
