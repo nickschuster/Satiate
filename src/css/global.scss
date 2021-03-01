@@ -30,6 +30,23 @@ html {
   border-radius: 15px;
 }
 
+.detail-container {
+  padding: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0px 0px 4px 1px black;
+  width: 50%;
+  max-width: 500px;
+  min-width: 320px;
+  max-height: 500px;
+  overflow-y: scroll;
+  z-index: 2000;
+}
+
 .default-text {
   color: white;
 }
