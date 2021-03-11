@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
 import {
   Container,
@@ -11,9 +12,8 @@ import {
   Form,
 } from "react-bootstrap";
 import moment from "moment";
-import { API, graphqlOperation } from "aws-amplify";
-import { getDay } from "../graphql/queries";
-import { createDay, createMeal, createIngredient } from "../graphql/mutations";
+import { getUser, listMeals } from "../graphql/queries";
+import { createDay, createUser } from "../graphql/mutations";
 
 const App = () => {
   const [formMeal, setFormMeal] = useState({
@@ -29,48 +29,89 @@ const App = () => {
     ],
   });
   const [meals, setMeals] = useState([]);
+  const [prevMeals, setPrevMeals] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [currentDay, setCurrentDay] = useState();
-  const [lastUpdate, setLastUpdate] = useState();
+  const [currentDay, setCurrentDay] = useState({
+    pretty: moment().format("LL"),
+  });
+  const [user, setUser] = useState({});
 
-  // Make sure a day exists to save meals to.
+  // User information.
   useEffect(() => {
     (async () => {
       try {
-        if (!currentDay) {
-          // Determine the day. Get the correct day. Create a day if one
-          // does not exist.
-          const dayID = parseInt(moment().unix() / 86400);
-          let day = await API.graphql(
-            graphqlOperation(
-              getDay,
-              { id: dayID },
-              { variables: { id: "some id" } }
-            )
-          );
-          if (!day.data.getDay) {
-            day = await API.graphql(
-              graphqlOperation(createDay, {
-                input: {
-                  id: dayID,
-                  name: moment().format("LL"),
-                },
-              })
-            );
-            day = day.data.createDay;
-          } else {
-            day = day.data.getDay;
-          }
+        const authUserId = (await Auth.currentUserInfo()).attributes.sub;
+        let userInfo = (
+          await API.graphql(graphqlOperation(getUser, { id: authUserId }))
+        ).data.getUser;
 
-          setCurrentDay({ ...day });
+        // User has not signed in before.
+        if (!userInfo) {
+          // TODO Ask for a goal.
+          // Create the user.
+          userInfo = (
+            await API.graphql(
+              graphqlOperation(createUser, { input: { id: authUserId } })
+            )
+          ).data.createUser;
         }
 
-        updateMeals();
+        setUser({ ...userInfo });
+
+        console.log(userInfo);
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, []);
+
+  // Current day.
+  useEffect(() => {
+    (async () => {
+      try {
+        if (user) {
+          // Determine if today exists as a saved day.
+          let savedDay;
+          if (user.days.items) {
+            savedDay = user.days.items.find(
+              (day) => day.pretty === currentDay.pretty
+            );
+          }
+
+          // If it does get the meals for that day. If it does not create a new day.
+          if (savedDay) {
+            const meals = (
+              await API.graphql(
+                graphqlOperation(listMeals, { filter: { dayId: savedDay.id } })
+              )
+            ).data.listMeals;
+            console.log(meals);
+          } else {
+            await API.graphql(
+              graphqlOperation(createDay, { input: { userId: user.id } })
+            );
+          }
+        }
       } catch (e) {
         console.log(e);
       }
     })();
   }, [currentDay]);
+
+  // Meal changes.
+  useEffect(() => {
+    (async () => {
+      try {
+        // Get ever meal for a day. If the saved meal does not exist localy delete it.
+        // If it does exist check ingredients. If an ingredient exists localy but not saved
+        // create it and vise versa.
+        // TODO Add a milisecond timestamp to each meal and ingredient. Dont fetch meal just
+        // save previous state whenever meal is changed.
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, [meals]);
 
   // Start editing a new meal.
   function createNewMeal() {
@@ -123,9 +164,6 @@ const App = () => {
         return [...prevState];
       });
     }
-
-    // Save meal for user.
-    saveMealForUser();
   }
 
   // Get the total of a particular property in a meal.
@@ -157,8 +195,6 @@ const App = () => {
       prevState.splice(key, 1);
       return [...prevState];
     });
-
-    // Delete meal for user.
   }
 
   // Edit a meal entry.
@@ -193,79 +229,6 @@ const App = () => {
     event.preventDefault();
   }
 
-  // Save the meal to the day for a user.
-  async function saveMealForUser() {
-    // Create the meal.
-    // Use the meal ID to create the ingredients.
-
-    try {
-      const meal = await API.graphql(
-        graphqlOperation(createMeal, {
-          input: {
-            dayID: currentDay.id,
-            title: formMeal.name,
-          },
-        })
-      );
-      formMeal.ingredients.forEach(async (ing) => {
-        const ingResult = await API.graphql(
-          graphqlOperation(createIngredient, {
-            input: {
-              mealID: meal.data.createMeal.id,
-              content: ing.name,
-              protein: ing.protein,
-              calories: ing.calories,
-              fat: ing.fat,
-              carbs: ing.carbs,
-            },
-          })
-        );
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  // Delete the meal from the day for a user.
-  function deleteMealForUser() {}
-
-  // Transform the saved meals to display meals
-  function updateMeals() {
-    currentDay.meals.items.forEach((meal) => {
-      // name: "",
-      // ingredients: [
-      //   {
-      //     name: "",
-      //     calories: 0,
-      //     protein: 0,
-      //     fat: 0,
-      //     carbs: 0,
-      //   },
-      // ],
-
-      const newMeal = {
-        name: meal.title,
-        ingredients: [],
-      };
-
-      meal.ingredients.items.forEach((ing) => {
-        newMeal.ingredients.push({
-          name: ing.content,
-          calories: ing.calories,
-          fat: ing.fat,
-          protein: ing.protein,
-          carbs: ing.carbs,
-        });
-      });
-
-      setMeals((prevState) => {
-        prevState.push(newMeal);
-
-        return [...prevState];
-      });
-    });
-  }
-
   return (
     <>
       <Container fluid>
@@ -276,7 +239,9 @@ const App = () => {
             </Button>
           </Col>
           <Col xs="4">
-            <p className="default-text">{currentDay ? currentDay.name : ""}</p>
+            <p className="default-text">
+              {currentDay ? currentDay.pretty : ""}
+            </p>
           </Col>
           <Col xs="4">
             <Button variant="light" disabled>
@@ -451,6 +416,7 @@ const App = () => {
           </Form>
         </Container>
       ) : null}
+      <AmplifySignOut />
     </>
   );
 };

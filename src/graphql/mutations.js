@@ -1,6 +1,78 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createUser = /* GraphQL */ `
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    createUser(input: $input, condition: $condition) {
+      id
+      days {
+        items {
+          id
+          userId
+          pretty
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateUser = /* GraphQL */ `
+  mutation UpdateUser(
+    $input: UpdateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    updateUser(input: $input, condition: $condition) {
+      id
+      days {
+        items {
+          id
+          userId
+          pretty
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteUser = /* GraphQL */ `
+  mutation DeleteUser(
+    $input: DeleteUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    deleteUser(input: $input, condition: $condition) {
+      id
+      days {
+        items {
+          id
+          userId
+          pretty
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const createDay = /* GraphQL */ `
   mutation CreateDay(
     $input: CreateDayInput!
@@ -8,13 +80,13 @@ export const createDay = /* GraphQL */ `
   ) {
     createDay(input: $input, condition: $condition) {
       id
-      name
-      goal
+      userId
+      pretty
       meals {
         items {
           id
-          title
-          dayID
+          dayId
+          name
           createdAt
           updatedAt
           owner
@@ -34,13 +106,13 @@ export const updateDay = /* GraphQL */ `
   ) {
     updateDay(input: $input, condition: $condition) {
       id
-      name
-      goal
+      userId
+      pretty
       meals {
         items {
           id
-          title
-          dayID
+          dayId
+          name
           createdAt
           updatedAt
           owner
@@ -60,13 +132,13 @@ export const deleteDay = /* GraphQL */ `
   ) {
     deleteDay(input: $input, condition: $condition) {
       id
-      name
-      goal
+      userId
+      pretty
       meals {
         items {
           id
-          title
-          dayID
+          dayId
+          name
           createdAt
           updatedAt
           owner
@@ -86,28 +158,17 @@ export const createMeal = /* GraphQL */ `
   ) {
     createMeal(input: $input, condition: $condition) {
       id
-      title
-      dayID
-      day {
-        id
-        name
-        goal
-        meals {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        owner
-      }
+      dayId
+      name
       ingredients {
         items {
           id
-          mealID
-          content
+          mealId
+          name
           calories
+          carbs
           protein
           fat
-          carbs
           createdAt
           updatedAt
           owner
@@ -127,28 +188,17 @@ export const updateMeal = /* GraphQL */ `
   ) {
     updateMeal(input: $input, condition: $condition) {
       id
-      title
-      dayID
-      day {
-        id
-        name
-        goal
-        meals {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        owner
-      }
+      dayId
+      name
       ingredients {
         items {
           id
-          mealID
-          content
+          mealId
+          name
           calories
+          carbs
           protein
           fat
-          carbs
           createdAt
           updatedAt
           owner
@@ -168,28 +218,17 @@ export const deleteMeal = /* GraphQL */ `
   ) {
     deleteMeal(input: $input, condition: $condition) {
       id
-      title
-      dayID
-      day {
-        id
-        name
-        goal
-        meals {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        owner
-      }
+      dayId
+      name
       ingredients {
         items {
           id
-          mealID
-          content
+          mealId
+          name
           calories
+          carbs
           protein
           fat
-          carbs
           createdAt
           updatedAt
           owner
@@ -209,31 +248,12 @@ export const createIngredient = /* GraphQL */ `
   ) {
     createIngredient(input: $input, condition: $condition) {
       id
-      mealID
-      meal {
-        id
-        title
-        dayID
-        day {
-          id
-          name
-          goal
-          createdAt
-          updatedAt
-          owner
-        }
-        ingredients {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        owner
-      }
-      content
+      mealId
+      name
       calories
+      carbs
       protein
       fat
-      carbs
       createdAt
       updatedAt
       owner
@@ -247,31 +267,12 @@ export const updateIngredient = /* GraphQL */ `
   ) {
     updateIngredient(input: $input, condition: $condition) {
       id
-      mealID
-      meal {
-        id
-        title
-        dayID
-        day {
-          id
-          name
-          goal
-          createdAt
-          updatedAt
-          owner
-        }
-        ingredients {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        owner
-      }
-      content
+      mealId
+      name
       calories
+      carbs
       protein
       fat
-      carbs
       createdAt
       updatedAt
       owner
@@ -285,31 +286,12 @@ export const deleteIngredient = /* GraphQL */ `
   ) {
     deleteIngredient(input: $input, condition: $condition) {
       id
-      mealID
-      meal {
-        id
-        title
-        dayID
-        day {
-          id
-          name
-          goal
-          createdAt
-          updatedAt
-          owner
-        }
-        ingredients {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        owner
-      }
-      content
+      mealId
+      name
       calories
+      carbs
       protein
       fat
-      carbs
       createdAt
       updatedAt
       owner
