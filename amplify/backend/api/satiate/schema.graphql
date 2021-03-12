@@ -4,7 +4,7 @@ type User @model @auth(rules: [{ allow: owner }]) {
 }
 
 type Day @model @auth(rules: [{ allow: owner }]) @key(name: "byDay", fields: ["userId"]) {
-  id: ID! # ID is the current day in numeric form. Meaning days since 1970 Jan 1 until today.
+  id: ID!
   userId: ID! # The user this day belongs too.
   pretty: String # Day in moment LL format
   meals: [Meal] @connection(keyName: "byMeal", fields: ["id"]) # Meals with ingredients.
