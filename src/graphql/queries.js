@@ -126,13 +126,6 @@ export const listMeals = /* GraphQL */ `
         dayId
         name
         ingredients {
-          id
-          mealId
-          name
-          calories
-          carbs
-          protein
-          fat
           nextToken
         }
         createdAt

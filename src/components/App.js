@@ -12,7 +12,7 @@ import {
   Form,
 } from "react-bootstrap";
 import moment from "moment";
-import { getUser, listMeals } from "../graphql/queries";
+import { getMeal, getUser, listMeals } from "../graphql/queries";
 import {
   createDay,
   createIngredient,
@@ -65,7 +65,7 @@ const App = () => {
             (day) => day.pretty === currentDay
           );
           if (dayToDisplay) {
-            const savedMeals = (
+            const savedMealIds = (
               await API.graphql(
                 graphqlOperation(listMeals, {
                   filter: { dayId: { eq: dayToDisplay.id } },
@@ -73,14 +73,23 @@ const App = () => {
               )
             ).data.listMeals.items;
 
+            // Get the ingredient data saved to each meal.
+            const savedMeals = [];
+            for (const meal of savedMealIds) {
+              const mealData = (
+                await API.graphql(graphqlOperation(getMeal, { id: meal.id }))
+              ).data.getMeal;
+              savedMeals.push(mealData);
+            }
+
             // Remove added property for internal formating.
             savedMeals.forEach((meal) => {
-              meal.ingredients = meal.ingredients.items || [];
+              meal.ingredients = meal.ingredients.items;
             });
 
-            console.log("saved", savedMeals);
-
-            setMeals([...savedMeals]);
+            setMeals(() => {
+              return savedMeals;
+            });
           } else {
             // New day.
             await API.graphql(
@@ -128,7 +137,6 @@ const App = () => {
                   })
                 );
               });
-              console.log("delete", meal);
               API.graphql(
                 graphqlOperation(deleteMealMutation, { input: { id: meal.id } })
               );
