@@ -73,6 +73,8 @@ const App = () => {
               )
             ).data.listMeals.items;
 
+            console.log("savedMealIds", savedMealIds);
+
             // Get the ingredient data saved to each meal.
             const savedMeals = [];
             for (const meal of savedMealIds) {
@@ -97,6 +99,8 @@ const App = () => {
                 input: { userId: user.id, pretty: currentDay },
               })
             );
+
+            setMeals([]);
           }
         }
       } catch (e) {
@@ -129,21 +133,21 @@ const App = () => {
             });
 
             // Delete all saved information.
-            savedMeals.items.forEach((meal) => {
-              meal.ingredients.forEach((ingredient) => {
-                API.graphql(
+            for (const meal of savedMeals.items) {
+              for (const ingredient of meal.ingredients) {
+                await API.graphql(
                   graphqlOperation(deleteIngredient, {
                     input: { id: ingredient.id },
                   })
                 );
-              });
-              API.graphql(
+              }
+              await API.graphql(
                 graphqlOperation(deleteMealMutation, { input: { id: meal.id } })
               );
-            });
+            }
 
             // Save the current meal information.
-            meals.forEach(async (meal) => {
+            for (const meal of meals) {
               const mealId = (
                 await API.graphql(
                   graphqlOperation(createMeal, {
@@ -154,8 +158,8 @@ const App = () => {
                   })
                 )
               ).data.createMeal.id;
-              meal.ingredients.forEach((ing) => {
-                API.graphql(
+              for (const ing of meal.ingredients) {
+                await API.graphql(
                   graphqlOperation(createIngredient, {
                     input: {
                       mealId: mealId,
@@ -167,15 +171,15 @@ const App = () => {
                     },
                   })
                 );
-              });
-            });
+              }
+            }
           }
         }
       } catch (e) {
         console.log(e);
       }
     })();
-  }, [meals]);
+  }, [meals, currentDay, user]);
 
   // Start editing a new meal.
   const createNewMeal = () => {
