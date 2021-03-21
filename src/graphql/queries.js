@@ -7,9 +7,19 @@ export const getUser = /* GraphQL */ `
       id
       days {
         items {
-          id
           userId
+          id
           pretty
+          meals {
+            name
+            ingredients {
+              name
+              calories
+              protein
+              fat
+              carbs
+            }
+          }
           createdAt
           updatedAt
           owner
@@ -32,6 +42,17 @@ export const listUsers = /* GraphQL */ `
       items {
         id
         days {
+          items {
+            userId
+            id
+            pretty
+            meals {
+              name
+            }
+            createdAt
+            updatedAt
+            owner
+          }
           nextToken
         }
         createdAt
@@ -45,19 +66,18 @@ export const listUsers = /* GraphQL */ `
 export const getDay = /* GraphQL */ `
   query GetDay($id: ID!) {
     getDay(id: $id) {
-      id
       userId
+      id
       pretty
       meals {
-        items {
-          id
-          dayId
+        name
+        ingredients {
           name
-          createdAt
-          updatedAt
-          owner
+          calories
+          protein
+          fat
+          carbs
         }
-        nextToken
       }
       createdAt
       updatedAt
@@ -73,100 +93,19 @@ export const listDays = /* GraphQL */ `
   ) {
     listDays(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
         userId
+        id
         pretty
         meals {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-export const getMeal = /* GraphQL */ `
-  query GetMeal($id: ID!) {
-    getMeal(id: $id) {
-      id
-      dayId
-      name
-      ingredients {
-        items {
-          id
-          mealId
           name
-          calories
-          carbs
-          protein
-          fat
-          createdAt
-          updatedAt
-          owner
+          ingredients {
+            name
+            calories
+            protein
+            fat
+            carbs
+          }
         }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const listMeals = /* GraphQL */ `
-  query ListMeals(
-    $filter: ModelMealFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMeals(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        dayId
-        name
-        ingredients {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-export const getIngredient = /* GraphQL */ `
-  query GetIngredient($id: ID!) {
-    getIngredient(id: $id) {
-      id
-      mealId
-      name
-      calories
-      carbs
-      protein
-      fat
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const listIngredients = /* GraphQL */ `
-  query ListIngredients(
-    $filter: ModelIngredientFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listIngredients(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        mealId
-        name
-        calories
-        carbs
-        protein
-        fat
         createdAt
         updatedAt
         owner

@@ -1,28 +1,24 @@
 type User @model @auth(rules: [{ allow: owner }]) {
   id: ID! # Cognito SUB attribute.
-  days: [Day] @connection(keyName: "byDay", fields: ["id"]) # Days with saved meal information.
+  days: [Day] @connection(keyName: "byDay", fields: ["id"])
 }
 
-type Day @model @auth(rules: [{ allow: owner }]) @key(name: "byDay", fields: ["userId"]) {
+type Day @model @auth(rules: [{allow: owner}]) @key(name: "byDay", fields: ["userId", "id"]) {
+  userId: ID!
   id: ID!
-  userId: ID! # The user this day belongs too.
-  pretty: String # Day in moment LL format
-  meals: [Meal] @connection(keyName: "byMeal", fields: ["id"]) # Meals with ingredients.
+  pretty: String
+  meals: [Meal]
 }
 
-type Meal @model @auth(rules: [{ allow: owner }]) @key(name: "byMeal", fields: ["dayId"]) {
-  id: ID!
-  dayId: ID!
+type Meal {
   name: String
-  ingredients: [Ingredient] @connection(keyName: "byIngredient", fields: ["id"])
+  ingredients: [Ingredient]
 }
 
-type Ingredient @model @auth(rules: [{ allow: owner }]) @key(name: "byIngredient", fields: ["mealId"]) {
-  id: ID!
-  mealId: ID!
+type Ingredient {
   name: String
   calories: Int
-  carbs: Int
   protein: Int
   fat: Int
+  carbs: Int
 }

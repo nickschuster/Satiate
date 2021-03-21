@@ -12,14 +12,11 @@ import {
   Form,
 } from "react-bootstrap";
 import moment from "moment";
-import { getMeal, getUser, listMeals } from "../graphql/queries";
+import { getUser, getDay } from "../graphql/queries";
 import {
-  createDay,
-  createIngredient,
-  createMeal,
   createUser,
-  deleteIngredient,
-  deleteMeal as deleteMealMutation,
+  createDay,
+  updateDay as updateDayGQ,
 } from "../graphql/mutations";
 
 const App = () => {
@@ -29,157 +26,102 @@ const App = () => {
   const [currentDay, setCurrentDay] = useState(moment().format("LL"));
   const [user, setUser] = useState(undefined);
 
-  // User information.
+  // User change.
   useEffect(() => {
     (async () => {
       try {
-        if (!user) {
-          const userAuthId = (await Auth.currentUserInfo()).attributes.sub;
-          const userInfo = (
-            await API.graphql(graphqlOperation(getUser, { id: userAuthId }))
-          ).data.getUser;
-          if (userInfo) {
-            setUser({ ...userInfo });
-          } else {
-            // It's a new user.
-            const newUser = (
-              await API.graphql(
-                graphqlOperation(createUser, { input: { id: userAuthId } })
-              )
-            ).data.createUser;
-            setUser({ ...newUser });
-          }
+        const userAuthId = (await Auth.currentUserInfo()).attributes.sub;
+        const userInfo = (
+          await API.graphql(graphqlOperation(getUser, { id: userAuthId }))
+        ).data.getUser;
+
+        if (userInfo) {
+          console.log("user exists", userInfo);
+          setUser(userInfo);
+        } else {
+          const newUser = (
+            await API.graphql(
+              graphqlOperation(createUser, { input: { id: userAuthId } })
+            )
+          ).data.createUser;
+          setUser(newUser);
+          console.log("new userInfo", userInfo);
         }
       } catch (e) {
-        console.log(e);
+        throw new Error(e);
       }
     })();
-  }, [user]);
+  }, []);
 
-  // Load the saved meal information on day change.
+  // Load meal data.
   useEffect(() => {
     (async () => {
       try {
         if (user) {
-          const dayToDisplay = user.days.items.find(
-            (day) => day.pretty === currentDay
-          );
-          if (dayToDisplay) {
-            const savedMealIds = (
-              await API.graphql(
-                graphqlOperation(listMeals, {
-                  filter: { dayId: { eq: dayToDisplay.id } },
-                })
-              )
-            ).data.listMeals.items;
-
-            console.log("savedMealIds", savedMealIds);
-
-            // Get the ingredient data saved to each meal.
-            const savedMeals = [];
-            for (const meal of savedMealIds) {
-              const mealData = (
-                await API.graphql(graphqlOperation(getMeal, { id: meal.id }))
-              ).data.getMeal;
-              savedMeals.push(mealData);
-            }
-
-            // Remove added property for internal formating.
-            savedMeals.forEach((meal) => {
-              meal.ingredients = meal.ingredients.items;
-            });
-
-            setMeals(() => {
-              return savedMeals;
-            });
-          } else {
-            // New day.
+          const dayId = parseInt(moment(currentDay, "LL").unix() / 86400);
+          const response = (
             await API.graphql(
-              graphqlOperation(createDay, {
-                input: { userId: user.id, pretty: currentDay },
-              })
-            );
-
+              graphqlOperation(getDay, { id: dayId, userId: user.id })
+            )
+          ).data.getDay;
+          console.log("load day", response);
+          if (response) {
+            setMeals(response.meals);
+          } else {
             setMeals([]);
           }
         }
       } catch (e) {
-        console.log(e);
+        throw new Error(e);
       }
     })();
-  }, [currentDay, user]);
+  }, [user, currentDay]);
 
-  // Save meal changes to db
+  // Save meal data.
   useEffect(() => {
     (async () => {
       try {
         if (user) {
-          const dayToDisplay = user.days.items.find(
+          const dayData = user.days.items.find(
             (day) => day.pretty === currentDay
           );
-          if (dayToDisplay) {
-            // Get the currently saved meals.
-            const savedMeals = (
+          if (dayData) {
+            const response = (
               await API.graphql(
-                graphqlOperation(listMeals, {
-                  filter: { dayId: { eq: dayToDisplay.id } },
+                graphqlOperation(updateDayGQ, {
+                  input: {
+                    id: dayData.id,
+                    userId: user.id,
+                    pretty: currentDay,
+                    meals: [...meals],
+                  },
                 })
               )
-            ).data.listMeals;
-
-            // Remove added property for internal formating.
-            savedMeals.items.forEach((meal) => {
-              meal.ingredients = meal.ingredients.items || [];
-            });
-
-            // Delete all saved information.
-            for (const meal of savedMeals.items) {
-              for (const ingredient of meal.ingredients) {
-                await API.graphql(
-                  graphqlOperation(deleteIngredient, {
-                    input: { id: ingredient.id },
-                  })
-                );
-              }
+            ).data.updateDay;
+            console.log("day update", response);
+          } else {
+            // New day.
+            const dayId = parseInt(moment(currentDay, "LL").unix() / 86400);
+            const response = (
               await API.graphql(
-                graphqlOperation(deleteMealMutation, { input: { id: meal.id } })
-              );
-            }
-
-            // Save the current meal information.
-            for (const meal of meals) {
-              const mealId = (
-                await API.graphql(
-                  graphqlOperation(createMeal, {
-                    input: {
-                      dayId: dayToDisplay.id,
-                      name: meal.name,
-                    },
-                  })
-                )
-              ).data.createMeal.id;
-              for (const ing of meal.ingredients) {
-                await API.graphql(
-                  graphqlOperation(createIngredient, {
-                    input: {
-                      mealId: mealId,
-                      name: ing.name,
-                      calories: ing.calories,
-                      protein: ing.protein,
-                      fat: ing.fat,
-                      carbs: ing.carbs,
-                    },
-                  })
-                );
-              }
-            }
+                graphqlOperation(createDay, {
+                  input: {
+                    id: dayId,
+                    userId: user.id,
+                    pretty: currentDay,
+                    meals: [...meals],
+                  },
+                })
+              )
+            ).data.createDay;
+            console.log("new day", response);
           }
         }
       } catch (e) {
-        console.log(e);
+        throw new Error(e);
       }
     })();
-  }, [meals, currentDay, user]);
+  }, [meals]);
 
   // Start editing a new meal.
   const createNewMeal = () => {

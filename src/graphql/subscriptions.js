@@ -7,9 +7,19 @@ export const onCreateUser = /* GraphQL */ `
       id
       days {
         items {
-          id
           userId
+          id
           pretty
+          meals {
+            name
+            ingredients {
+              name
+              calories
+              protein
+              fat
+              carbs
+            }
+          }
           createdAt
           updatedAt
           owner
@@ -28,9 +38,19 @@ export const onUpdateUser = /* GraphQL */ `
       id
       days {
         items {
-          id
           userId
+          id
           pretty
+          meals {
+            name
+            ingredients {
+              name
+              calories
+              protein
+              fat
+              carbs
+            }
+          }
           createdAt
           updatedAt
           owner
@@ -49,9 +69,19 @@ export const onDeleteUser = /* GraphQL */ `
       id
       days {
         items {
-          id
           userId
+          id
           pretty
+          meals {
+            name
+            ingredients {
+              name
+              calories
+              protein
+              fat
+              carbs
+            }
+          }
           createdAt
           updatedAt
           owner
@@ -67,19 +97,18 @@ export const onDeleteUser = /* GraphQL */ `
 export const onCreateDay = /* GraphQL */ `
   subscription OnCreateDay($owner: String!) {
     onCreateDay(owner: $owner) {
-      id
       userId
+      id
       pretty
       meals {
-        items {
-          id
-          dayId
+        name
+        ingredients {
           name
-          createdAt
-          updatedAt
-          owner
+          calories
+          protein
+          fat
+          carbs
         }
-        nextToken
       }
       createdAt
       updatedAt
@@ -90,19 +119,18 @@ export const onCreateDay = /* GraphQL */ `
 export const onUpdateDay = /* GraphQL */ `
   subscription OnUpdateDay($owner: String!) {
     onUpdateDay(owner: $owner) {
-      id
       userId
+      id
       pretty
       meals {
-        items {
-          id
-          dayId
+        name
+        ingredients {
           name
-          createdAt
-          updatedAt
-          owner
+          calories
+          protein
+          fat
+          carbs
         }
-        nextToken
       }
       createdAt
       updatedAt
@@ -113,149 +141,19 @@ export const onUpdateDay = /* GraphQL */ `
 export const onDeleteDay = /* GraphQL */ `
   subscription OnDeleteDay($owner: String!) {
     onDeleteDay(owner: $owner) {
-      id
       userId
+      id
       pretty
       meals {
-        items {
-          id
-          dayId
-          name
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onCreateMeal = /* GraphQL */ `
-  subscription OnCreateMeal($owner: String!) {
-    onCreateMeal(owner: $owner) {
-      id
-      dayId
-      name
-      ingredients {
-        items {
-          id
-          mealId
+        name
+        ingredients {
           name
           calories
-          carbs
           protein
           fat
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdateMeal = /* GraphQL */ `
-  subscription OnUpdateMeal($owner: String!) {
-    onUpdateMeal(owner: $owner) {
-      id
-      dayId
-      name
-      ingredients {
-        items {
-          id
-          mealId
-          name
-          calories
           carbs
-          protein
-          fat
-          createdAt
-          updatedAt
-          owner
         }
-        nextToken
       }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeleteMeal = /* GraphQL */ `
-  subscription OnDeleteMeal($owner: String!) {
-    onDeleteMeal(owner: $owner) {
-      id
-      dayId
-      name
-      ingredients {
-        items {
-          id
-          mealId
-          name
-          calories
-          carbs
-          protein
-          fat
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onCreateIngredient = /* GraphQL */ `
-  subscription OnCreateIngredient($owner: String!) {
-    onCreateIngredient(owner: $owner) {
-      id
-      mealId
-      name
-      calories
-      carbs
-      protein
-      fat
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdateIngredient = /* GraphQL */ `
-  subscription OnUpdateIngredient($owner: String!) {
-    onUpdateIngredient(owner: $owner) {
-      id
-      mealId
-      name
-      calories
-      carbs
-      protein
-      fat
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeleteIngredient = /* GraphQL */ `
-  subscription OnDeleteIngredient($owner: String!) {
-    onDeleteIngredient(owner: $owner) {
-      id
-      mealId
-      name
-      calories
-      carbs
-      protein
-      fat
       createdAt
       updatedAt
       owner
