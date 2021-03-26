@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { API, Auth, graphqlOperation } from "aws-amplify";
-import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
 import {
   Container,
   Row,
@@ -437,7 +436,6 @@ const App = () => {
           </Form>
         </Container>
       ) : null}
-      <AmplifySignOut />
     </>
   );
 };
