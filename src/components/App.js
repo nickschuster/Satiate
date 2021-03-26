@@ -111,18 +111,17 @@ const App = () => {
           } else {
             // New day.
             const dayId = parseInt(moment(currentDay, "LL").unix() / 86400);
-            const response = (
-              await API.graphql(
-                graphqlOperation(createDay, {
-                  input: {
-                    id: dayId,
-                    userId: user.id,
-                    pretty: currentDay,
-                    meals: [...meals],
-                  },
-                })
-              )
-            ).data.createDay;
+
+            await API.graphql(
+              graphqlOperation(createDay, {
+                input: {
+                  id: dayId,
+                  userId: user.id,
+                  pretty: currentDay,
+                  meals: [...meals],
+                },
+              })
+            );
           }
         }
       } catch (e) {
