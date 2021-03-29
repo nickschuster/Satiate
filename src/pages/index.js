@@ -1,10 +1,15 @@
 import * as React from "react";
+import { Splashpage } from "../components/Splashpage";
 
 import "../css/global.scss";
 
-// Main app.
+// Log in/tracker page.
 const Index = () => {
-  return <></>;
+  return (
+    <>
+      <Splashpage />
+    </>
+  );
 };
 
 export default Index;
