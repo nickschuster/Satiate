@@ -2,7 +2,7 @@
 import React from "react";
 import { ThemeProvider } from "@material-ui/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { theme as globalTheme } from "./src/theme/theme";
+import { lightTheme as globalTheme } from "./src/theme/theme";
 import Amplify from "aws-amplify";
 import awsconfig from "./src/aws-exports.js";
 

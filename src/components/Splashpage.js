@@ -1,14 +1,27 @@
-import { Typography, Container } from "@material-ui/core";
+import { Typography, Container, makeStyles } from "@material-ui/core";
 import { Link } from "gatsby";
 import React from "react";
+import { AuthenticationFlow } from "./Auth/Controller";
 
-import "../css/Splashpage.scss";
+// Style rules.
+const useStyles = makeStyles({
+  title: {
+    marginTop: "10%",
+  },
+  leaderboardsLink: {
+    marginTop: "5%",
+    marginBottom: "10%",
+  },
+});
 
+// Splashpage component.
 export const Splashpage = () => {
+  const classes = useStyles();
+
   return (
     <Container>
       <Typography
-        className="splash-page-title"
+        className={classes.title}
         variant="h1"
         color="secondary"
         align="center"
@@ -18,11 +31,17 @@ export const Splashpage = () => {
       <Typography variant="h4" color="secondary" align="center">
         Level up your fitness.
       </Typography>
-      <Typography variant="h6" color="secondary" align="center">
-        <Link to="/leaderboards" className="leaderboards-link">
+      <Typography
+        className={classes.leaderboardsLink}
+        variant="h6"
+        color="secondary"
+        align="center"
+      >
+        <Link to="/leaderboards" color="white">
           Leaderboards
         </Link>
       </Typography>
+      <AuthenticationFlow className={classes.auth} />
     </Container>
   );
 };
