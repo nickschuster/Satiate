@@ -13,6 +13,15 @@ let lightTheme = createMuiTheme({
         },
       },
     },
+    MuiLink: {
+      root: {
+        color: themeColorLight.text,
+        cursor: "pointer",
+        "&:hover": {
+          color: themeColorLight.primary,
+        },
+      },
+    },
     MuiButton: {
       root: {
         borderRadius: 15,
@@ -20,6 +29,13 @@ let lightTheme = createMuiTheme({
         paddingLeft: 40,
         paddingRight: 40,
         textTransform: "none",
+        boxShadow: "none",
+      },
+      contained: {
+        boxShadow: "none",
+        "&:hover": {
+          boxShadow: "none",
+        },
       },
     },
     MuiTextField: {

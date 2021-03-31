@@ -106,7 +106,6 @@ const App = () => {
                 })
               )
             ).data.updateDay;
-            console.log("day update", response);
           } else {
             // New day.
             const dayId = parseInt(moment(currentDay, "LL").unix() / 86400);

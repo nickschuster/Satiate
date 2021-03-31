@@ -12,17 +12,19 @@ import React from "react";
 const useStyles = makeStyles((theme) => ({
   form: {
     minWidth: 285,
-    maxWidth: 400,
+    maxWidth: 450,
     flexGrow: 1,
   },
-  input: {
+  password: {
     width: "100%",
     marginTop: 20,
   },
-  account: {
-    color: theme.palette.text.main,
-    textDecoration: "underline",
-    cursor: "pointer",
+  username: {
+    width: "100%",
+    marginTop: 30,
+  },
+  forgotPassword: {
+    paddingLeft: 14,
   },
   control: {
     marginBottom: 10,
@@ -38,7 +40,7 @@ export const Login = ({ setAuthState }) => {
         <Grid container spacing={3} justify="center">
           <Grid item xs={10}>
             <TextField
-              className={classes.input}
+              className={classes.username}
               id="outlined"
               label="Email, username or phone"
               variant="outlined"
@@ -46,26 +48,34 @@ export const Login = ({ setAuthState }) => {
           </Grid>
           <Grid item xs={10}>
             <TextField
-              className={classes.input}
+              className={classes.password}
               id="outlined"
               label="Password"
               variant="outlined"
             />
+            <Typography variant="body2" className={classes.forgotPassword}>
+              <Link
+                onClick={() => setAuthState("forgot password")}
+                underline="always"
+              >
+                Forgot password?
+              </Link>
+            </Typography>
           </Grid>
           <Grid item xs={10}>
             <Grid
               container
               spacing={3}
-              justify="space-between"
+              justify="center"
               direction="row"
               alignItems="center"
               className={classes.control}
             >
               <Grid item>
-                <Typography variant="h5" className={classes.account}>
+                <Typography variant="h5">
                   <Link
-                    color="inherit"
                     onClick={() => setAuthState("create account")}
+                    underline="always"
                   >
                     Create account.
                   </Link>

@@ -2,17 +2,23 @@ import { Typography, Container, makeStyles } from "@material-ui/core";
 import { Link } from "gatsby";
 import React from "react";
 import { AuthenticationFlow } from "./Auth/Controller";
+import { Footer } from "./Footer";
 
 // Style rules.
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   title: {
     marginTop: "10%",
   },
-  leaderboardsLink: {
+  leaderboards: {
     marginTop: "5%",
-    marginBottom: "10%",
+    marginBottom: "8%",
   },
-});
+  leaderboardsLink: {
+    "&:hover": {
+      color: theme.palette.text.main,
+    },
+  },
+}));
 
 // Splashpage component.
 export const Splashpage = () => {
@@ -32,16 +38,21 @@ export const Splashpage = () => {
         Level up your fitness.
       </Typography>
       <Typography
-        className={classes.leaderboardsLink}
+        className={classes.leaderboards}
         variant="h6"
         color="secondary"
         align="center"
       >
-        <Link to="/leaderboards" color="white">
+        <Link
+          to="/leaderboards"
+          color="white"
+          className={classes.leaderboardsLink}
+        >
           Leaderboards
         </Link>
       </Typography>
       <AuthenticationFlow className={classes.auth} />
+      <Footer />
     </Container>
   );
 };
