@@ -1,5 +1,6 @@
 // Gatsby browser API functions.
 import React from "react";
+import { Helmet } from "react-helmet";
 import { ThemeProvider } from "@material-ui/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { lightTheme as globalTheme } from "./src/theme/theme";
@@ -15,6 +16,10 @@ export const onClientEntry = () => {
 export const wrapRootElement = ({ element }) => {
   return (
     <ThemeProvider theme={globalTheme}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Satiate</title>
+      </Helmet>
       <CssBaseline />
       {element}
     </ThemeProvider>
