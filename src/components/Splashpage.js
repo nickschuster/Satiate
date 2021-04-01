@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // Splashpage component.
-export const Splashpage = () => {
+export const Splashpage = ({ loginSuccess }) => {
   const classes = useStyles();
 
   return (
@@ -51,7 +51,10 @@ export const Splashpage = () => {
           Leaderboards
         </Link>
       </Typography>
-      <AuthenticationFlow className={classes.auth} />
+      <AuthenticationFlow
+        className={classes.auth}
+        loginSuccess={loginSuccess}
+      />
       <Footer />
     </Container>
   );

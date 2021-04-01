@@ -1,13 +1,13 @@
+import React from "react";
 import {
-  makeStyles,
-  TextField,
   Grid,
+  TextField,
+  makeStyles,
+  Link,
   Typography,
   Button,
-  Link,
 } from "@material-ui/core";
 import { AuthStates } from "./AuthStates";
-import React from "react";
 
 // Styling.
 const useStyles = makeStyles((theme) => ({
@@ -24,8 +24,11 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginTop: 30,
   },
-  forgotPassword: {
-    paddingLeft: 14,
+  passwordRules: {
+    marginTop: 10,
+    width: "100%",
+    height: 50,
+    backgroundColor: "grey",
   },
   control: {
     marginBottom: 10,
@@ -35,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Login = ({ setAuthState }) => {
+export const Register = ({ setAuthState }) => {
   const classes = useStyles();
 
   return (
@@ -46,7 +49,15 @@ export const Login = ({ setAuthState }) => {
             <TextField
               className={classes.input1}
               id="outlined"
-              label="Email, username or phone"
+              label="Name"
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              className={classes.input2}
+              id="outlined"
+              label="Email or phone number"
               variant="outlined"
             />
           </Grid>
@@ -57,14 +68,7 @@ export const Login = ({ setAuthState }) => {
               label="Password"
               variant="outlined"
             />
-            <Typography variant="body2" className={classes.forgotPassword}>
-              <Link
-                onClick={() => setAuthState(AuthStates.resetPassword)}
-                underline="always"
-              >
-                Forgot password?
-              </Link>
-            </Typography>
+            <div className={classes.passwordRules}>placeholder</div>
           </Grid>
           <Grid item xs={10}>
             <Grid
@@ -78,10 +82,10 @@ export const Login = ({ setAuthState }) => {
               <Grid item>
                 <Typography variant="h5">
                   <Link
-                    onClick={() => setAuthState(AuthStates.register)}
+                    onClick={() => setAuthState(AuthStates.login)}
                     underline="always"
                   >
-                    Create account.
+                    Sign in
                   </Link>
                 </Typography>
               </Grid>
@@ -89,9 +93,9 @@ export const Login = ({ setAuthState }) => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => setAuthState(AuthStates.loginSuccess)}
+                  onClick={() => setAuthState(AuthStates.verifyAccount)}
                 >
-                  <Typography variant="h5">Log in</Typography>
+                  <Typography variant="h5">Create Account</Typography>
                 </Button>
               </Grid>
             </Grid>
