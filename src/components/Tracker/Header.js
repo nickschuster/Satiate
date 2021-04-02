@@ -3,13 +3,13 @@ import { Link } from "gatsby";
 import React from "react";
 
 // Image.
-import Arrow from "../images/arrow.png";
+import Arrow from "../../images/arrow.png";
 
 const useStyles = makeStyles((theme) => ({
   prev: {
     height: 75,
     marginTop: "40vh",
-    [theme.breakpoints.down(400)]: {
+    [theme.breakpoints.down("xs")]: {
       marginTop: 5,
     },
   },
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     transform: "rotate(180deg)",
     height: 75,
     marginTop: "40vh",
-    [theme.breakpoints.down(400)]: {
+    [theme.breakpoints.down("xs")]: {
       marginTop: 5,
     },
   },
@@ -31,14 +31,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Tracker = () => {
+export const Header = () => {
   const classes = useStyles();
 
   return (
     <>
       <Grid container justify="space-evenly" className={classes.container}>
         <Grid item>
-          <img src={Arrow} className={classes.prev} />
+          <img src={Arrow} className={classes.prev} alt="<" />
         </Grid>
         <Grid item align="center">
           <Typography variant="h3" color="secondary">
@@ -56,7 +56,7 @@ export const Tracker = () => {
           </Typography>
         </Grid>
         <Grid item>
-          <img src={Arrow} className={classes.next} />
+          <img src={Arrow} className={classes.next} alt=">" />
         </Grid>
       </Grid>
     </>

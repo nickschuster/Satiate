@@ -1,5 +1,5 @@
 import Auth from "@aws-amplify/auth";
-import { Tracker } from "../components/Tracker";
+import { TrackerController } from "../components/Tracker/Controller";
 import * as React from "react";
 import { Splashpage } from "../components/Splashpage";
 
@@ -20,7 +20,7 @@ const Index = () => {
   };
 
   if (login) {
-    return <Tracker />;
+    return <TrackerController />;
   } else {
     return <Splashpage loginSuccess={loginSuccess} />;
   }
