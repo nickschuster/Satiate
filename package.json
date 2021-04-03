@@ -1,6 +1,6 @@
 {
   "name": "satiate",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "private": true,
   "description": "Satiate",
   "author": "Nick Schuster",
@@ -15,9 +15,9 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
-    "@aws-amplify/ui-react": "^1.0.3",
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
     "aws-amplify": "^3.3.21",
-    "bootstrap": "^4.6.0",
     "gatsby": "^2.32.3",
     "gatsby-plugin-manifest": "^2.12.0",
     "gatsby-plugin-offline": "^3.10.1",
@@ -25,7 +25,6 @@
     "gatsby-plugin-sass": "^3.2.0",
     "moment": "^2.29.1",
     "react": "^16.13.1",
-    "react-bootstrap": "^1.5.0",
     "react-dom": "^16.13.1",
     "react-helmet": "^6.1.0",
     "sass": "^1.32.8"

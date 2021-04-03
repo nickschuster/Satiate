@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { API, Auth, graphqlOperation } from "aws-amplify";
-import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
 import {
   Container,
   Row,
@@ -20,32 +19,33 @@ import {
 } from "../graphql/mutations";
 
 const App = () => {
-  const [formMeal, setFormMeal] = useState({});
-  const [meals, setMeals] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [currentDay, setCurrentDay] = useState(moment().format("LL"));
-  const [user, setUser] = useState(undefined);
+  const [formMeal, setFormMeal] = useState({}); // Contents of the edit/new meal form.
+  const [meals, setMeals] = useState([]); // Current displayed meal info.
+  const [showForm, setShowForm] = useState(false); // Show the edit/new meal from.
+  const [currentDay, setCurrentDay] = useState(moment().format("LL")); // Current day being viewed.
+  const [user, setUser] = useState(undefined); // The current user.
 
-  // User change.
+  // Load user information on mount.
   useEffect(() => {
     (async () => {
       try {
+        // Get user auth and info.
         const userAuthId = (await Auth.currentUserInfo()).attributes.sub;
         const userInfo = (
           await API.graphql(graphqlOperation(getUser, { id: userAuthId }))
         ).data.getUser;
 
         if (userInfo) {
-          console.log("user exists", userInfo);
+          // The user exists.
           setUser(userInfo);
         } else {
+          // Its a new user (never signed in before).
           const newUser = (
             await API.graphql(
               graphqlOperation(createUser, { input: { id: userAuthId } })
             )
           ).data.createUser;
           setUser(newUser);
-          console.log("new userInfo", userInfo);
         }
       } catch (e) {
         throw new Error(e);
@@ -53,21 +53,26 @@ const App = () => {
     })();
   }, []);
 
-  // Load meal data.
+  // Load meal data on login or day change.
   useEffect(() => {
     (async () => {
       try {
         if (user) {
+          // Determine what day it is.
           const dayId = parseInt(moment(currentDay, "LL").unix() / 86400);
+
+          // Try to get day details.
           const response = (
             await API.graphql(
               graphqlOperation(getDay, { id: dayId, userId: user.id })
             )
           ).data.getDay;
-          console.log("load day", response);
+
           if (response) {
+            // Day exists.
             setMeals(response.meals);
           } else {
+            // New day.
             setMeals([]);
           }
         }
@@ -77,15 +82,18 @@ const App = () => {
     })();
   }, [user, currentDay]);
 
-  // Save meal data.
+  // Save meal data on meal update.
   useEffect(() => {
     (async () => {
       try {
         if (user) {
+          // Try to find the day in the user data.
           const dayData = user.days.items.find(
             (day) => day.pretty === currentDay
           );
+
           if (dayData) {
+            // Day already exists.
             const response = (
               await API.graphql(
                 graphqlOperation(updateDayGQ, {
@@ -98,23 +106,20 @@ const App = () => {
                 })
               )
             ).data.updateDay;
-            console.log("day update", response);
           } else {
             // New day.
             const dayId = parseInt(moment(currentDay, "LL").unix() / 86400);
-            const response = (
-              await API.graphql(
-                graphqlOperation(createDay, {
-                  input: {
-                    id: dayId,
-                    userId: user.id,
-                    pretty: currentDay,
-                    meals: [...meals],
-                  },
-                })
-              )
-            ).data.createDay;
-            console.log("new day", response);
+
+            await API.graphql(
+              graphqlOperation(createDay, {
+                input: {
+                  id: dayId,
+                  userId: user.id,
+                  pretty: currentDay,
+                  meals: [...meals],
+                },
+              })
+            );
           }
         }
       } catch (e) {
@@ -430,7 +435,6 @@ const App = () => {
           </Form>
         </Container>
       ) : null}
-      <AmplifySignOut />
     </>
   );
 };
