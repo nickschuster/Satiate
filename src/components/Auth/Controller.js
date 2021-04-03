@@ -13,6 +13,9 @@ export const AuthenticationFlow = ({ loginSuccess }) => {
   // Function passed to every auth component to set the current auth state.
   const setAuthState = (state) => {
     setAuthStateHook(state);
+    if (state === AuthStates.loginSuccess) {
+      loginSuccess();
+    }
   };
 
   // Determine what form to display based on auth state.
@@ -29,7 +32,6 @@ export const AuthenticationFlow = ({ loginSuccess }) => {
   } else if (authState === AuthStates.verifyAccount) {
     return <VerifyAccount setAuthState={setAuthState} />;
   } else if (authState === AuthStates.loginSuccess) {
-    loginSuccess();
     return null;
   } else {
     return <Login setAuthState={setAuthState} />;
