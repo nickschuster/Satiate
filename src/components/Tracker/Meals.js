@@ -4,6 +4,7 @@ import { LargeExpansionPanel } from "../LargeExpansionPanel";
 
 // Image.
 import Plus from "../../images/plus.png";
+import { TrackerStates } from "./TrackerStates";
 
 // Styling.
 const useStyles = makeStyles((theme) => ({
@@ -19,18 +20,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Meals = () => {
+export const Meals = ({meals, setTrackerState}) => {
   const classes = useStyles();
-  const [meals, setMeals] = useState([]);
 
   const addMeal = () => {
-    setMeals((prev) => {
-      prev.push({
-        key: Math.random(),
-        content: <h1>some content</h1>,
-      });
-      return [...prev];
-    });
+    setTrackerState(TrackerStates.addMeal);
   };
 
   return (
