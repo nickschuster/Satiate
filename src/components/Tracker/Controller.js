@@ -26,36 +26,47 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: "50%",
     left: "50%",
-    transform: "translate(-50%,-50%)"
-  }
+    transform: "translate(-50%,-50%)",
+  },
 }));
 
 export const TrackerController = () => {
   const classes = useStyles();
   const [trackerState, setTrackerStateHook] = useState(undefined);
+  const [meals, setMeals] = useState([]);
 
+  // Set the current tracker state.
   const setTrackerState = (state) => {
     setTrackerStateHook(state);
-  }
+  };
+
+  // Add a meal to the current day.
+  const addMeal = () => {
+    setMeals((prev) => {
+      prev.push({
+        key: Math.random(),
+        content: "test content",
+      });
+      return [...prev];
+    });
+  };
 
   const activeForm = () => {
-    if(trackerState === TrackerStates.addMeal) {
-      return <AddMeal />
+    if (trackerState === TrackerStates.addMeal) {
+      return <AddMeal setTrackerState={setTrackerState} addMeal={addMeal} />;
     }
     return null;
-  }
+  };
 
   return (
     <>
       <Header />
       <Container className={classes.mealsContainer}>
-        <Meals setTrackerState={setTrackerState} meals={[]}/>
+        <Meals setTrackerState={setTrackerState} meals={meals} />
         <Totals />
         <Footer />
       </Container>
-      <div className={classes.formContainer}>
-        {activeForm()}
-      </div>
+      <div className={classes.formContainer}>{activeForm()}</div>
     </>
   );
 };

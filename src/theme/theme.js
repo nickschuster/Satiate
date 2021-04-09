@@ -10,6 +10,9 @@ let lightTheme = createMuiTheme({
           backgroundColor: themeColorLight.secondary,
           borderRadius: 15,
           margin: "auto",
+          minWidth: 285,
+          maxWidth: 450,
+          flexGrow: 1,
         },
       },
     },
@@ -36,6 +39,9 @@ let lightTheme = createMuiTheme({
         "&:hover": {
           boxShadow: "none",
         },
+      },
+      outlined: {
+        padding: "none",
       },
     },
     MuiTextField: {
@@ -89,18 +95,6 @@ let lightTheme = createMuiTheme({
     carbs: {
       main: themeColorLight.carbs,
     },
-    // error: {
-    //   main: themeColorLight.text,
-    // },
-    // warning: {
-    //   main: themeColorLight.protein,
-    // },
-    // success: {
-    //   main: themeColorLight.fat,
-    // },
-    // info: {
-    //   main: themeColorLight.carbs,
-    // },
   },
 });
 
