@@ -13,6 +13,7 @@ let lightTheme = createMuiTheme({
           minWidth: 285,
           maxWidth: 450,
           flexGrow: 1,
+          overflow: "hidden",
         },
       },
     },

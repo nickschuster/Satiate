@@ -41,7 +41,8 @@ export const TrackerController = () => {
   };
 
   // Add a meal to the current day.
-  const addMeal = () => {
+  const addMeal = (meal) => {
+    console.log(meal);
     setMeals((prev) => {
       prev.push({
         key: Math.random(),

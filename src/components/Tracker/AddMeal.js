@@ -14,6 +14,7 @@ import {
   Add,
 } from "@material-ui/icons";
 import { TrackerStates } from "./TrackerStates";
+import { Keygen } from "../../util/keygen";
 
 const useStyles = makeStyles((theme) => ({
   input1: {
@@ -30,6 +31,11 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: 20,
     textAlign: "center",
+    maxHeight: 500,
+    overflowY: "scroll",
+  },
+  buttonContainer: {
+    paddingBottom: 20,
   },
   calories: {
     "& .MuiFormLabel-root": {
@@ -73,30 +79,46 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
   const classes = useStyles();
   const [meal, setMeal] = useState({
     name: "",
-    ingredients: [
-      {
-        key: Math.random(),
+    ingredients: {
+      [Keygen.getKey()]: {
         name: "",
         calories: "",
         protein: "",
         fat: "",
         carbs: "",
       },
-    ],
+    },
   });
 
   // Add a new empty ingredient.
   const addIngredient = () => {
     setMeal((prev) => {
-      prev.ingredients.push({
-        key: Math.random(),
+      prev.ingredients[Keygen.getKey()] = {
         name: "",
         calories: "",
         protein: "",
         fat: "",
         carbs: "",
-      });
+      };
       return { ...prev };
+    });
+  };
+
+  // Reset form to default state.
+  const resetForm = () => {
+    setMeal(() => {
+      return {
+        name: "",
+        ingredients: {
+          [Keygen.getKey()]: {
+            name: "",
+            calories: "",
+            protein: "",
+            fat: "",
+            carbs: "",
+          },
+        },
+      };
     });
   };
 
@@ -131,10 +153,9 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
             </Grid>
           </Grid>
           <div className={`${classes.seperator} ${classes.formItem}`} />
-          {meal.ingredients.map((ing) => (
-            <div>
+          {Object.entries(meal.ingredients).map(([key, value]) => (
+            <div key={key}>
               <Grid
-                key={ing.key}
                 container
                 justify="space-between"
                 alignItems="center"
@@ -216,11 +237,19 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
               <Add />
             </IconButton>
           </Grid>
-          <Grid container className={classes.formItem} justify="space-evenly">
+          <Grid
+            container
+            className={`${classes.formItem} ${classes.buttonContainer}`}
+            justify="space-evenly"
+            spacing={2}
+          >
             <Button
               variant="outlined"
               color="primary"
-              onClick={() => setTrackerState(TrackerStates.default)}
+              onClick={() => {
+                resetForm();
+                setTrackerState(TrackerStates.default);
+              }}
             >
               <Typography variant="h5">Cancel</Typography>
             </Button>
@@ -229,6 +258,7 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
               color="primary"
               onClick={() => {
                 addMeal();
+                resetForm();
                 setTrackerState(TrackerStates.default);
               }}
             >
