@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   makeStyles,
@@ -90,6 +90,12 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
     },
   });
 
+  useEffect(() => {
+    if (Object.keys(meal.ingredients) == 0) {
+      resetForm();
+    }
+  }, [meal]);
+
   // Add a new empty ingredient.
   const addIngredient = () => {
     setMeal((prev) => {
@@ -100,6 +106,30 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
         fat: "",
         carbs: "",
       };
+      return { ...prev };
+    });
+  };
+
+  // Remove an ingredient.
+  const removeIngredient = (key) => {
+    setMeal((prev) => {
+      delete prev.ingredients[key];
+      return { ...prev };
+    });
+  };
+
+  // Track ingredient changes.
+  const onIngredientChange = (key, type, value) => {
+    setMeal((prev) => {
+      prev.ingredients[key][type] = value;
+      return { ...prev };
+    });
+  };
+
+  // Track meal changes.
+  const onMealChange = (value) => {
+    setMeal((prev) => {
+      prev.name = value;
       return { ...prev };
     });
   };
@@ -139,6 +169,8 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
                 label="Meal"
                 variant="outlined"
                 placeholder="e.g. Lunch"
+                value={meal.name}
+                onChange={(event) => onMealChange(event.target.value)}
               />
             </Grid>
             <Grid item xs={2}>
@@ -168,6 +200,10 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
                     label="Ingredient"
                     variant="outlined"
                     placeholder="e.g. Banana"
+                    value={value["name"]}
+                    onChange={(event) =>
+                      onIngredientChange(key, "name", event.target.value)
+                    }
                   />
                 </Grid>
                 <Grid item xs={2}>
@@ -181,7 +217,10 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
                   </IconButton>
                 </Grid>
                 <Grid item xs={2}>
-                  <IconButton color="primary">
+                  <IconButton
+                    color="primary"
+                    onClick={() => removeIngredient(key)}
+                  >
                     <Close />
                   </IconButton>
                 </Grid>
@@ -198,6 +237,10 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
                     id="outlined"
                     label="Calories"
                     variant="outlined"
+                    value={value["calories"]}
+                    onChange={(event) =>
+                      onIngredientChange(key, "calories", event.target.value)
+                    }
                   />
                 </Grid>
                 <Grid item xs={6} lg={3}>
@@ -206,6 +249,10 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
                     id="outlined"
                     label="Protein"
                     variant="outlined"
+                    value={value["protein"]}
+                    onChange={(event) =>
+                      onIngredientChange(key, "protein", event.target.value)
+                    }
                   />
                 </Grid>
                 <Grid item xs={6} lg={3}>
@@ -214,6 +261,10 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
                     id="outlined"
                     label="Fat"
                     variant="outlined"
+                    value={value["fat"]}
+                    onChange={(event) =>
+                      onIngredientChange(key, "fat", event.target.value)
+                    }
                   />
                 </Grid>
                 <Grid item xs={6} lg={3}>
@@ -222,6 +273,10 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
                     id="outlined"
                     label="Carbs"
                     variant="outlined"
+                    value={value["carbs"]}
+                    onChange={(event) =>
+                      onIngredientChange(key, "carbs", event.target.value)
+                    }
                   />
                 </Grid>
               </Grid>
@@ -257,7 +312,7 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
               variant="contained"
               color="primary"
               onClick={() => {
-                addMeal();
+                addMeal(meal);
                 resetForm();
                 setTrackerState(TrackerStates.default);
               }}
