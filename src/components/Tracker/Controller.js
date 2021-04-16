@@ -1,11 +1,12 @@
 import { Container, makeStyles } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Footer } from "../Footer";
 import { Header } from "./Header";
 import { Meals } from "./Meals";
 import { Totals } from "./Totals";
 import { AddMeal } from "./AddMeal";
 import { TrackerStates } from "./TrackerStates";
+import { Keygen } from "../../util/keygen";
 
 const useStyles = makeStyles((theme) => ({
   mealsContainer: {
@@ -35,6 +36,24 @@ export const TrackerController = () => {
   const [trackerState, setTrackerStateHook] = useState(undefined);
   const [meals, setMeals] = useState([]);
 
+  // Calculate the total for a meal for a given type.
+  const getMealTotal = (meal, type) => {
+    let total = 0;
+    for (const ing of Object.entries(meal.ingredients)) {
+      total += parseInt(ing[1][type]);
+    }
+    return total;
+  };
+
+  // Calculate the total for all meals for a given type.
+  const getTotals = (meals, type) => {
+    let total = 0;
+    for (const meal of meals) {
+      total += getMealTotal(meal, type);
+    }
+    return total;
+  };
+
   // Set the current tracker state.
   const setTrackerState = (state) => {
     setTrackerStateHook(state);
@@ -45,8 +64,8 @@ export const TrackerController = () => {
     console.log(meal);
     setMeals((prev) => {
       prev.push({
-        key: Math.random(),
-        content: "test content",
+        key: Keygen.getKey(),
+        content: meal,
       });
       return [...prev];
     });
@@ -63,7 +82,11 @@ export const TrackerController = () => {
     <>
       <Header />
       <Container className={classes.mealsContainer}>
-        <Meals setTrackerState={setTrackerState} meals={meals} />
+        <Meals
+          setTrackerState={setTrackerState}
+          meals={meals}
+          getMealTotal={getMealTotal}
+        />
         <Totals />
         <Footer />
       </Container>

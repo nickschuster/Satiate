@@ -75,23 +75,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const AddMeal = ({ setTrackerState, addMeal }) => {
+export const AddMeal = ({ setTrackerState, addMeal, editMeal }) => {
   const classes = useStyles();
-  const [meal, setMeal] = useState({
-    name: "",
-    ingredients: {
-      [Keygen.getKey()]: {
-        name: "",
-        calories: "",
-        protein: "",
-        fat: "",
-        carbs: "",
-      },
-    },
-  });
+  const [meal, setMeal] = useState(
+    editMeal
+      ? editMeal
+      : {
+          name: "",
+          ingredients: {
+            [Keygen.getKey()]: {
+              name: "",
+              calories: 0,
+              protein: 0,
+              fat: 0,
+              carbs: 0,
+            },
+          },
+        }
+  );
 
   useEffect(() => {
-    if (Object.keys(meal.ingredients) == 0) {
+    if (!meal || Object.keys(meal.ingredients) == 0) {
       resetForm();
     }
   }, [meal]);
@@ -101,10 +105,10 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
     setMeal((prev) => {
       prev.ingredients[Keygen.getKey()] = {
         name: "",
-        calories: "",
-        protein: "",
-        fat: "",
-        carbs: "",
+        calories: 0,
+        protein: 0,
+        fat: 0,
+        carbs: 0,
       };
       return { ...prev };
     });
@@ -142,10 +146,10 @@ export const AddMeal = ({ setTrackerState, addMeal }) => {
         ingredients: {
           [Keygen.getKey()]: {
             name: "",
-            calories: "",
-            protein: "",
-            fat: "",
-            carbs: "",
+            calories: 0,
+            protein: 0,
+            fat: 0,
+            carbs: 0,
           },
         },
       };

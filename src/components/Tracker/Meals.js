@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { Grid, makeStyles, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { LargeExpansionPanel } from "../LargeExpansionPanel";
 
@@ -20,11 +20,49 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Meals = ({meals, setTrackerState}) => {
+export const Meals = ({ meals, setTrackerState, getMealTotal }) => {
   const classes = useStyles();
 
+  // Change the current tracker state to addMeal.
   const addMeal = () => {
     setTrackerState(TrackerStates.addMeal);
+  };
+
+  // Build the title using the meal info.
+  const buildMealTitle = (meal) => {
+    console.log(meal);
+    return (
+      <>
+        <Grid container justify="center" alignItems="center" spacing={3}>
+          <Grid item xs={12}></Grid>
+          <Grid item>
+            <Typography variant="h6">
+              {meal.name ? meal.name : "Not provided"}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6">
+              {getMealTotal(meal, "calories")}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6">
+              {getMealTotal(meal, "protein")}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6">{getMealTotal(meal, "fat")}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6">{getMealTotal(meal, "carbs")}</Typography>
+          </Grid>
+        </Grid>
+      </>
+    );
+  };
+
+  const buildMealContent = (meal) => {
+    return <h1>test</h1>;
   };
 
   return (
@@ -34,8 +72,8 @@ export const Meals = ({meals, setTrackerState}) => {
           return (
             <LargeExpansionPanel
               key={meal.key}
-              title={<h1>test title</h1>}
-              content={meal.content}
+              title={buildMealTitle(meal.content)}
+              content={buildMealContent(meal.content)}
             />
           );
         })}
