@@ -5,6 +5,7 @@ import { LargeExpansionPanel } from "../LargeExpansionPanel";
 // Image.
 import Plus from "../../images/plus.png";
 import { TrackerStates } from "./TrackerStates";
+import { CallMissedSharp } from "@material-ui/icons";
 
 // Styling.
 const useStyles = makeStyles((theme) => ({
@@ -17,6 +18,30 @@ const useStyles = makeStyles((theme) => ({
   },
   addMeal: {
     height: 75,
+  },
+  headerContainer: {
+    padding: 15,
+    height: "100%",
+    width: "100%",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+  },
+  mealName: {
+    color: theme.palette.text.main,
+  },
+  mealCalories: {
+    fontWeight: "bold",
+    color: theme.palette.primary.main,
+  },
+  mealProtein: {
+    color: theme.palette.protein.main,
+  },
+  mealFat: {
+    color: theme.palette.fat.main,
+  },
+  mealCarbs: {
+    color: theme.palette.carbs.main,
   },
 }));
 
@@ -32,37 +57,93 @@ export const Meals = ({ meals, setTrackerState, getMealTotal }) => {
   const buildMealTitle = (meal) => {
     console.log(meal);
     return (
-      <>
-        <Grid container justify="center" alignItems="center" spacing={3}>
-          <Grid item xs={12}></Grid>
-          <Grid item>
-            <Typography variant="h6">
-              {meal.name ? meal.name : "Not provided"}
-            </Typography>
+      <div className={classes.headerContainer}>
+        <Grid container>
+          <Grid container justify="center">
+            <Grid item>
+              <Typography
+                noWrap
+                overflowX="hidden"
+                className={classes.mealName}
+              >
+                {meal.name || "Not provided."}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Typography variant="h6">
-              {getMealTotal(meal, "calories")}
-            </Typography>
+          <Grid container justify="center">
+            <Grid item>
+              <Typography className={classes.mealCalories}>
+                {getMealTotal(meal, "calories")}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Typography variant="h6">
-              {getMealTotal(meal, "protein")}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6">{getMealTotal(meal, "fat")}</Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6">{getMealTotal(meal, "carbs")}</Typography>
+          <Grid container justify="space-evenly">
+            <Grid item>
+              <Typography className={classes.mealProtein}>
+                {getMealTotal(meal, "protein")}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={classes.mealFat}>
+                {getMealTotal(meal, "fat")}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={classes.mealCarbs}>
+                {getMealTotal(meal, "carbs")}
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
-      </>
+      </div>
     );
   };
 
   const buildMealContent = (meal) => {
-    return <h1>test</h1>;
+    if (Object.keys(meal).length == 0) {
+      return (
+        <Typography className={classes.mealName}>
+          No ingredients provided.
+        </Typography>
+      );
+    }
+    return (
+      <>
+        {Object.entries(meal.ingredients).map(([key, value]) => {
+          return (
+            <div className={classes.headerContainer}>
+              <Grid key={key} container justify="space-between">
+                <Grid item xs={12} sm={"auto"}>
+                  <Typography className={classes.mealName}>
+                    {value.name || "Not provided."}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography className={classes.mealCalories}>
+                    {value.calories}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography className={classes.mealProtein}>
+                    {value.protein}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography className={classes.mealFat}>
+                    {value.fat}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography className={classes.mealCarbs}>
+                    {value.carbs}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
+          );
+        })}
+      </>
+    );
   };
 
   return (
