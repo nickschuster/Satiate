@@ -1,11 +1,10 @@
-import { Grid, makeStyles, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import { Grid, makeStyles, Typography, Button } from "@material-ui/core";
+import React from "react";
 import { LargeExpansionPanel } from "../LargeExpansionPanel";
 
 // Image.
 import Plus from "../../images/plus.png";
 import { TrackerStates } from "./TrackerStates";
-import { CallMissedSharp } from "@material-ui/icons";
 
 // Styling.
 const useStyles = makeStyles((theme) => ({
@@ -45,7 +44,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Meals = ({ meals, setTrackerState, getMealTotal }) => {
+export const Meals = ({
+  meals,
+  setTrackerState,
+  getMealTotal,
+  saveEditMeal,
+  deleteMeal,
+}) => {
   const classes = useStyles();
 
   // Change the current tracker state to addMeal.
@@ -53,19 +58,20 @@ export const Meals = ({ meals, setTrackerState, getMealTotal }) => {
     setTrackerState(TrackerStates.addMeal);
   };
 
+  // Change tracker state and save the meal to be edited.
+  const editMeal = (key) => {
+    saveEditMeal(key);
+    setTrackerState(TrackerStates.editMeal);
+  };
+
   // Build the title using the meal info.
   const buildMealTitle = (meal) => {
-    console.log(meal);
     return (
       <div className={classes.headerContainer}>
         <Grid container>
           <Grid container justify="center">
             <Grid item>
-              <Typography
-                noWrap
-                overflowX="hidden"
-                className={classes.mealName}
-              >
+              <Typography noWrap className={classes.mealName}>
                 {meal.name || "Not provided."}
               </Typography>
             </Grid>
@@ -99,8 +105,9 @@ export const Meals = ({ meals, setTrackerState, getMealTotal }) => {
     );
   };
 
-  const buildMealContent = (meal) => {
-    if (Object.keys(meal).length == 0) {
+  // Build the ingredient details.
+  const buildMealContent = (meal, key) => {
+    if (Object.keys(meal).length === 0) {
       return (
         <Typography className={classes.mealName}>
           No ingredients provided.
@@ -111,8 +118,8 @@ export const Meals = ({ meals, setTrackerState, getMealTotal }) => {
       <>
         {Object.entries(meal.ingredients).map(([key, value]) => {
           return (
-            <div className={classes.headerContainer}>
-              <Grid key={key} container justify="space-between">
+            <div key={key} className={classes.headerContainer}>
+              <Grid container justify="space-between">
                 <Grid item xs={12} sm={"auto"}>
                   <Typography className={classes.mealName}>
                     {value.name || "Not provided."}
@@ -142,6 +149,25 @@ export const Meals = ({ meals, setTrackerState, getMealTotal }) => {
             </div>
           );
         })}
+
+        <div className={classes.headerContainer}>
+          <Grid container justify="space-evenly" spacing={2}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => deleteMeal(key)}
+            >
+              <Typography variant="h5">Delete</Typography>
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => editMeal(key)}
+            >
+              <Typography variant="h5">Edit</Typography>
+            </Button>
+          </Grid>
+        </div>
       </>
     );
   };
@@ -154,7 +180,7 @@ export const Meals = ({ meals, setTrackerState, getMealTotal }) => {
             <LargeExpansionPanel
               key={meal.key}
               title={buildMealTitle(meal.content)}
-              content={buildMealContent(meal.content)}
+              content={buildMealContent(meal.content, meal.key)}
             />
           );
         })}

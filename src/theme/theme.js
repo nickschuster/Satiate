@@ -30,8 +30,7 @@ let lightTheme = createMuiTheme({
       root: {
         borderRadius: 15,
         padding: 10,
-        paddingLeft: 40,
-        paddingRight: 40,
+        minWidth: 100,
         textTransform: "none",
         boxShadow: "none",
       },

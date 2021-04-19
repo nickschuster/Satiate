@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const AddMeal = ({ setTrackerState, addMeal, editMeal }) => {
+export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
   const classes = useStyles();
   const [meal, setMeal] = useState(
     editMeal
@@ -95,7 +95,7 @@ export const AddMeal = ({ setTrackerState, addMeal, editMeal }) => {
   );
 
   useEffect(() => {
-    if (!meal || Object.keys(meal.ingredients) == 0) {
+    if (!meal || Object.keys(meal.ingredients) === 0) {
       resetForm();
     }
   }, [meal]);

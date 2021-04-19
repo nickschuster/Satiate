@@ -4,7 +4,7 @@ import { Footer } from "../Footer";
 import { Header } from "./Header";
 import { Meals } from "./Meals";
 import { Totals } from "./Totals";
-import { AddMeal } from "./AddMeal";
+import { MealControl } from "./MealControl";
 import { TrackerStates } from "./TrackerStates";
 import { Keygen } from "../../util/keygen";
 
@@ -35,6 +35,7 @@ export const TrackerController = () => {
   const classes = useStyles();
   const [trackerState, setTrackerStateHook] = useState(undefined);
   const [meals, setMeals] = useState([]);
+  const [savedEditMeal, setEditMeal] = useState(undefined);
 
   // Calculate the total for a meal for a given type.
   const getMealTotal = (meal, type) => {
@@ -61,7 +62,6 @@ export const TrackerController = () => {
 
   // Add a meal to the current day.
   const addMeal = (meal) => {
-    console.log(meal);
     setMeals((prev) => {
       prev.push({
         key: Keygen.getKey(),
@@ -71,9 +71,44 @@ export const TrackerController = () => {
     });
   };
 
+  // Save the meal to be edited.
+  const saveEditMeal = (key) => {
+    setEditMeal(() => {
+      const saved = meals.find((meal) => meal.key === key);
+      return { ...saved };
+    });
+  };
+
+  const editMeal = (editMeal) => {
+    setMeals((prev) => {
+      const update = prev.find((meal) => meal.key === savedEditMeal.key);
+      update.content = editMeal;
+      return [...prev];
+    });
+  };
+
+  // Delete a meal from the current day.
+  const deleteMeal = (key) => {
+    setMeals((prev) => {
+      const index = meals.findIndex((meal) => meal.key === key);
+      prev.splice(index, 1);
+      return [...prev];
+    });
+  };
+
   const activeForm = () => {
     if (trackerState === TrackerStates.addMeal) {
-      return <AddMeal setTrackerState={setTrackerState} addMeal={addMeal} />;
+      return (
+        <MealControl setTrackerState={setTrackerState} addMeal={addMeal} />
+      );
+    } else if (trackerState === TrackerStates.editMeal) {
+      return (
+        <MealControl
+          setTrackerState={setTrackerState}
+          addMeal={editMeal}
+          editMeal={savedEditMeal.content}
+        />
+      );
     }
     return null;
   };
@@ -86,6 +121,8 @@ export const TrackerController = () => {
           setTrackerState={setTrackerState}
           meals={meals}
           getMealTotal={getMealTotal}
+          deleteMeal={deleteMeal}
+          saveEditMeal={saveEditMeal}
         />
         <Totals />
         <Footer />
