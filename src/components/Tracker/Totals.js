@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Totals = () => {
+export const Totals = ({ getTotals, goals, getPoints }) => {
   const classes = useStyles();
 
   return (
@@ -36,27 +36,27 @@ export const Totals = () => {
           className={classes.calorieGoal}
           color="primary"
         >
-          ----/----
+          {getTotals("calories")}/{goals.calories || "----"}
         </Typography>
         <Grid container justify="space-evenly">
           <Grid item>
             <Typography variant="h5" className={classes.proteinGoal}>
-              ----/----
+              {getTotals("protein")}/{goals.protein || "----"}
             </Typography>
           </Grid>
           <Grid item>
             <Typography variant="h5" className={classes.fatGoal}>
-              ----/----
+              {getTotals("fat")}/{goals.fat || "----"}
             </Typography>
           </Grid>
           <Grid item>
             <Typography variant="h5" className={classes.carbsGoal}>
-              ----/----
+              {getTotals("carbs")}/{goals.carbs || "----"}
             </Typography>
           </Grid>
         </Grid>
         <Typography variant="h5" className={classes.score}>
-          ----
+          {getPoints()}
         </Typography>
       </div>
     </>

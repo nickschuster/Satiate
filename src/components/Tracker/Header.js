@@ -1,5 +1,6 @@
 import { Grid, Typography, makeStyles } from "@material-ui/core";
 import { Link } from "gatsby";
+import moment from "moment";
 import React from "react";
 
 // Image.
@@ -26,23 +27,34 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 5,
     },
   },
+  imgButton: {
+    cursor: "pointer",
+  },
   container: {
     marginTop: 20,
   },
 }));
 
-export const Header = () => {
+export const Header = ({ currentDay, nextDay, prevDay }) => {
   const classes = useStyles();
 
   return (
     <>
       <Grid container justify="space-evenly" className={classes.container}>
         <Grid item>
-          <img src={Arrow} className={classes.prev} alt="<" />
+          <div
+            className={classes.imgButton}
+            onClick={() => prevDay()}
+            onKeyDown={() => prevDay()}
+            role="button"
+            tabIndex="-2"
+          >
+            <img src={Arrow} className={classes.prev} alt="<" />
+          </div>
         </Grid>
         <Grid item align="center">
           <Typography variant="h3" color="secondary">
-            Feb, 2nd 2021
+            {moment.unix(currentDay * 86400).format("LL")}
           </Typography>
           <Typography variant="h5" color="secondary">
             <Link to="/profile" className={classes.link}>
@@ -56,7 +68,15 @@ export const Header = () => {
           </Typography>
         </Grid>
         <Grid item>
-          <img src={Arrow} className={classes.next} alt=">" />
+          <div
+            className={classes.imgButton}
+            onClick={() => nextDay()}
+            onKeyDown={() => nextDay()}
+            role="button"
+            tabIndex="-1"
+          >
+            <img src={Arrow} className={classes.next} alt=">" />
+          </div>
         </Grid>
       </Grid>
     </>
