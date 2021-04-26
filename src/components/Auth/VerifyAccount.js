@@ -11,11 +11,6 @@ import { AuthStates } from "./AuthStates";
 
 // Styling.
 const useStyles = makeStyles((theme) => ({
-  form: {
-    minWidth: 285,
-    maxWidth: 450,
-    flexGrow: 1,
-  },
   input2: {
     width: "100%",
     marginTop: 20,
@@ -40,7 +35,7 @@ export const VerifyAccount = ({ setAuthState }) => {
 
   return (
     <>
-      <form className={classes.form}>
+      <form>
         <Grid container spacing={3} justify="center">
           <Grid item xs={10}>
             <TextField

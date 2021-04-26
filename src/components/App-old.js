@@ -184,11 +184,11 @@ const App = () => {
   // Get the total of a particular property in a meal.
   // E.g. add all calories for all ingredients.
   const getIngredientTotal = (meal, key) => {
-    return meal.ingredients.reduce((a, b) => {
-      let valueOne = a;
-      let valueTwo = b;
-      if (typeof a === "object") valueOne = parseInt(a[key]);
-      if (typeof b === "object") valueTwo = parseInt(b[key]);
+    return Object.entries(meal.ingredients).reduce((a, b) => {
+      let valueOne = a[1];
+      let valueTwo = b[1];
+      if (typeof a[1] === "object") valueOne = parseInt(a[1][key]);
+      if (typeof b[1] === "object") valueTwo = parseInt(b[1][key]);
       return valueOne + valueTwo;
     }, 0);
   };
