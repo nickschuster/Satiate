@@ -10,6 +10,11 @@ import { VerifyAccount } from "./VerifyAccount";
 export const AuthenticationFlow = ({ loginSuccess }) => {
   const [authState, setAuthStateHook] = useState(AuthStates.login);
 
+  // Register new user.
+  const register = ({ name, email, password }) => {
+    console.log("Register.");
+  };
+
   // Function passed to every auth component to set the current auth state.
   const setAuthState = (state) => {
     setAuthStateHook(state);
@@ -20,7 +25,7 @@ export const AuthenticationFlow = ({ loginSuccess }) => {
 
   // Determine what form to display based on auth state.
   if (authState === AuthStates.register) {
-    return <Register setAuthState={setAuthState} />;
+    return <Register setAuthState={setAuthState} register={register} />;
   } else if (authState === AuthStates.login) {
     return <Login setAuthState={setAuthState} />;
   } else if (authState === AuthStates.resetPassword) {
