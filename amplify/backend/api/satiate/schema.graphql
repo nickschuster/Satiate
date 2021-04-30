@@ -1,0 +1,26 @@
+type User {
+  id: ID!
+  username: String!
+  days: @connection or whatever
+  savedMeals: @connection
+  savedIngredients: @connection
+  calorieGoal: Number
+  proteinGoal: Number
+  fatGoal: Number
+  carbGoal: Number
+}
+
+type Day {
+  id: ID! # Day since epoch
+  pretty: Number!
+  meals: [Meal]
+  calorieGoal: Number
+  proteinGoal: Number
+  fatGoal: Number
+  carbGoal: Number
+}
+
+type Meal {
+  name: String
+  ingredients: 
+}
