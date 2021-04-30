@@ -9,6 +9,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@material-ui/core";
+import { Loader } from "../Loader";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { AuthStates } from "./AuthStates";
 
@@ -22,12 +23,6 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginTop: 30,
   },
-  passwordRules: {
-    marginTop: 10,
-    width: "100%",
-    height: 50,
-    backgroundColor: "grey",
-  },
   control: {
     marginBottom: 10,
     [theme.breakpoints.down(400)]: {
@@ -36,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Register = ({ setAuthState, register }) => {
+export const Register = ({ setAuthState, register, loadStatus }) => {
   const classes = useStyles();
   const [user, setUser] = useState({
     name: "",
@@ -110,7 +105,6 @@ export const Register = ({ setAuthState, register }) => {
                 ),
               }}
             />
-            <div className={classes.passwordRules}>placeholder</div>
           </Grid>
           <Grid item xs={10}>
             <Grid
@@ -144,6 +138,7 @@ export const Register = ({ setAuthState, register }) => {
           </Grid>
         </Grid>
       </form>
+      <Loader show={loadStatus} />
     </>
   );
 };

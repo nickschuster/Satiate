@@ -6,13 +6,33 @@ import { AuthStates } from "./AuthStates";
 import { VerifyPassword } from "./VerifyPassword";
 import { NewPassword } from "./NewPassword";
 import { VerifyAccount } from "./VerifyAccount";
+import generateUsername from "../../util/generateUsername";
+import Auth from "@aws-amplify/auth";
 
 export const AuthenticationFlow = ({ loginSuccess }) => {
   const [authState, setAuthStateHook] = useState(AuthStates.login);
+  const [loadStatus, setLoadStatus] = useState(false);
 
   // Register new user.
-  const register = ({ name, email, password }) => {
-    console.log("Register.");
+  const register = async ({ name, email, password }) => {
+    const username = generateUsername(email);
+
+    try {
+      setLoadStatus(true);
+      // const { user } = await Auth.signUp({
+      //   email,
+      //   password,
+      //   attributes: {
+      //     name, // optional
+      //     email, // optional - E.164 number convention
+      //     preffered_username: username,
+      //   },
+      // });
+      // setLoadStatus(false);
+      // console.log(user);
+    } catch (error) {
+      console.log("error signing up:", error);
+    }
   };
 
   // Function passed to every auth component to set the current auth state.
@@ -25,7 +45,13 @@ export const AuthenticationFlow = ({ loginSuccess }) => {
 
   // Determine what form to display based on auth state.
   if (authState === AuthStates.register) {
-    return <Register setAuthState={setAuthState} register={register} />;
+    return (
+      <Register
+        setAuthState={setAuthState}
+        register={register}
+        loadStatus={loadStatus}
+      />
+    );
   } else if (authState === AuthStates.login) {
     return <Login setAuthState={setAuthState} />;
   } else if (authState === AuthStates.resetPassword) {
