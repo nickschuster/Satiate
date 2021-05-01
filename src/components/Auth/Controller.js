@@ -11,14 +11,12 @@ import Auth from "@aws-amplify/auth";
 
 export const AuthenticationFlow = ({ loginSuccess }) => {
   const [authState, setAuthStateHook] = useState(AuthStates.login);
-  const [loadStatus, setLoadStatus] = useState(false);
 
   // Register new user.
   const register = async ({ name, email, password }) => {
     const username = generateUsername(email);
 
     try {
-      setLoadStatus(true);
       // const { user } = await Auth.signUp({
       //   email,
       //   password,
@@ -28,7 +26,6 @@ export const AuthenticationFlow = ({ loginSuccess }) => {
       //     preffered_username: username,
       //   },
       // });
-      // setLoadStatus(false);
       // console.log(user);
     } catch (error) {
       console.log("error signing up:", error);
@@ -45,13 +42,7 @@ export const AuthenticationFlow = ({ loginSuccess }) => {
 
   // Determine what form to display based on auth state.
   if (authState === AuthStates.register) {
-    return (
-      <Register
-        setAuthState={setAuthState}
-        register={register}
-        loadStatus={loadStatus}
-      />
-    );
+    return <Register setAuthState={setAuthState} register={register} />;
   } else if (authState === AuthStates.login) {
     return <Login setAuthState={setAuthState} />;
   } else if (authState === AuthStates.resetPassword) {

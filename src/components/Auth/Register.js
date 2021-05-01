@@ -9,9 +9,9 @@ import {
   InputAdornment,
   IconButton,
 } from "@material-ui/core";
-import { Loader } from "../Loader";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { AuthStates } from "./AuthStates";
+import { validate } from "../../util/formValidation";
 
 // Styling.
 const useStyles = makeStyles((theme) => ({
@@ -31,13 +31,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Register = ({ setAuthState, register, loadStatus }) => {
+export const Register = ({ setAuthState, register }) => {
   const classes = useStyles();
   const [user, setUser] = useState({
     name: "",
     email: "",
     password: "",
     showPassword: false,
+  });
+  const [formErrors, setFormErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
   });
 
   // Update the input field value.
@@ -47,6 +52,7 @@ export const Register = ({ setAuthState, register, loadStatus }) => {
       prev[type] = value;
       return { ...prev };
     });
+    validate(type, value, setFormErrors);
   };
 
   // Change the password visibility.
@@ -79,6 +85,8 @@ export const Register = ({ setAuthState, register, loadStatus }) => {
               variant="outlined"
               value={user.email}
               onChange={(event) => handleChange(event, "email")}
+              error={!!formErrors.email}
+              helperText={formErrors.email}
             />
           </Grid>
           <Grid item xs={10}>
@@ -138,7 +146,6 @@ export const Register = ({ setAuthState, register, loadStatus }) => {
           </Grid>
         </Grid>
       </form>
-      <Loader show={loadStatus} />
     </>
   );
 };
