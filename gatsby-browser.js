@@ -6,6 +6,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { lightTheme as globalTheme } from "./src/theme/theme";
 import Amplify from "aws-amplify";
 import awsconfig from "./src/aws-exports.js";
+import { Notification } from "./src/components/Notification";
 
 // AWS config init.
 export const onClientEntry = () => {
@@ -20,6 +21,7 @@ export const wrapRootElement = ({ element }) => {
         <meta charSet="utf-8" />
         <title>Satiate</title>
       </Helmet>
+      <Notification />
       <CssBaseline />
       {element}
     </ThemeProvider>

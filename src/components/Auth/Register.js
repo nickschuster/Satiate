@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { AuthStates } from "./AuthStates";
-import { validate } from "../../util/formValidation";
+import { formIsValid, validate, validateAll } from "../../util/formValidation";
 
 // Styling.
 const useStyles = makeStyles((theme) => ({
@@ -45,6 +45,14 @@ export const Register = ({ setAuthState, register }) => {
     password: "",
   });
 
+  // Register the user if form is valid.
+  const handleSubmit = () => {
+    validateAll(formErrors, user, setFormErrors);
+    if (formIsValid(formErrors)) {
+      register(user);
+    }
+  };
+
   // Update the input field value.
   const handleChange = (event, type) => {
     const value = event.target.value;
@@ -75,6 +83,8 @@ export const Register = ({ setAuthState, register }) => {
               variant="outlined"
               value={user.name}
               onChange={(event) => handleChange(event, "name")}
+              error={!!formErrors.name}
+              helperText={formErrors.name}
             />
           </Grid>
           <Grid item xs={10}>
@@ -98,6 +108,8 @@ export const Register = ({ setAuthState, register }) => {
               type={user.showPassword ? "text" : "password"}
               value={user.password}
               onChange={(event) => handleChange(event, "password")}
+              error={!!formErrors.password}
+              helperText={formErrors.password}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -137,7 +149,7 @@ export const Register = ({ setAuthState, register }) => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => register(user)}
+                  onClick={() => handleSubmit()}
                 >
                   <Typography variant="h5">Create Account</Typography>
                 </Button>
