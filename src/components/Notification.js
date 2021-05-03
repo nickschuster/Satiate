@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import { IconButton, makeStyles, Typography } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 
@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
     transform: "translate(-50%)",
     borderRadius: 15,
+    transition: "top ease 0.2s",
   },
   notifClose: {
     float: "left",
@@ -39,23 +40,67 @@ const useStyles = makeStyles((theme) => ({
 
 export const Notification = () => {
   const classes = useStyles();
+  const { notification, removeNotification } = useNotification();
 
   return (
     <>
-      <div className={classes.notifContainer}>
+      <div
+        className={classes.notifContainer}
+        style={notification ? { top: 10 } : { top: -70 }}
+      >
         <div className={classes.notifClose}>
-          <IconButton color="secondary">
+          <IconButton color="secondary" onClick={() => removeNotification()}>
             <Close />
           </IconButton>
         </div>
         <div className={classes.notifContent}>
           <Typography variant="body2" className={classes.notifText}>
-            Test notifiaction text Test notifiaction text Test notifiaction text
-            Test notifiaction text v vTest notifiaction textTest notifiaction
-            text Test notifiaction text
+            {notification || ""}
           </Typography>
         </div>
       </div>
     </>
   );
+};
+
+// Notification context.
+export const NotifContext = createContext({
+  notification: null,
+  addNotification: () => {},
+  removeNotification: () => {},
+});
+
+// Notification context provider.
+export const NotifContextProvider = ({ children }) => {
+  const [notification, setNotification] = useState(null);
+
+  const addNotification = (notification) => setNotification(notification);
+
+  const removeNotification = () => setNotification(null);
+
+  const context = {
+    notification,
+    addNotification: useCallback(
+      (notification) => addNotification(notification),
+      []
+    ),
+    removeNotification: useCallback(() => removeNotification(), []),
+  };
+
+  return (
+    <NotifContext.Provider value={context}>{children}</NotifContext.Provider>
+  );
+};
+
+// Context wrapper.
+export const useNotification = () => {
+  const { notification, addNotification, removeNotification } = useContext(
+    NotifContext
+  );
+
+  return {
+    notification,
+    addNotification,
+    removeNotification,
+  };
 };

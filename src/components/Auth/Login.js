@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import { AuthStates } from "./AuthStates";
 import React from "react";
+import { useNotification } from "../Notification";
 
 // Styling.
 const useStyles = makeStyles((theme) => ({
