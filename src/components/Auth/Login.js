@@ -7,8 +7,8 @@ import {
   Link,
 } from "@material-ui/core";
 import { AuthStates } from "./AuthStates";
-import React from "react";
-import { useNotification } from "../Notification";
+import React, { useState } from "react";
+import { formIsValid, validate, validateAll } from "../../util/formValidation";
 
 // Styling.
 const useStyles = makeStyles((theme) => ({
@@ -31,8 +31,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Login = ({ setAuthState }) => {
+export const Login = ({ setAuthState, login, forgotPassword }) => {
   const classes = useStyles();
+
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [formErrors, setFormErrors] = useState({
+    email: "",
+  });
+
+  // Update form values.
+  const handleChange = (type, event) => {
+    const value = event.target.value;
+    setUser((prev) => {
+      prev[type] = value;
+      return { ...prev };
+    });
+    validate(type, value, setFormErrors);
+  };
+
+  // Verify form values and login.
+  const handleSubmit = () => {
+    validateAll(formErrors, user, setFormErrors);
+    if (formIsValid(formErrors)) {
+      login(user);
+    }
+  };
 
   return (
     <>
@@ -42,8 +69,11 @@ export const Login = ({ setAuthState }) => {
             <TextField
               className={classes.input1}
               id="outlined"
-              label="Email, username or phone"
+              label="Email"
               variant="outlined"
+              onChange={(event) => handleChange("email", event)}
+              error={!!formErrors.email}
+              helperText={formErrors.email}
             />
           </Grid>
           <Grid item xs={10}>
@@ -52,12 +82,10 @@ export const Login = ({ setAuthState }) => {
               id="outlined"
               label="Password"
               variant="outlined"
+              onChange={(event) => handleChange("password", event)}
             />
             <Typography variant="body2" className={classes.forgotPassword}>
-              <Link
-                onClick={() => setAuthState(AuthStates.resetPassword)}
-                underline="always"
-              >
+              <Link onClick={() => forgotPassword()} underline="always">
                 Forgot password?
               </Link>
             </Typography>
@@ -85,7 +113,7 @@ export const Login = ({ setAuthState }) => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => setAuthState(AuthStates.loginSuccess)}
+                  onClick={() => handleSubmit()}
                 >
                   <Typography variant="h5">Log in</Typography>
                 </Button>
