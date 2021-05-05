@@ -6,7 +6,10 @@ import {
   Link,
   Typography,
   Button,
+  InputAdornment,
+  IconButton,
 } from "@material-ui/core";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { AuthStates } from "./AuthStates";
 import { formIsValid, validate, validateAll } from "../../util/formValidation";
 
@@ -42,6 +45,8 @@ export const ResetPassword = ({
     password: "",
     confirmPassword: "",
     code: "",
+    showPassword: false,
+    showConfirmPassword: false,
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -71,6 +76,14 @@ export const ResetPassword = ({
     }
   };
 
+  // Handle showing password and confirm password visibility.
+  const hanldeShowPasswordClick = (value, type) => {
+    setUser((prev) => {
+      prev[type] = value;
+      return { ...prev };
+    });
+  };
+
   return (
     <>
       <form>
@@ -82,9 +95,27 @@ export const ResetPassword = ({
               label="New password"
               variant="outlined"
               value={user.password}
+              type={user.showPassword ? "text" : "password"}
               onChange={(evt) => handleChange("password", evt)}
               error={!!formErrors.password}
               helperText={formErrors.password}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() =>
+                        hanldeShowPasswordClick(
+                          !user.showPassword,
+                          "showPassword"
+                        )
+                      }
+                    >
+                      {user.showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={10}>
@@ -93,10 +124,32 @@ export const ResetPassword = ({
               id="outlined"
               label="Confirm new password"
               variant="outlined"
+              type={user.showConfirmPassword ? "text" : "password"}
               value={user.confirmPassword}
               onChange={(evt) => handleChange("confirmPassword", evt)}
               error={!!validateConfirmPassword()}
               helperText={validateConfirmPassword()}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() =>
+                        hanldeShowPasswordClick(
+                          !user.showConfirmPassword,
+                          "showConfirmPassword"
+                        )
+                      }
+                    >
+                      {user.showConfirmPassword ? (
+                        <Visibility />
+                      ) : (
+                        <VisibilityOff />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={10}>

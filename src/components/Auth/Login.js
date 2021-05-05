@@ -83,6 +83,7 @@ export const Login = ({ setAuthState, login }) => {
               id="outlined"
               label="Password"
               variant="outlined"
+              type="password"
               value={user.password}
               onChange={(event) => handleChange("password", event)}
             />
