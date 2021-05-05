@@ -2,7 +2,7 @@
 import Joi from "joi";
 
 // Form schema.
-export const schema = Joi.object({
+export const schema = Joi.object().keys({
   email: Joi.string()
     .email({ tlds: { allow: false } })
     .messages({
@@ -34,7 +34,9 @@ export const validate = (type, value, setErrorState) => {
   });
 
   setErrorState((prev) => {
-    prev[type] = result.error ? result.error.message : "";
+    if (type in prev) {
+      prev[type] = result.error ? result.error.message : "";
+    }
     return { ...prev };
   });
 };

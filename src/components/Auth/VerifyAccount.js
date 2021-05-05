@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 export const VerifyAccount = ({ setAuthState, resendCode, verifyEmail }) => {
   const classes = useStyles();
 
-  const [code, setCode] = useState();
+  const [code, setCode] = useState("");
 
   const handleChange = (event) => {
     const value = event.target.value;

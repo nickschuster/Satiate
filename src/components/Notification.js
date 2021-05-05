@@ -74,7 +74,13 @@ export const NotifContext = createContext({
 export const NotifContextProvider = ({ children }) => {
   const [notification, setNotification] = useState(null);
 
-  const addNotification = (notification) => setNotification(notification);
+  const addNotification = async (newNotification) => {
+    setNotification(null);
+    await new Promise((resolve) => {
+      setTimeout(() => resolve(), 100);
+    });
+    setNotification(newNotification);
+  };
 
   const removeNotification = () => setNotification(null);
 

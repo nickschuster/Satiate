@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Login } from "./Login";
 import { Register } from "./Register";
-import { ResetPassword } from "./ResetPassword";
+import { ForgotPassword } from "./ForgotPassword";
 import { AuthStates } from "./AuthStates";
-import { VerifyPassword } from "./VerifyPassword";
-import { NewPassword } from "./NewPassword";
+import { ResetPassword } from "./ResetPassword";
 import { VerifyAccount } from "./VerifyAccount";
 import { generateUsername as generatePreferredUsername } from "../../util/generateUsername";
 import Auth from "@aws-amplify/auth";
@@ -19,7 +18,6 @@ export const AuthenticationFlow = ({ loginSuccess }) => {
   // Register new user.
   const register = async ({ name, email, password }) => {
     const username = generatePreferredUsername(email);
-    console.log(username, email, name, password);
 
     try {
       setUsername(email);
@@ -75,8 +73,27 @@ export const AuthenticationFlow = ({ loginSuccess }) => {
   };
 
   // Start forgot password flow.
-  const forgotPassword = async () => {
-    setAuthState(AuthStates.resetPassword);
+  const forgotPassword = async (email) => {
+    try {
+      const user = email || username;
+      console.log(user);
+      setUsername(user);
+      await Auth.forgotPassword(user);
+      setAuthState(AuthStates.verifyPassword);
+    } catch (e) {
+      addNotification("Could not reset password. " + e.message);
+    }
+  };
+
+  // Reset user password.
+  const resetPassword = async ({ code, password }) => {
+    try {
+      await Auth.forgotPasswordSubmit(username, code, password);
+      addNotification("Password has been reset.");
+      setAuthState(AuthStates.login);
+    } catch (e) {
+      addNotification("Could not reset password. " + e.message);
+    }
   };
 
   // Function passed to every auth component to set the current auth state.
@@ -91,19 +108,22 @@ export const AuthenticationFlow = ({ loginSuccess }) => {
   if (authState === AuthStates.register) {
     return <Register setAuthState={setAuthState} register={register} />;
   } else if (authState === AuthStates.login) {
+    return <Login setAuthState={setAuthState} login={login} />;
+  } else if (authState === AuthStates.resetPassword) {
     return (
-      <Login
+      <ForgotPassword
         setAuthState={setAuthState}
-        login={login}
         forgotPassword={forgotPassword}
       />
     );
-  } else if (authState === AuthStates.resetPassword) {
-    return <ResetPassword setAuthState={setAuthState} />;
   } else if (authState === AuthStates.verifyPassword) {
-    return <VerifyPassword setAuthState={setAuthState} />;
-  } else if (authState === AuthStates.newPassword) {
-    return <NewPassword setAuthState={setAuthState} />;
+    return (
+      <ResetPassword
+        setAuthState={setAuthState}
+        resetPassword={resetPassword}
+        forgotPassword={forgotPassword}
+      />
+    );
   } else if (authState === AuthStates.verifyAccount) {
     return (
       <VerifyAccount

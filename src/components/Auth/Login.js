@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Login = ({ setAuthState, login, forgotPassword }) => {
+export const Login = ({ setAuthState, login }) => {
   const classes = useStyles();
 
   const [user, setUser] = useState({
@@ -71,6 +71,7 @@ export const Login = ({ setAuthState, login, forgotPassword }) => {
               id="outlined"
               label="Email"
               variant="outlined"
+              value={user.email}
               onChange={(event) => handleChange("email", event)}
               error={!!formErrors.email}
               helperText={formErrors.email}
@@ -82,10 +83,14 @@ export const Login = ({ setAuthState, login, forgotPassword }) => {
               id="outlined"
               label="Password"
               variant="outlined"
+              value={user.password}
               onChange={(event) => handleChange("password", event)}
             />
             <Typography variant="body2" className={classes.forgotPassword}>
-              <Link onClick={() => forgotPassword()} underline="always">
+              <Link
+                onClick={() => setAuthState(AuthStates.resetPassword)}
+                underline="always"
+              >
                 Forgot password?
               </Link>
             </Typography>

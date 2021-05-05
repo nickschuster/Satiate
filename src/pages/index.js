@@ -9,13 +9,20 @@ import "../css/global.scss";
 const Index = () => {
   const [login, setLogin] = React.useState(false);
 
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        if (user) {
+          setLogin(true);
+        }
+      } catch (e) {
+        setLogin(false);
+      }
+    })();
+  }, []);
+
   const loginSuccess = () => {
-    // const result = new Promise((reject, resolve) => {
-    //   Auth.currentAuthenticatedUser()
-    //   .then(resolve(true))
-    //   .catch(reject(false));
-    // })
-    // await result;
     setLogin(true);
   };
 
