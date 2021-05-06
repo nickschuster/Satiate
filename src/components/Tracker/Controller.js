@@ -12,6 +12,11 @@ import { API, graphqlOperation } from "@aws-amplify/api";
 import { getUser } from "../../graphql/queries";
 import { createUser, createDay, updateDay } from "../../graphql/mutations";
 import { useNotification } from "../Notification";
+import {
+  findMealsForDay,
+  formatMealsForLoad,
+  formatMealsForSave,
+} from "../../util/mealFormatting";
 
 const useStyles = makeStyles((theme) => ({
   mealsContainer: {
@@ -49,7 +54,7 @@ export const TrackerController = ({ user }) => {
   useEffect(() => {
     (async () => {
       try {
-        if (user) {
+        if (user && !userData) {
           console.log("Get user data.");
 
           const UID = user.username;
@@ -79,7 +84,7 @@ export const TrackerController = ({ user }) => {
         addNotification("Could not get your saved data.");
       }
     })();
-  }, [user, addNotification]);
+  }, [user, userData, addNotification]);
 
   // Set the meals of the current day.
   useEffect(() => {
@@ -88,11 +93,11 @@ export const TrackerController = ({ user }) => {
 
       const dayId = Math.floor(currentDay);
       const UID = userData.id;
-      const meals = findMealsForDay(dayId, userData);
+      const mealData = formatMealsForLoad(findMealsForDay(dayId, userData));
 
-      if (meals) {
+      if (mealData) {
         // Day exists.
-        setMeals(meals);
+        setMeals(mealData);
       } else {
         // Its a new day.
         (async () => {
@@ -134,7 +139,7 @@ export const TrackerController = ({ user }) => {
                 id: dayId,
                 userID: UID,
                 pretty: currentDay,
-                meals: [...meals],
+                meals: [...formatMealsForSave(meals)],
               },
             })
           );
@@ -146,13 +151,6 @@ export const TrackerController = ({ user }) => {
       }
     })();
   }, [meals, currentDay, userData, addNotification]);
-
-  // Helper method for getting the meals for a specific day.
-  const findMealsForDay = (dayId, userData) => {
-    const days = userData.days.items;
-    const day = days.find((day) => parseInt(day.id) === dayId);
-    return day.meals;
-  };
 
   // Increase the current day by one.
   const nextDay = () => {
