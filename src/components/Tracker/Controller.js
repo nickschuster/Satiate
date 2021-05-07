@@ -1,5 +1,5 @@
 import { Container, makeStyles } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Footer } from "../Footer";
 import { Header } from "./Header";
 import { Meals } from "./Meals";
@@ -11,7 +11,6 @@ import moment from "moment";
 import { API, graphqlOperation } from "@aws-amplify/api";
 import { getUser } from "../../graphql/queries";
 import { createUser, createDay, updateDay } from "../../graphql/mutations";
-import { useNotification } from "../Notification";
 import {
   findMealsForDay,
   formatMealsForLoad,
@@ -43,114 +42,108 @@ const useStyles = makeStyles((theme) => ({
 
 export const TrackerController = ({ user }) => {
   const classes = useStyles();
-  const { addNotification } = useNotification();
   const [trackerState, setTrackerStateHook] = useState(undefined);
   const [meals, setMeals] = useState([]);
   const [currentDay, setCurrentDay] = useState(moment().unix() / 86400);
   const [savedEditMeal, setEditMeal] = useState(undefined);
   const [userData, setUserData] = useState();
 
-  // Create a new user or get exisiting user data.
+  // Load the current user.
   useEffect(() => {
     (async () => {
       try {
-        if (user && !userData) {
-          console.log("Get user data.");
-
-          const UID = user.username;
-          const username = user.attributes.preferred_username;
-          const userInfo = (
-            await API.graphql(graphqlOperation(getUser, { id: UID }))
+        if (user) {
+          console.log("Get user.");
+          let userInfo = (
+            await API.graphql(graphqlOperation(getUser, { id: user.username }))
           ).data.getUser;
-
           if (userInfo) {
-            // The user exists.
+            // User exists.
             setUserData(userInfo);
           } else {
-            // Its a new user (never signed in before).
-            const newUser = (
+            // New user.
+            userInfo = (
               await API.graphql(
                 graphqlOperation(createUser, {
-                  input: { id: UID, username: username },
+                  input: {
+                    id: user.username,
+                    username: user.attributes.preferred_username,
+                  },
                 })
               )
             ).data.createUser;
-            setUserData(newUser);
+            setUserData(userInfo);
           }
+
+          // Trigger initial load.
+          setCurrentDay(moment().unix() / 86400);
         }
       } catch (e) {
         console.log(e);
-
-        addNotification("Could not get your saved data.");
       }
     })();
-  }, [user, userData, addNotification]);
+  }, [user]);
 
-  // Set the meals of the current day.
+  // Load meals whenever the day changes.
   useEffect(() => {
+    loadMeals();
+    // eslint-disable-next-line no-use-before-define
+  }, [currentDay, loadMeals]);
+
+  // Load meals for day.
+  const loadMeals = useCallback(async () => {
     if (userData) {
-      console.log("Loading user data.");
+      console.log("Load");
+      const pretty = currentDay;
+      const dayID = Math.floor(pretty);
+      const meal = findMealsForDay(dayID, userData);
 
-      const dayId = Math.floor(currentDay);
-      const UID = userData.id;
-      const mealData = formatMealsForLoad(findMealsForDay(dayId, userData));
-
-      if (mealData) {
-        // Day exists.
-        setMeals(mealData);
+      if (meal) {
+        setMeals(formatMealsForLoad(meal));
       } else {
-        // Its a new day.
-        (async () => {
-          try {
-            await API.graphql(
-              graphqlOperation(createDay, {
-                input: {
-                  id: dayId,
-                  userID: UID,
-                  pretty: currentDay,
-                },
-              })
-            );
-          } catch (e) {
-            console.log(e);
-
-            addNotification(
-              "Could not create a new day. Your meals will not be saved."
-            );
-          }
-        })();
-      }
-    }
-  }, [currentDay, userData, addNotification]);
-
-  // Save the meal changes to the user.
-  useEffect(() => {
-    (async () => {
-      try {
-        if (userData) {
-          console.log("Save user data.");
-
-          const UID = userData.id;
-          const dayId = Math.floor(currentDay);
-
+        try {
+          setMeals([]);
           await API.graphql(
-            graphqlOperation(updateDay, {
+            graphqlOperation(createDay, {
               input: {
-                id: dayId,
-                userID: UID,
-                pretty: currentDay,
-                meals: [...formatMealsForSave(meals)],
+                id: dayID,
+                userID: userData.id,
+                pretty: pretty,
               },
             })
           );
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
-
-        addNotification("Could not save changes.");
       }
-    })();
-  }, [meals, currentDay, userData, addNotification]);
+    }
+  }, [currentDay, userData]);
+
+  // Save meals for day.
+  const saveMeals = async () => {
+    console.log("Save", meals, currentDay);
+    try {
+      await API.graphql(
+        graphqlOperation(updateDay, {
+          input: {
+            userID: userData.id,
+            id: Math.floor(currentDay),
+            pretty: currentDay,
+            meals: [...formatMealsForSave(meals)],
+          },
+        })
+      );
+      setUserData((prev) => {
+        let day = prev.days.items.findIndex(
+          (day) => parseInt(day.id) === Math.floor(currentDay)
+        );
+        prev.days.items[day].meals = formatMealsForSave(meals);
+        return { ...prev };
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   // Increase the current day by one.
   const nextDay = () => {
@@ -168,6 +161,8 @@ export const TrackerController = ({ user }) => {
 
   // Calculate the total for a meal for a given type.
   const getMealTotal = (meal, type) => {
+    if (!meal) return 0;
+
     let total = 0;
     for (const ing of Object.entries(meal.ingredients)) {
       total += parseInt(ing[1][type], 10);
@@ -198,6 +193,7 @@ export const TrackerController = ({ user }) => {
       });
       return [...prev];
     });
+    saveMeals();
   };
 
   // Save the meal to be edited.
@@ -215,6 +211,7 @@ export const TrackerController = ({ user }) => {
       update.content = editMeal;
       return [...prev];
     });
+    saveMeals();
   };
 
   // Delete a meal from the current day.
@@ -224,6 +221,7 @@ export const TrackerController = ({ user }) => {
       prev.splice(index, 1);
       return [...prev];
     });
+    saveMeals();
   };
 
   // Detemine what form to show based on tracker state.

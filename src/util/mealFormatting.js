@@ -2,9 +2,8 @@ import { Keygen } from "./keygen";
 
 // Convert loaded meals to application usable format.
 export const formatMealsForLoad = (mealData) => {
-  if (!mealData) return undefined;
+  if (!mealData) return [];
 
-  console.log("Pre format", mealData);
   const meals = [...mealData];
   let formattedMeals = [];
   for (const meal of meals) {
@@ -14,36 +13,35 @@ export const formatMealsForLoad = (mealData) => {
       formattedIng[newKey] = ing;
     }
 
-    meal.ingredients = formattedIng;
     formattedMeals.push({
       key: Keygen.getKey(),
       content: {
         ...meal,
+        ingredients: {
+          ...formattedIng,
+        },
       },
     });
   }
-  console.log("Load", formattedMeals);
   return formattedMeals;
 };
 
 // Convert meals to save to saveable format.
 export const formatMealsForSave = (mealData) => {
-  if (!mealData) return undefined;
+  if (!mealData) return [];
 
-  console.log("Save", mealData);
   const meals = [...mealData];
+  let formattedMeals = [];
   for (const meal of meals) {
-    delete meal.key;
-    const formattedIng = [];
+    const formattedMeal = { ...meal.content };
+    formattedMeal.ingredients = [];
     for (const ing in meal.content.ingredients) {
-      console.log(meal.content.ingredients[ing]);
-      formattedIng.push(meal.content.ingredients[ing]);
+      formattedMeal.ingredients.push(meal.content.ingredients[ing]);
     }
-    meal.ingredients = formattedIng;
-    meal.name = meal.content.name;
-    delete meal.content;
+    formattedMeals.push(formattedMeal);
   }
-  return meals;
+
+  return formattedMeals;
 };
 
 // Helper method for getting the meals for a specific day.
