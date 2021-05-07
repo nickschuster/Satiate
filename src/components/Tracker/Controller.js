@@ -106,7 +106,7 @@ export const TrackerController = ({ user }) => {
           await API.graphql(
             graphqlOperation(createDay, {
               input: {
-                id: dayID,
+                id: `${dayID} ${userData.id}`,
                 userID: userData.id,
                 pretty: pretty,
               },
@@ -121,13 +121,13 @@ export const TrackerController = ({ user }) => {
 
   // Save meals for day.
   const saveMeals = async () => {
-    console.log("Save", meals, currentDay);
+    console.log("Save");
     try {
       await API.graphql(
         graphqlOperation(updateDay, {
           input: {
+            id: `${Math.floor(currentDay)} ${userData.id}`,
             userID: userData.id,
-            id: Math.floor(currentDay),
             pretty: currentDay,
             meals: [...formatMealsForSave(meals)],
           },
@@ -135,9 +135,18 @@ export const TrackerController = ({ user }) => {
       );
       setUserData((prev) => {
         let day = prev.days.items.findIndex(
-          (day) => parseInt(day.id) === Math.floor(currentDay)
+          (day) => day.id === `${Math.floor(currentDay)} ${userData.id}`
         );
-        prev.days.items[day].meals = formatMealsForSave(meals);
+        let formatted = formatMealsForSave(meals);
+        if (!(day === -1)) {
+          prev.days.items[day].meals = formatted;
+        } else {
+          prev.days.items.push({
+            id: `${Math.floor(currentDay)} ${userData.id}`,
+            usedID: userData.id,
+            meals: formatted,
+          });
+        }
         return { ...prev };
       });
     } catch (e) {

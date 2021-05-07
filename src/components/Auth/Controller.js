@@ -76,7 +76,6 @@ export const AuthenticationFlow = ({ loginSuccess }) => {
   const forgotPassword = async (email) => {
     try {
       const user = email || username;
-      console.log(user);
       setUsername(user);
       await Auth.forgotPassword(user);
       setAuthState(AuthStates.verifyPassword);

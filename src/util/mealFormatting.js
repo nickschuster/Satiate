@@ -47,7 +47,7 @@ export const formatMealsForSave = (mealData) => {
 // Helper method for getting the meals for a specific day.
 export const findMealsForDay = (dayId, userData) => {
   const days = userData.days.items;
-  const day = days.find((day) => parseInt(day.id) === dayId);
+  const day = days.find((day) => day.id === `${dayId} ${userData.id}`);
   if (day) {
     return day.meals;
   }
