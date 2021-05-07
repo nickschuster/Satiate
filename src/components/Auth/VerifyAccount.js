@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   TextField,
@@ -30,8 +30,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const VerifyAccount = ({ setAuthState }) => {
+export const VerifyAccount = ({ setAuthState, resendCode, verifyEmail }) => {
   const classes = useStyles();
+
+  const [code, setCode] = useState("");
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setCode(value);
+  };
 
   return (
     <>
@@ -43,12 +50,10 @@ export const VerifyAccount = ({ setAuthState }) => {
               id="outlined"
               label="Verification code"
               variant="outlined"
+              onChange={(evt) => handleChange(evt)}
             />
             <Typography variant="body2" className={classes.resendCode}>
-              <Link
-                onClick={() => setAuthState(AuthStates.login)}
-                underline="always"
-              >
+              <Link onClick={() => resendCode()} underline="always">
                 Resend code?
               </Link>
             </Typography>
@@ -76,7 +81,7 @@ export const VerifyAccount = ({ setAuthState }) => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => setAuthState(AuthStates.login)}
+                  onClick={() => verifyEmail(code)}
                 >
                   <Typography variant="h5">Verify</Typography>
                 </Button>

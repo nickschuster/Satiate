@@ -8,9 +8,10 @@ export const createUser = /* GraphQL */ `
   ) {
     createUser(input: $input, condition: $condition) {
       id
+      username
       days {
         items {
-          userId
+          userID
           id
           pretty
           meals {
@@ -23,12 +24,53 @@ export const createUser = /* GraphQL */ `
               carbs
             }
           }
+          calorieGoal
+          proteinGoal
+          fatGoal
+          carbGoal
           createdAt
           updatedAt
           owner
         }
         nextToken
       }
+      savedMeals {
+        items {
+          id
+          userID
+          name
+          ingredients {
+            name
+            calories
+            protein
+            fat
+            carbs
+          }
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      savedIngredients {
+        items {
+          id
+          userID
+          name
+          calories
+          protein
+          fat
+          carbs
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      calorieGoal
+      proteinGoal
+      fatGoal
+      carbGoal
       createdAt
       updatedAt
       owner
@@ -42,9 +84,10 @@ export const updateUser = /* GraphQL */ `
   ) {
     updateUser(input: $input, condition: $condition) {
       id
+      username
       days {
         items {
-          userId
+          userID
           id
           pretty
           meals {
@@ -57,12 +100,53 @@ export const updateUser = /* GraphQL */ `
               carbs
             }
           }
+          calorieGoal
+          proteinGoal
+          fatGoal
+          carbGoal
           createdAt
           updatedAt
           owner
         }
         nextToken
       }
+      savedMeals {
+        items {
+          id
+          userID
+          name
+          ingredients {
+            name
+            calories
+            protein
+            fat
+            carbs
+          }
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      savedIngredients {
+        items {
+          id
+          userID
+          name
+          calories
+          protein
+          fat
+          carbs
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      calorieGoal
+      proteinGoal
+      fatGoal
+      carbGoal
       createdAt
       updatedAt
       owner
@@ -76,9 +160,10 @@ export const deleteUser = /* GraphQL */ `
   ) {
     deleteUser(input: $input, condition: $condition) {
       id
+      username
       days {
         items {
-          userId
+          userID
           id
           pretty
           meals {
@@ -91,12 +176,53 @@ export const deleteUser = /* GraphQL */ `
               carbs
             }
           }
+          calorieGoal
+          proteinGoal
+          fatGoal
+          carbGoal
           createdAt
           updatedAt
           owner
         }
         nextToken
       }
+      savedMeals {
+        items {
+          id
+          userID
+          name
+          ingredients {
+            name
+            calories
+            protein
+            fat
+            carbs
+          }
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      savedIngredients {
+        items {
+          id
+          userID
+          name
+          calories
+          protein
+          fat
+          carbs
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      calorieGoal
+      proteinGoal
+      fatGoal
+      carbGoal
       createdAt
       updatedAt
       owner
@@ -109,7 +235,7 @@ export const createDay = /* GraphQL */ `
     $condition: ModelDayConditionInput
   ) {
     createDay(input: $input, condition: $condition) {
-      userId
+      userID
       id
       pretty
       meals {
@@ -122,6 +248,10 @@ export const createDay = /* GraphQL */ `
           carbs
         }
       }
+      calorieGoal
+      proteinGoal
+      fatGoal
+      carbGoal
       createdAt
       updatedAt
       owner
@@ -134,7 +264,7 @@ export const updateDay = /* GraphQL */ `
     $condition: ModelDayConditionInput
   ) {
     updateDay(input: $input, condition: $condition) {
-      userId
+      userID
       id
       pretty
       meals {
@@ -147,6 +277,10 @@ export const updateDay = /* GraphQL */ `
           carbs
         }
       }
+      calorieGoal
+      proteinGoal
+      fatGoal
+      carbGoal
       createdAt
       updatedAt
       owner
@@ -159,7 +293,7 @@ export const deleteDay = /* GraphQL */ `
     $condition: ModelDayConditionInput
   ) {
     deleteDay(input: $input, condition: $condition) {
-      userId
+      userID
       id
       pretty
       meals {
@@ -172,6 +306,133 @@ export const deleteDay = /* GraphQL */ `
           carbs
         }
       }
+      calorieGoal
+      proteinGoal
+      fatGoal
+      carbGoal
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createSavedMeal = /* GraphQL */ `
+  mutation CreateSavedMeal(
+    $input: CreateSavedMealInput!
+    $condition: ModelSavedMealConditionInput
+  ) {
+    createSavedMeal(input: $input, condition: $condition) {
+      id
+      userID
+      name
+      ingredients {
+        name
+        calories
+        protein
+        fat
+        carbs
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateSavedMeal = /* GraphQL */ `
+  mutation UpdateSavedMeal(
+    $input: UpdateSavedMealInput!
+    $condition: ModelSavedMealConditionInput
+  ) {
+    updateSavedMeal(input: $input, condition: $condition) {
+      id
+      userID
+      name
+      ingredients {
+        name
+        calories
+        protein
+        fat
+        carbs
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteSavedMeal = /* GraphQL */ `
+  mutation DeleteSavedMeal(
+    $input: DeleteSavedMealInput!
+    $condition: ModelSavedMealConditionInput
+  ) {
+    deleteSavedMeal(input: $input, condition: $condition) {
+      id
+      userID
+      name
+      ingredients {
+        name
+        calories
+        protein
+        fat
+        carbs
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createSavedIngredient = /* GraphQL */ `
+  mutation CreateSavedIngredient(
+    $input: CreateSavedIngredientInput!
+    $condition: ModelSavedIngredientConditionInput
+  ) {
+    createSavedIngredient(input: $input, condition: $condition) {
+      id
+      userID
+      name
+      calories
+      protein
+      fat
+      carbs
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateSavedIngredient = /* GraphQL */ `
+  mutation UpdateSavedIngredient(
+    $input: UpdateSavedIngredientInput!
+    $condition: ModelSavedIngredientConditionInput
+  ) {
+    updateSavedIngredient(input: $input, condition: $condition) {
+      id
+      userID
+      name
+      calories
+      protein
+      fat
+      carbs
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteSavedIngredient = /* GraphQL */ `
+  mutation DeleteSavedIngredient(
+    $input: DeleteSavedIngredientInput!
+    $condition: ModelSavedIngredientConditionInput
+  ) {
+    deleteSavedIngredient(input: $input, condition: $condition) {
+      id
+      userID
+      name
+      calories
+      protein
+      fat
+      carbs
       createdAt
       updatedAt
       owner

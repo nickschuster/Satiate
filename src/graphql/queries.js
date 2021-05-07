@@ -5,9 +5,10 @@ export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id
+      username
       days {
         items {
-          userId
+          userID
           id
           pretty
           meals {
@@ -20,12 +21,53 @@ export const getUser = /* GraphQL */ `
               carbs
             }
           }
+          calorieGoal
+          proteinGoal
+          fatGoal
+          carbGoal
           createdAt
           updatedAt
           owner
         }
         nextToken
       }
+      savedMeals {
+        items {
+          id
+          userID
+          name
+          ingredients {
+            name
+            calories
+            protein
+            fat
+            carbs
+          }
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      savedIngredients {
+        items {
+          id
+          userID
+          name
+          calories
+          protein
+          fat
+          carbs
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      calorieGoal
+      proteinGoal
+      fatGoal
+      carbGoal
       createdAt
       updatedAt
       owner
@@ -41,13 +83,36 @@ export const listUsers = /* GraphQL */ `
     listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        username
         days {
           items {
-            userId
+            userID
             id
             pretty
             meals {
               name
+            }
+            calorieGoal
+            proteinGoal
+            fatGoal
+            carbGoal
+            createdAt
+            updatedAt
+            owner
+          }
+          nextToken
+        }
+        savedMeals {
+          items {
+            id
+            userID
+            name
+            ingredients {
+              name
+              calories
+              protein
+              fat
+              carbs
             }
             createdAt
             updatedAt
@@ -55,6 +120,25 @@ export const listUsers = /* GraphQL */ `
           }
           nextToken
         }
+        savedIngredients {
+          items {
+            id
+            userID
+            name
+            calories
+            protein
+            fat
+            carbs
+            createdAt
+            updatedAt
+            owner
+          }
+          nextToken
+        }
+        calorieGoal
+        proteinGoal
+        fatGoal
+        carbGoal
         createdAt
         updatedAt
         owner
@@ -66,7 +150,7 @@ export const listUsers = /* GraphQL */ `
 export const getDay = /* GraphQL */ `
   query GetDay($id: ID!) {
     getDay(id: $id) {
-      userId
+      userID
       id
       pretty
       meals {
@@ -79,6 +163,10 @@ export const getDay = /* GraphQL */ `
           carbs
         }
       }
+      calorieGoal
+      proteinGoal
+      fatGoal
+      carbGoal
       createdAt
       updatedAt
       owner
@@ -93,7 +181,7 @@ export const listDays = /* GraphQL */ `
   ) {
     listDays(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        userId
+        userID
         id
         pretty
         meals {
@@ -106,6 +194,98 @@ export const listDays = /* GraphQL */ `
             carbs
           }
         }
+        calorieGoal
+        proteinGoal
+        fatGoal
+        carbGoal
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getSavedMeal = /* GraphQL */ `
+  query GetSavedMeal($id: ID!) {
+    getSavedMeal(id: $id) {
+      id
+      userID
+      name
+      ingredients {
+        name
+        calories
+        protein
+        fat
+        carbs
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listSavedMeals = /* GraphQL */ `
+  query ListSavedMeals(
+    $filter: ModelSavedMealFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSavedMeals(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        name
+        ingredients {
+          name
+          calories
+          protein
+          fat
+          carbs
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getSavedIngredient = /* GraphQL */ `
+  query GetSavedIngredient($id: ID!) {
+    getSavedIngredient(id: $id) {
+      id
+      userID
+      name
+      calories
+      protein
+      fat
+      carbs
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listSavedIngredients = /* GraphQL */ `
+  query ListSavedIngredients(
+    $filter: ModelSavedIngredientFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSavedIngredients(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        name
+        calories
+        protein
+        fat
+        carbs
         createdAt
         updatedAt
         owner

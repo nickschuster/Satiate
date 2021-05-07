@@ -1,6 +1,6 @@
 {
   "name": "satiate",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "private": true,
   "description": "Satiate",
   "author": "Nick Schuster",
@@ -23,6 +23,7 @@
     "gatsby-plugin-offline": "^3.10.1",
     "gatsby-plugin-react-helmet": "^3.10.0",
     "gatsby-plugin-sass": "^3.2.0",
+    "joi": "^17.4.0",
     "moment": "^2.29.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

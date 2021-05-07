@@ -1,7 +1,7 @@
 {
     "identityPoolName": "testAuthIdentityPool",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "satiat48eb2cb4",
+    "resourceNameTruncated": "satiate5bb04a7",
     "userPoolName": "Satiate",
     "autoVerifiedAttributes": [
         "email"
@@ -12,27 +12,28 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code",
-    "emailVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Forgot password code: {####}",
+    "emailVerificationMessage": "Forgot password code: {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
-    "passwordPolicyCharacters": [],
+    "passwordPolicyCharacters": [
+        "Requires Lowercase",
+        "Requires Numbers",
+        "Requires Symbols",
+        "Requires Uppercase"
+    ],
     "requiredAttributes": [
-        "email"
+        "email",
+        "preferred_username",
+        "name"
     ],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
-    "userpoolClientWriteAttributes": [
-        "name",
-        "email"
-    ],
-    "userpoolClientReadAttributes": [
-        "email",
-        "name"
-    ],
-    "userpoolClientLambdaRole": "Satiat48eb2cb4_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": true,
-    "sharedId": "48eb2cb4",
+    "userpoolClientWriteAttributes": [],
+    "userpoolClientReadAttributes": [],
+    "userpoolClientLambdaRole": "Satiate5bb04a7_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": false,
+    "sharedId": "e5bb04a7",
     "resourceName": "Satiate",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
@@ -55,12 +56,8 @@
     "userPoolGroups": false,
     "userPoolGroupList": [],
     "adminQueries": false,
-    "dependsOn": [],
     "thirdPartyAuth": false,
-    "triggers": "{}",
-    "hostedUI": false,
-    "parentStack": {
-        "Ref": "AWS::StackId"
-    },
-    "permissions": []
+    "authProviders": [],
+    "usernameCaseSensitive": false,
+    "dependsOn": []
 }
