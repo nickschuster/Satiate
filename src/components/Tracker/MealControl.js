@@ -79,7 +79,7 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
   const classes = useStyles();
   const [meal, setMeal] = useState(
     editMeal
-      ? editMeal
+      ? { ...editMeal }
       : {
           name: "",
           ingredients: {
@@ -178,12 +178,12 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
               />
             </Grid>
             <Grid item xs={2}>
-              <IconButton color="primary">
+              <IconButton color="primary" disabled>
                 <SaveOutlined />
               </IconButton>
             </Grid>
             <Grid item xs={2}>
-              <IconButton color="primary">
+              <IconButton color="primary" disabled>
                 <InsertDriveFileOutlined />
               </IconButton>
             </Grid>
@@ -211,12 +211,12 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
                   />
                 </Grid>
                 <Grid item xs={2}>
-                  <IconButton color="primary">
+                  <IconButton color="primary" disabled>
                     <SaveOutlined />
                   </IconButton>
                 </Grid>
                 <Grid item xs={2}>
-                  <IconButton color="primary" aria-label="">
+                  <IconButton color="primary" aria-label="" disabled>
                     <InsertDriveFileOutlined />
                   </IconButton>
                 </Grid>

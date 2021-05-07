@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   TextField,
@@ -19,12 +19,6 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginTop: 30,
   },
-  passwordRules: {
-    marginTop: 10,
-    width: "100%",
-    height: 50,
-    backgroundColor: "grey",
-  },
   control: {
     marginBottom: 10,
     [theme.breakpoints.down(400)]: {
@@ -33,8 +27,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const NewPassword = ({ setAuthState }) => {
+export const ForgotPassword = ({ setAuthState, forgotPassword }) => {
   const classes = useStyles();
+
+  const [email, setEmail] = useState("");
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setEmail(value);
+  };
 
   return (
     <>
@@ -44,18 +45,11 @@ export const NewPassword = ({ setAuthState }) => {
             <TextField
               className={classes.input1}
               id="outlined"
-              label="New password"
+              label="Email, phone number or username"
               variant="outlined"
+              value={email}
+              onChange={(evt) => handleChange(evt)}
             />
-          </Grid>
-          <Grid item xs={10}>
-            <TextField
-              className={classes.input2}
-              id="outlined"
-              label="Confirm new password"
-              variant="outlined"
-            />
-            <div className={classes.passwordRules}>placeholder</div>
           </Grid>
           <Grid item xs={10}>
             <Grid
@@ -80,9 +74,9 @@ export const NewPassword = ({ setAuthState }) => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => setAuthState(AuthStates.login)}
+                  onClick={() => forgotPassword(email)}
                 >
-                  <Typography variant="h5">Reset password</Typography>
+                  <Typography variant="h5">Send code</Typography>
                 </Button>
               </Grid>
             </Grid>

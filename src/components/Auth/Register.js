@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { AuthStates } from "./AuthStates";
+import { formIsValid, validate, validateAll } from "../../util/formValidation";
 
 // Styling.
 const useStyles = makeStyles((theme) => ({
@@ -21,12 +22,6 @@ const useStyles = makeStyles((theme) => ({
   input1: {
     width: "100%",
     marginTop: 30,
-  },
-  passwordRules: {
-    marginTop: 10,
-    width: "100%",
-    height: 50,
-    backgroundColor: "grey",
   },
   control: {
     marginBottom: 10,
@@ -44,6 +39,19 @@ export const Register = ({ setAuthState, register }) => {
     password: "",
     showPassword: false,
   });
+  const [formErrors, setFormErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  // Register the user if form is valid.
+  const handleSubmit = () => {
+    validateAll(formErrors, user, setFormErrors);
+    if (formIsValid(formErrors)) {
+      register(user);
+    }
+  };
 
   // Update the input field value.
   const handleChange = (event, type) => {
@@ -52,6 +60,7 @@ export const Register = ({ setAuthState, register }) => {
       prev[type] = value;
       return { ...prev };
     });
+    validate(type, value, setFormErrors);
   };
 
   // Change the password visibility.
@@ -74,6 +83,8 @@ export const Register = ({ setAuthState, register }) => {
               variant="outlined"
               value={user.name}
               onChange={(event) => handleChange(event, "name")}
+              error={!!formErrors.name}
+              helperText={formErrors.name}
             />
           </Grid>
           <Grid item xs={10}>
@@ -84,6 +95,8 @@ export const Register = ({ setAuthState, register }) => {
               variant="outlined"
               value={user.email}
               onChange={(event) => handleChange(event, "email")}
+              error={!!formErrors.email}
+              helperText={formErrors.email}
             />
           </Grid>
           <Grid item xs={10}>
@@ -95,6 +108,8 @@ export const Register = ({ setAuthState, register }) => {
               type={user.showPassword ? "text" : "password"}
               value={user.password}
               onChange={(event) => handleChange(event, "password")}
+              error={!!formErrors.password}
+              helperText={formErrors.password}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -110,7 +125,6 @@ export const Register = ({ setAuthState, register }) => {
                 ),
               }}
             />
-            <div className={classes.passwordRules}>placeholder</div>
           </Grid>
           <Grid item xs={10}>
             <Grid
@@ -135,7 +149,7 @@ export const Register = ({ setAuthState, register }) => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => register(user)}
+                  onClick={() => handleSubmit()}
                 >
                   <Typography variant="h5">Create Account</Typography>
                 </Button>

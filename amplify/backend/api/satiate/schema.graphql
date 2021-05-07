@@ -1,13 +1,24 @@
 type User @model @auth(rules: [{ allow: owner }]) {
-  id: ID! # Cognito SUB attribute.
-  days: [Day] @connection(keyName: "byDay", fields: ["id"])
+  id: ID! # Cognito SUB
+  username: String!
+  days: [Day] @connection(keyName: "byUser", fields: ["id"])
+  savedMeals: [SavedMeal] @connection(keyName: "byUser", fields: ["id"])
+  savedIngredients: [SavedIngredient] @connection(keyName: "byUser", fields: ["id"])
+  calorieGoal: Int
+  proteinGoal: Int
+  fatGoal: Int
+  carbGoal: Int
 }
 
-type Day @model @auth(rules: [{allow: owner}]) @key(name: "byDay", fields: ["userId", "id"]) {
-  userId: ID!
-  id: ID!
-  pretty: String
+type Day @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["userID"]) {
+  userID: ID!
+  id: ID! # Days since epoch
+  pretty: Float!
   meals: [Meal]
+  calorieGoal: Int
+  proteinGoal: Int
+  fatGoal: Int
+  carbGoal: Int
 }
 
 type Meal {
@@ -16,6 +27,21 @@ type Meal {
 }
 
 type Ingredient {
+  name: String
+  calories: Int
+  protein: Int
+  fat: Int
+  carbs: Int
+}
+
+type SavedMeal @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["userID"]) {
+  userID: ID!
+  name: String
+  ingredients: [Ingredient]
+}
+
+type SavedIngredient @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["userID"]) {
+  userID: ID!
   name: String
   calories: Int
   protein: Int

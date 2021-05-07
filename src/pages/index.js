@@ -8,19 +8,28 @@ import "../css/global.scss";
 // Log in/tracker page.
 const Index = () => {
   const [login, setLogin] = React.useState(false);
+  const [user, setUser] = React.useState();
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const userSession = await Auth.currentAuthenticatedUser();
+        if (userSession) {
+          setUser(userSession);
+          setLogin(true);
+        }
+      } catch (e) {
+        setLogin(false);
+      }
+    })();
+  }, [login]);
 
   const loginSuccess = () => {
-    // const result = new Promise((reject, resolve) => {
-    //   Auth.currentAuthenticatedUser()
-    //   .then(resolve(true))
-    //   .catch(reject(false));
-    // })
-    // await result;
     setLogin(true);
   };
 
   if (login) {
-    return <TrackerController />;
+    return <TrackerController user={user} />;
   } else {
     return <Splashpage loginSuccess={loginSuccess} />;
   }
