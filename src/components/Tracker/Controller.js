@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const TrackerController = ({ user }) => {
   const classes = useStyles();
-  const [trackerState, setTrackerStateHook] = useState(undefined);
+  const [trackerState, setTrackerStateHook] = useState(TrackerStates.default);
   const [meals, setMeals] = useState([]);
   const [currentDay, setCurrentDay] = useState(moment().unix() / 86400);
   const [savedEditMeal, setEditMeal] = useState(undefined);

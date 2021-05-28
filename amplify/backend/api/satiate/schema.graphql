@@ -1,6 +1,7 @@
 type User @model @auth(rules: [{ allow: owner }]) {
   id: ID! # Cognito SUB
   username: String!
+  parameters: [Parameter] @connection(keyName: "byUser", fields: ["id"])
   days: [Day] @connection(keyName: "byUser", fields: ["id"])
   savedMeals: [SavedMeal] @connection(keyName: "byUser", fields: ["id"])
   savedIngredients: [SavedIngredient] @connection(keyName: "byUser", fields: ["id"])
@@ -47,4 +48,10 @@ type SavedIngredient @model @auth(rules: [{ allow: owner }]) @key(name: "byUser"
   protein: Int
   fat: Int
   carbs: Int
+}
+
+type Parameter @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["userID"]) {
+  userID: ID!
+  name: String!
+  value: Boolean = False!
 }
