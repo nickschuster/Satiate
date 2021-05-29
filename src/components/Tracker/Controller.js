@@ -16,6 +16,7 @@ import {
   formatMealsForLoad,
   formatMealsForSave,
 } from "../../util/mealFormatting";
+import { NewUser } from "./NewUser";
 
 const useStyles = makeStyles((theme) => ({
   mealsContainer: {
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const TrackerController = ({ user }) => {
   const classes = useStyles();
-  const [trackerState, setTrackerStateHook] = useState(TrackerStates.default);
+  const [trackerState, setTrackerStateHook] = useState(TrackerStates.newUser);
   const [meals, setMeals] = useState([]);
   const [currentDay, setCurrentDay] = useState(moment().unix() / 86400);
   const [savedEditMeal, setEditMeal] = useState(undefined);
@@ -247,6 +248,8 @@ export const TrackerController = ({ user }) => {
           editMeal={savedEditMeal.content}
         />
       );
+    } else if (trackerState === TrackerStates.newUser) {
+      return <NewUser />;
     }
     return null;
   };
