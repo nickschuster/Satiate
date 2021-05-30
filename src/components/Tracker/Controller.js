@@ -99,7 +99,7 @@ export const TrackerController = ({ user }) => {
       const dayID = Math.floor(pretty);
       const meal = findMealsForDay(dayID, userData);
 
-      if (meal) {
+      if (meal !== undefined) {
         setMeals(formatMealsForLoad(meal));
       } else {
         try {
@@ -249,7 +249,7 @@ export const TrackerController = ({ user }) => {
         />
       );
     } else if (trackerState === TrackerStates.newUser) {
-      return <NewUser />;
+      return <NewUser setTrackerState={setTrackerState} />;
     }
     return null;
   };

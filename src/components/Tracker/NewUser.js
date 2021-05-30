@@ -4,28 +4,21 @@ import {
   makeStyles,
   TextField,
   Button,
-  Link,
   Typography,
 } from "@material-ui/core";
+import { TrackerStates } from "./TrackerStates";
 
 const useStyles = makeStyles((theme) => ({
-  input1: {
+  input: {
     width: "100%",
-    margin: "auto",
-  },
-  input2: {
-    width: "100%",
-    paddingTop: "20",
-  },
-  container: {
-    padding: 20,
-    textAlign: "center",
-    maxHeight: 500,
-    overflowY: "scroll",
   },
   buttonContainer: {
-    paddingBottom: 20,
     paddingTop: 20,
+    paddingBottom: 30,
+    textAlign: "center",
+  },
+  container: {
+    paddingTop: 30,
   },
   calories: {
     "& .MuiFormLabel-root": {
@@ -65,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const NewUser = () => {
+export const NewUser = ({ setTrackerState }) => {
   const classes = useStyles();
 
   return (
@@ -73,76 +66,54 @@ export const NewUser = () => {
       <form>
         <Grid
           container
-          className={classes.container}
           spacing={3}
-          alignContent="center"
           justify="center"
+          className={classes.container}
         >
-          <Grid
-            item
-            className={classes.input2}
-            alignContent="center"
-            justify="center"
-          >
+          <Grid item xs={10}>
             <TextField
-              className={`${classes.input2} ${classes.calories}`}
+              className={`${classes.input} ${classes.calories}`}
               id="outlined"
-              label="Calories"
+              label="Calorie goal"
               variant="outlined"
             />
           </Grid>
-          <Grid
-            item
-            className={classes.input1}
-            alignContent="center"
-            justify="center"
-          >
+          <Grid item xs={10}>
             <TextField
-              className={`${classes.input1} ${classes.protein}`}
+              className={`${classes.input} ${classes.protein}`}
               id="outlined"
-              label="Protein"
+              label="Protein goal"
               variant="outlined"
             />
           </Grid>
-          <Grid
-            item
-            className={classes.input1}
-            alignContent="center"
-            justify="center"
-          >
+          <Grid item xs={10}>
             <TextField
-              className={`${classes.input1} ${classes.fat}`}
+              className={`${classes.input} ${classes.fat}`}
               id="outlined"
-              label="Fat"
+              label="Fat goal"
               variant="outlined"
             />
           </Grid>
-          <Grid
-            item
-            className={classes.input1}
-            alignContent="center"
-            justify="center"
-          >
+          <Grid item xs={10}>
             <TextField
-              className={`${classes.input1} ${classes.carbs}`}
+              className={`${classes.input} ${classes.carbs}`}
               id="outlined"
-              label="Carbs"
+              label="Carb goal"
               variant="outlined"
             />
           </Grid>
           <Grid
             container
             spacing={3}
-            alignItems="center"
             className={classes.buttonContainer}
+            justify="center"
           >
-            <Grid item xs={12}>
-              <Typography variant="h5">
-                <Link underline="always">Follow some friends?</Link>
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Button variant="contained" color="primary">
+            <Grid item xs={10}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setTrackerState(TrackerStates.default)}
+              >
                 <Typography variant="h5">Next</Typography>
               </Button>
             </Grid>
