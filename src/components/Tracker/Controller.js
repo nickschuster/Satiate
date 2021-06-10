@@ -16,7 +16,7 @@ import {
   formatMealsForLoad,
   formatMealsForSave,
 } from "../../util/mealFormatting";
-import { NewUser } from "./NewUser";
+import { OnboardingController } from "../Onboarding/Controller";
 
 const useStyles = makeStyles((theme) => ({
   mealsContainer: {
@@ -249,7 +249,7 @@ export const TrackerController = ({ user }) => {
         />
       );
     } else if (trackerState === TrackerStates.newUser) {
-      return <NewUser setTrackerState={setTrackerState} />;
+      return <OnboardingController setTrackerState={setTrackerState} />;
     }
     return null;
   };

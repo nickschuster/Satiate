@@ -6,7 +6,7 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
-import { TrackerStates } from "./TrackerStates";
+import { OnboardingStates } from "./OnboardingStates";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -58,7 +58,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const NewUser = ({ setTrackerState }) => {
+export const SetGoalsAndUsername = ({
+  setOnboardingState,
+  finishOnboarding,
+}) => {
   const classes = useStyles();
 
   return (
@@ -70,6 +73,14 @@ export const NewUser = ({ setTrackerState }) => {
           justify="center"
           className={classes.container}
         >
+          <Grid item xs={10}>
+            <TextField
+              className={`${classes.input}`}
+              id="outlined"
+              label="Username"
+              variant="outlined"
+            />
+          </Grid>
           <Grid item xs={10}>
             <TextField
               className={`${classes.input} ${classes.calories}`}
@@ -112,7 +123,10 @@ export const NewUser = ({ setTrackerState }) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setTrackerState(TrackerStates.default)}
+                onClick={() => {
+                  setOnboardingState(OnboardingStates.exit);
+                  finishOnboarding();
+                }}
               >
                 <Typography variant="h5">Next</Typography>
               </Button>
