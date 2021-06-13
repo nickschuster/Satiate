@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   makeStyles,
@@ -6,7 +6,6 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
-import { OnboardingStates } from "./OnboardingStates";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -58,10 +57,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const SetGoalsAndUsername = ({
-  setOnboardingState,
-  finishOnboarding,
-}) => {
+export const SetGoals = ({ saveGoals }) => {
+  const [goals, setGoals] = useState({
+    calories: 0,
+    fat: 0,
+    carbs: 0,
+    protein: 0,
+  });
+
   const classes = useStyles();
 
   return (
@@ -73,14 +76,6 @@ export const SetGoalsAndUsername = ({
           justify="center"
           className={classes.container}
         >
-          <Grid item xs={10}>
-            <TextField
-              className={`${classes.input}`}
-              id="outlined"
-              label="Username"
-              variant="outlined"
-            />
-          </Grid>
           <Grid item xs={10}>
             <TextField
               className={`${classes.input} ${classes.calories}`}
@@ -124,8 +119,7 @@ export const SetGoalsAndUsername = ({
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                  setOnboardingState(OnboardingStates.exit);
-                  finishOnboarding();
+                  saveGoals(goals);
                 }}
               >
                 <Typography variant="h5">Next</Typography>
