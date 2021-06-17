@@ -10,6 +10,8 @@ export const OnboardingController = ({ setTrackerState }) => {
     OnboardingStates.setGoals
   );
 
+  const [creatingAccount, setCreatingAccount] = useState(false);
+
   // Save the set goals to parent state.
   const saveGoals = () => {
     console.log("Save goals.");
@@ -24,11 +26,22 @@ export const OnboardingController = ({ setTrackerState }) => {
 
   // Finish the onboarding process.
   const finishOnboarding = async () => {
+    setCreatingAccount(true);
     await new Promise((resolve, reject) => {
-      setTimeout(() => resolve(), 5000);
+      setTimeout(() => resolve(), 2000);
     });
-    //setOnboardingState(OnboardingStates.exit);
-    //setTrackerState(TrackerStates.default);
+    await stopLoading();
+    setTrackerState(TrackerStates.default);
+    // setOnboardingState(OnboardingStates.exit);
+  };
+
+  // Helper function for showing succesful account creation. Waits for
+  // 500 ms to show status.
+  const stopLoading = async () => {
+    setCreatingAccount(false);
+    await new Promise((resolve, reject) => {
+      setTimeout(() => resolve(), 1000);
+    });
   };
 
   // Display the onboarding form based on current onboarding state.
@@ -38,7 +51,7 @@ export const OnboardingController = ({ setTrackerState }) => {
     } else if (onboardingState === OnboardingStates.setGoals) {
       return <SetGoals saveGoals={saveGoals} />;
     } else if (onboardingState === OnboardingStates.finish) {
-      return <FinishOnboarding />;
+      return <FinishOnboarding isLoading={creatingAccount} />;
     }
   };
 

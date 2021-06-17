@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SetGoals = ({ saveGoals }) => {
-  const [goals, setGoals] = useState({
+  const [goals] = useState({
     calories: 0,
     fat: 0,
     carbs: 0,
