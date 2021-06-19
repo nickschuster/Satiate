@@ -6,6 +6,7 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
+import { formIsValid, validate, validateAll } from "../../util/formValidation";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -58,14 +59,39 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SetGoals = ({ saveGoals }) => {
-  const [goals] = useState({
+  const [goals, setGoals] = useState({
     calories: 0,
     fat: 0,
     carbs: 0,
     protein: 0,
   });
 
+  const [formErrors, setFormErrors] = useState({
+    calories: "",
+    fat: "",
+    carbs: "",
+    protein: "",
+  });
+
   const classes = useStyles();
+
+  // Handle all form value updates.
+  const handleChange = (event, type) => {
+    const value = event.target.value;
+    setGoals((prev) => {
+      prev[type] = value;
+      return { ...prev };
+    });
+    validate(type, value, setFormErrors);
+  };
+
+  // Handle the form submit.
+  const handleSubmit = () => {
+    validateAll(formErrors, goals, setFormErrors);
+    if (formIsValid(formErrors)) {
+      saveGoals(goals);
+    }
+  };
 
   return (
     <>
@@ -82,6 +108,11 @@ export const SetGoals = ({ saveGoals }) => {
               id="outlined"
               label="Calorie goal"
               variant="outlined"
+              type="number"
+              value={goals.calories}
+              onChange={(event) => handleChange(event, "calories")}
+              error={!!formErrors.calories}
+              helperText={formErrors.calories}
             />
           </Grid>
           <Grid item xs={10}>
@@ -90,6 +121,11 @@ export const SetGoals = ({ saveGoals }) => {
               id="outlined"
               label="Protein goal"
               variant="outlined"
+              type="number"
+              value={goals.protein}
+              onChange={(event) => handleChange(event, "protein")}
+              error={!!formErrors.protein}
+              helperText={formErrors.protein}
             />
           </Grid>
           <Grid item xs={10}>
@@ -98,6 +134,11 @@ export const SetGoals = ({ saveGoals }) => {
               id="outlined"
               label="Fat goal"
               variant="outlined"
+              type="number"
+              value={goals.fat}
+              onChange={(event) => handleChange(event, "fat")}
+              error={!!formErrors.fat}
+              helperText={formErrors.fat}
             />
           </Grid>
           <Grid item xs={10}>
@@ -106,6 +147,11 @@ export const SetGoals = ({ saveGoals }) => {
               id="outlined"
               label="Carb goal"
               variant="outlined"
+              type="number"
+              value={goals.carbs}
+              onChange={(event) => handleChange(event, "carbs")}
+              error={!!formErrors.carbs}
+              helperText={formErrors.carbs}
             />
           </Grid>
           <Grid
@@ -119,7 +165,7 @@ export const SetGoals = ({ saveGoals }) => {
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                  saveGoals(goals);
+                  handleSubmit();
                 }}
               >
                 <Typography variant="h5">Next</Typography>
