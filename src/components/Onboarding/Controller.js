@@ -1,7 +1,7 @@
 import { Container } from "@material-ui/core";
 import React, { useState } from "react";
 import { TrackerStates } from "../Tracker/TrackerStates";
-import { FinishOnboarding } from "./finishOnboarding";
+import { FinishOnboarding } from "./FinishOnboarding";
 import { OnboardingStates } from "./OnboardingStates";
 import { SetGoals } from "./SetGoals";
 
