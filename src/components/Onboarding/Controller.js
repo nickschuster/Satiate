@@ -1,4 +1,5 @@
 import { Container } from "@material-ui/core";
+import { API, graphqlOperation } from "aws-amplify";
 import React, { useEffect, useState } from "react";
 import { TrackerStates } from "../Tracker/TrackerStates";
 import { FinishOnboarding } from "./FinishOnboarding";
@@ -20,6 +21,7 @@ export const OnboardingController = ({ setTrackerState, currentUser }) => {
         console.log("Onboarding Controller");
         // In order to proceed a user must be logged in.
         if (currentUser && !parameters) {
+          const userParams = await API.graphql(graphqlOperation());
           console.log(currentUser.id);
           console.log(parameters);
           setParameters("test");
