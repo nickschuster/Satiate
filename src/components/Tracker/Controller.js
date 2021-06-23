@@ -249,7 +249,12 @@ export const TrackerController = ({ user }) => {
         />
       );
     } else if (trackerState === TrackerStates.newUser) {
-      return <OnboardingController setTrackerState={setTrackerState} />;
+      return (
+        <OnboardingController
+          setTrackerState={setTrackerState}
+          currentUser={userData}
+        />
+      );
     }
     return null;
   };

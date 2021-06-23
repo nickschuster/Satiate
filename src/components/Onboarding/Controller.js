@@ -1,16 +1,34 @@
 import { Container } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TrackerStates } from "../Tracker/TrackerStates";
 import { FinishOnboarding } from "./FinishOnboarding";
 import { OnboardingStates } from "./OnboardingStates";
 import { SetGoals } from "./SetGoals";
 
-export const OnboardingController = ({ setTrackerState }) => {
+export const OnboardingController = ({ setTrackerState, currentUser }) => {
   const [onboardingState, setOnboardingState] = useState(
     OnboardingStates.setGoals
   );
-
   const [creatingAccount, setCreatingAccount] = useState(false);
+  const [parameters, setParameters] = useState(undefined);
+
+  // Check and set the users onBoardingIndex. If not avaible start from the
+  // beginning.
+  useEffect(() => {
+    (async () => {
+      try {
+        console.log("Onboarding Controller");
+        // In order to proceed a user must be logged in.
+        if (currentUser && !parameters) {
+          console.log(currentUser.id);
+          console.log(parameters);
+          setParameters("test");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  });
 
   // Save the set goals to parent state.
   const saveGoals = () => {

@@ -5,10 +5,6 @@ type User @model @auth(rules: [{ allow: owner }]) {
   days: [Day] @connection(keyName: "byUser", fields: ["id"])
   savedMeals: [SavedMeal] @connection(keyName: "byUser", fields: ["id"])
   savedIngredients: [SavedIngredient] @connection(keyName: "byUser", fields: ["id"])
-  calorieGoal: Int
-  proteinGoal: Int
-  fatGoal: Int
-  carbGoal: Int
 }
 
 type Day @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["userID"]) {
@@ -52,6 +48,6 @@ type SavedIngredient @model @auth(rules: [{ allow: owner }]) @key(name: "byUser"
 
 type Parameter @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["userID"]) {
   userID: ID!
-  name: String!
-  value: Boolean = False!
+  key: String!
+  value: String!
 }
