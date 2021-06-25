@@ -51,3 +51,4 @@ type Parameter @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fiel
   key: String!
   value: String!
 }
+

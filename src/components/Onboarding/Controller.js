@@ -1,17 +1,19 @@
 import { Container } from "@material-ui/core";
 import { API, graphqlOperation } from "aws-amplify";
 import React, { useEffect, useState } from "react";
+import { listParameters } from "../../graphql/queries";
 import { TrackerStates } from "../Tracker/TrackerStates";
 import { FinishOnboarding } from "./FinishOnboarding";
 import { OnboardingStates } from "./OnboardingStates";
 import { SetGoals } from "./SetGoals";
+import { UserParameters } from "../../util/userParameters";
 
 export const OnboardingController = ({ setTrackerState, currentUser }) => {
   const [onboardingState, setOnboardingState] = useState(
     OnboardingStates.setGoals
   );
   const [creatingAccount, setCreatingAccount] = useState(false);
-  const [parameters, setParameters] = useState(undefined);
+  const [userOnboardingStatus, setUserOnboardingStatus] = useState(undefined);
 
   // Check and set the users onBoardingIndex. If not avaible start from the
   // beginning.
@@ -20,17 +22,24 @@ export const OnboardingController = ({ setTrackerState, currentUser }) => {
       try {
         console.log("Onboarding Controller");
         // In order to proceed a user must be logged in.
-        if (currentUser && !parameters) {
-          const userParams = await API.graphql(graphqlOperation());
-          console.log(currentUser.id);
-          console.log(parameters);
-          setParameters("test");
+        if (currentUser && userOnboardingStatus !== undefined) {
+          const userParams = await API.graphql(
+            graphqlOperation(listParameters, {
+              filter: {
+                key: { eq: UserParameters.onboardingIndex },
+              },
+            })
+          );
+          const state = userParams.data.listParameters.items[0] || 0;
+          setUserOnboardingStatus(state);
+          setOnboardingState(state);
+          console.log("User params", userParams);
         }
       } catch (e) {
         console.log(e);
       }
     })();
-  });
+  }, [currentUser, userOnboardingStatus]);
 
   // Save the set goals to parent state.
   const saveGoals = () => {
