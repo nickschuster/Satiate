@@ -8,35 +8,46 @@ import { OnboardingStates } from "./OnboardingStates";
 import { SetGoals } from "./SetGoals";
 import { UserParameters } from "../../util/userParameters";
 import { createParameter, updateParameter } from "../../graphql/mutations";
+import { SettingsBackupRestoreSharp } from "@material-ui/icons";
 
 export const OnboardingController = ({
   setTrackerState,
   userOnboardingState,
 }) => {
   const [onboardingState, setOnboardingState] = useState(
-    userOnboardingState.value || OnboardingStates.setGoals
+    OnboardingStates.setGoals
   );
   const [creatingAccount, setCreatingAccount] = useState(false);
+  const [tasks, setTasks] = useState([]);
 
   // Save the current onboardingState when it changes.
   const saveOnboardingState = async () => {
     try {
       // Update the parameter.
+      let result;
       if (userOnboardingState.id) {
         console.log("Update");
-        await API.graphql(
+        result = await API.graphql(
           graphqlOperation(updateParameter, {
             input: {
-              id: userOnboardingState.id,
-              key: UserParameters.onboardingState,
-              value: onboardingState,
+              value: onboardingState.value,
+            },
+            condition: {
+              and: {
+                key: {
+                  eq: UserParameters.onboardingState,
+                },
+                userID: {
+                  eq: userOnboardingState.userID,
+                },
+              },
             },
           })
         );
       } else {
         console.log("create");
         // Create the parameter.
-        await API.graphql(
+        result = API.graphql(
           graphqlOperation(createParameter, {
             input: {
               userID: userOnboardingState.userID,
@@ -46,6 +57,10 @@ export const OnboardingController = ({
           })
         );
       }
+      setTasks((prev) => {
+        prev.push(result);
+        return { ...prev };
+      });
     } catch (e) {
       console.log(e);
     }
@@ -54,7 +69,6 @@ export const OnboardingController = ({
   // Save the set goals to parent state.
   const saveGoals = () => {
     console.log("Save goals.");
-    saveOnboardingState();
     setOnboardingState(OnboardingStates.finish);
     finishOnboarding();
   };
@@ -67,12 +81,11 @@ export const OnboardingController = ({
   // Finish the onboarding process.
   const finishOnboarding = async () => {
     setCreatingAccount(true);
-    await new Promise((resolve, reject) => {
-      setTimeout(() => resolve(), 2000);
-    });
+    await Promise.all(tasks);
     await stopLoading();
     setTrackerState(TrackerStates.default);
-    // setOnboardingState(OnboardingStates.exit);
+    setOnboardingState(OnboardingStates.exit);
+    saveOnboardingState();
   };
 
   // Helper function for showing succesful account creation. Waits for
@@ -86,8 +99,9 @@ export const OnboardingController = ({
 
   // Display the onboarding form based on current onboarding state.
   const getOnboardingState = () => {
+    console.log("Rerender");
     if (onboardingState === OnboardingStates.exit) {
-      return null;
+      return <></>;
     } else if (onboardingState === OnboardingStates.setGoals) {
       return <SetGoals saveGoals={saveGoals} />;
     } else if (onboardingState === OnboardingStates.finish) {
