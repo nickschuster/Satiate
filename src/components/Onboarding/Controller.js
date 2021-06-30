@@ -7,43 +7,54 @@ import { FinishOnboarding } from "./FinishOnboarding";
 import { OnboardingStates } from "./OnboardingStates";
 import { SetGoals } from "./SetGoals";
 import { UserParameters } from "../../util/userParameters";
+import { createParameter, updateParameter } from "../../graphql/mutations";
 
-export const OnboardingController = ({ setTrackerState, currentUser }) => {
+export const OnboardingController = ({
+  setTrackerState,
+  userOnboardingState,
+}) => {
   const [onboardingState, setOnboardingState] = useState(
-    OnboardingStates.setGoals
+    userOnboardingState.value || OnboardingStates.setGoals
   );
   const [creatingAccount, setCreatingAccount] = useState(false);
-  const [userOnboardingStatus, setUserOnboardingStatus] = useState(undefined);
 
-  // Check and set the users onBoardingIndex. If not avaible start from the
-  // beginning.
-  useEffect(() => {
-    (async () => {
-      try {
-        console.log("Onboarding Controller");
-        // In order to proceed a user must be logged in.
-        if (currentUser && userOnboardingStatus !== undefined) {
-          const userParams = await API.graphql(
-            graphqlOperation(listParameters, {
-              filter: {
-                key: { eq: UserParameters.onboardingIndex },
-              },
-            })
-          );
-          const state = userParams.data.listParameters.items[0] || 0;
-          setUserOnboardingStatus(state);
-          setOnboardingState(state);
-          console.log("User params", userParams);
-        }
-      } catch (e) {
-        console.log(e);
+  // Save the current onboardingState when it changes.
+  const saveOnboardingState = async () => {
+    try {
+      // Update the parameter.
+      if (userOnboardingState.id) {
+        console.log("Update");
+        await API.graphql(
+          graphqlOperation(updateParameter, {
+            input: {
+              id: userOnboardingState.id,
+              key: UserParameters.onboardingState,
+              value: onboardingState,
+            },
+          })
+        );
+      } else {
+        console.log("create");
+        // Create the parameter.
+        await API.graphql(
+          graphqlOperation(createParameter, {
+            input: {
+              userID: userOnboardingState.userID,
+              key: UserParameters.onboardingState,
+              value: onboardingState,
+            },
+          })
+        );
       }
-    })();
-  }, [currentUser, userOnboardingStatus]);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   // Save the set goals to parent state.
   const saveGoals = () => {
     console.log("Save goals.");
+    saveOnboardingState();
     setOnboardingState(OnboardingStates.finish);
     finishOnboarding();
   };

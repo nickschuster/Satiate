@@ -17,6 +17,7 @@ import {
   formatMealsForSave,
 } from "../../util/mealFormatting";
 import { OnboardingController } from "../Onboarding/Controller";
+import { UserParameters } from "../../util/userParameters";
 
 const useStyles = makeStyles((theme) => ({
   mealsContainer: {
@@ -234,6 +235,24 @@ export const TrackerController = ({ user }) => {
     saveMeals();
   };
 
+  // Helper function. Gets the onboardingState parameter from the
+  // user object.
+  const getOnboardingState = () => {
+    let state = {
+      value: undefined,
+    };
+
+    if (userData) {
+      let parameter = userData.parameters.items.find(
+        (value) => value.key === UserParameters.onboardingState
+      );
+      if (parameter) state = parameter;
+      state["userID"] = userData.id;
+    }
+
+    return state;
+  };
+
   // Detemine what form to show based on tracker state.
   const activeForm = () => {
     if (trackerState === TrackerStates.addMeal) {
@@ -252,7 +271,7 @@ export const TrackerController = ({ user }) => {
       return (
         <OnboardingController
           setTrackerState={setTrackerState}
-          currentUser={userData}
+          userOnboardingState={getOnboardingState()}
         />
       );
     }
