@@ -18,6 +18,7 @@ import {
 } from "../../util/mealFormatting";
 import { OnboardingController } from "../Onboarding/Controller";
 import { UserParameters } from "../../util/userParameters";
+import { OnboardingStates } from "../Onboarding/OnboardingStates";
 
 const useStyles = makeStyles((theme) => ({
   mealsContainer: {
@@ -49,6 +50,7 @@ export const TrackerController = ({ user }) => {
   const [currentDay, setCurrentDay] = useState(moment().unix() / 86400);
   const [savedEditMeal, setEditMeal] = useState(undefined);
   const [userData, setUserData] = useState();
+  const [onboardingState, setOnboardingState] = useState(undefined);
 
   // Load the current user.
   useEffect(() => {
@@ -79,12 +81,23 @@ export const TrackerController = ({ user }) => {
 
           // Trigger initial load.
           setCurrentDay(moment().unix() / 86400);
+
+          // Setup the user parameters.
+          populateParameters(userInfo);
         }
       } catch (e) {
         console.log(e);
       }
     })();
   }, [user]);
+
+  // Save the current onboardingState.
+  useEffect(() => {
+    // Only save if this is not the default state.
+    if (onboardingState !== undefined) {
+      console.log("save onboarding state");
+    }
+  }, [onboardingState]);
 
   // Load meals whenever the day changes.
   useEffect(() => {
@@ -154,6 +167,19 @@ export const TrackerController = ({ user }) => {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  // Populate the various parameter states depending on
+  // current user information.
+  const populateParameters = (userInfo) => {
+    setOnboardingState(() => {
+      let state = userInfo.parameters.items.find(
+        (param) => param.key === UserParameters.onboardingState
+      );
+      if (!state) state = OnboardingStates.setGoals;
+      else state = parseInt(state.value);
+      return state;
+    });
   };
 
   // Increase the current day by one.
@@ -235,22 +261,9 @@ export const TrackerController = ({ user }) => {
     saveMeals();
   };
 
-  // Helper function. Gets the onboardingState parameter from the
-  // user object.
-  const getOnboardingState = () => {
-    let state = {
-      value: undefined,
-    };
-
-    if (userData) {
-      let parameter = userData.parameters.items.find(
-        (value) => value.key === UserParameters.onboardingState
-      );
-      if (parameter) state = parameter;
-      state["userID"] = userData.id;
-    }
-
-    return state;
+  // Finish the onboarding process.
+  const finishOnboarding = () => {
+    setTrackerState(TrackerStates.default);
   };
 
   // Detemine what form to show based on tracker state.
@@ -270,8 +283,9 @@ export const TrackerController = ({ user }) => {
     } else if (trackerState === TrackerStates.newUser) {
       return (
         <OnboardingController
-          setTrackerState={setTrackerState}
-          userOnboardingState={getOnboardingState()}
+          finishOnboarding={finishOnboarding}
+          onboardingState={onboardingState}
+          setOnboardingState={setOnboardingState}
         />
       );
     }
