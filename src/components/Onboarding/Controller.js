@@ -26,6 +26,7 @@ export const OnboardingController = ({
   // Wait for all setup tasks to finish. Display status.
   const completeTasks = async () => {
     setLoading(true);
+
     // Wait for use setup tasks to finish.
     // Simulate tasks.
     await new Promise((resolve) => {
@@ -45,7 +46,6 @@ export const OnboardingController = ({
 
   // Display the onboarding form based on current onboarding state.
   const getOnboardingState = () => {
-    console.log("Rerender", onboardingState);
     if (onboardingState === OnboardingStates.setGoals) {
       return <SetGoals saveGoals={saveGoals} />;
     } else if (onboardingState === OnboardingStates.finish) {

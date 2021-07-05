@@ -10,7 +10,13 @@ import { Keygen } from "../../util/keygen";
 import moment from "moment";
 import { API, graphqlOperation } from "@aws-amplify/api";
 import { getUser } from "../../graphql/queries";
-import { createUser, createDay, updateDay } from "../../graphql/mutations";
+import {
+  createUser,
+  createDay,
+  updateDay,
+  updateParameter,
+  createParameter,
+} from "../../graphql/mutations";
 import {
   findMealsForDay,
   formatMealsForLoad,
@@ -93,11 +99,41 @@ export const TrackerController = ({ user }) => {
 
   // Save the current onboardingState.
   useEffect(() => {
-    // Only save if this is not the default state.
-    if (onboardingState !== undefined) {
-      console.log("save onboarding state");
-    }
-  }, [onboardingState]);
+    (async () => {
+      try {
+        // Only save if this is not the default state.
+        if (onboardingState !== undefined) {
+          let exists = userData.parameters.items.find(
+            (param) => param.key === UserParameters.onboardingState
+          );
+          console.log(exists);
+          if (exists) {
+            await API.graphql(
+              graphqlOperation(updateParameter, {
+                input: {
+                  userID: userData.id,
+                  key: UserParameters.onboardingState,
+                  value: `${onboardingState}`,
+                },
+              })
+            );
+          } else {
+            await API.graphql(
+              graphqlOperation(createParameter, {
+                input: {
+                  userID: userData.id,
+                  key: UserParameters.onboardingState,
+                  value: `${onboardingState}`,
+                },
+              })
+            );
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, [onboardingState, userData]);
 
   // Load meals whenever the day changes.
   useEffect(() => {
