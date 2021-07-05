@@ -32,12 +32,14 @@ type Ingredient {
 }
 
 type SavedMeal @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["userID"]) {
+  id: ID!
   userID: ID!
   name: String
   ingredients: [Ingredient]
 }
 
 type SavedIngredient @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["userID"]) {
+  id: ID!
   userID: ID!
   name: String
   calories: Int
@@ -47,6 +49,7 @@ type SavedIngredient @model @auth(rules: [{ allow: owner }]) @key(name: "byUser"
 }
 
 type Parameter @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["userID"]) {
+  id: ID!
   userID: ID!
   key: String!
   value: String!

@@ -111,6 +111,7 @@ export const TrackerController = ({ user }) => {
             await API.graphql(
               graphqlOperation(updateParameter, {
                 input: {
+                  id: exists.id,
                   userID: userData.id,
                   key: UserParameters.onboardingState,
                   value: `${onboardingState}`,
