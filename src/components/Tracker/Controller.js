@@ -106,7 +106,6 @@ export const TrackerController = ({ user }) => {
           let exists = userData.parameters.items.find(
             (param) => param.key === UserParameters.onboardingState
           );
-          console.log(exists);
           if (exists) {
             await API.graphql(
               graphqlOperation(updateParameter, {
@@ -298,6 +297,50 @@ export const TrackerController = ({ user }) => {
     saveMeals();
   };
 
+  // Save the onboarding goals to the user.
+  const saveGoalsToUser = (goals) => {
+    try {
+      API.graphql(
+        graphqlOperation(createParameter, {
+          input: {
+            userID: userData.id,
+            key: UserParameters.calorieGoal,
+            value: goals.calories,
+          },
+        })
+      );
+      API.graphql(
+        graphqlOperation(createParameter, {
+          input: {
+            userID: userData.id,
+            key: UserParameters.fatGoal,
+            value: goals.fat,
+          },
+        })
+      );
+      API.graphql(
+        graphqlOperation(createParameter, {
+          input: {
+            userID: userData.id,
+            key: UserParameters.carbGoal,
+            value: goals.carbs,
+          },
+        })
+      );
+      API.graphql(
+        graphqlOperation(createParameter, {
+          input: {
+            userID: userData.id,
+            key: UserParameters.proteinGoal,
+            value: goals.protein,
+          },
+        })
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   // Finish the onboarding process.
   const finishOnboarding = () => {
     setTrackerState(TrackerStates.default);
@@ -323,6 +366,7 @@ export const TrackerController = ({ user }) => {
           finishOnboarding={finishOnboarding}
           onboardingState={onboardingState}
           setOnboardingState={setOnboardingState}
+          saveGoalsToUser={saveGoalsToUser}
         />
       );
     }

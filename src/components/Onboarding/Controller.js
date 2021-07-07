@@ -8,12 +8,13 @@ export const OnboardingController = ({
   finishOnboarding,
   onboardingState,
   setOnboardingState,
+  saveGoalsToUser,
 }) => {
   const [isLoading, setLoading] = useState(false);
 
   // Save the set goals to parent state.
-  const saveGoals = () => {
-    console.log("Save goals.");
+  const saveGoals = (goals) => {
+    saveGoalsToUser(goals);
     setOnboardingState(OnboardingStates.finish);
     completeTasks();
   };
@@ -30,7 +31,7 @@ export const OnboardingController = ({
     // Wait for use setup tasks to finish.
     // Simulate tasks.
     await new Promise((resolve) => {
-      setTimeout(resolve, 5000);
+      setTimeout(resolve, 2500);
     });
 
     setLoading(false);
