@@ -56,6 +56,7 @@ export const TrackerController = ({ user }) => {
   const [currentDay, setCurrentDay] = useState(moment().unix() / 86400);
   const [savedEditMeal, setEditMeal] = useState(undefined);
   const [userData, setUserData] = useState();
+  const [goals, setGoals] = useState();
   const [onboardingState, setOnboardingState] = useState(undefined);
 
   // Load the current user.
@@ -208,6 +209,7 @@ export const TrackerController = ({ user }) => {
   // Populate the various parameter states depending on
   // current user information.
   const populateParameters = (userInfo) => {
+    // Onboarding.
     setOnboardingState(() => {
       let state = userInfo.parameters.items.find(
         (param) => param.key === UserParameters.onboardingState
@@ -215,6 +217,32 @@ export const TrackerController = ({ user }) => {
       if (!state) state = OnboardingStates.setGoals;
       else state = parseInt(state.value);
       return state;
+    });
+
+    // Goals.
+    setGoals(() => {
+      let goals = {};
+      let carbGoal = userInfo.parameters.items.find(
+        (param) => param.key === UserParameters.carbGoal
+      );
+      let proteinGoal = userInfo.parameters.items.find(
+        (param) => param.key === UserParameters.proteinGoal
+      );
+      let calorieGoal = userInfo.parameters.items.find(
+        (param) => param.key === UserParameters.calorieGoal
+      );
+      let fatGoal = userInfo.parameters.items.find(
+        (param) => param.key === UserParameters.fatGoal
+      );
+
+      goals = {
+        carbGoal,
+        proteinGoal,
+        calorieGoal,
+        fatGoal,
+      };
+
+      return { ...goals };
     });
   };
 
@@ -297,10 +325,31 @@ export const TrackerController = ({ user }) => {
     saveMeals();
   };
 
+  // Package user goals into a value only object.
+  const getUserGoals = () => {
+    let packaged = {};
+    if (goals && goals.calorieGoal) {
+      packaged["calories"] = goals.calorieGoal.value;
+      packaged["fat"] = goals.fatGoal.value;
+      packaged["carbs"] = goals.carbGoal.value;
+      packaged["protein"] = goals.proteinGoal.value;
+    }
+    return packaged;
+  };
+
+  // Format the save results for local to avoid refetching user.
+  const formatGoals = async (calorieGoal, fatGoal, proteinGoal, carbGoal) => {
+    await calorieGoal;
+    await fatGoal;
+    await proteinGoal;
+    await carbGoal;
+    console.log(calorieGoal);
+  };
+
   // Save the onboarding goals to the user.
   const saveGoalsToUser = (goals) => {
     try {
-      API.graphql(
+      let calorieGoal = API.graphql(
         graphqlOperation(createParameter, {
           input: {
             userID: userData.id,
@@ -309,7 +358,7 @@ export const TrackerController = ({ user }) => {
           },
         })
       );
-      API.graphql(
+      let fatGoal = API.graphql(
         graphqlOperation(createParameter, {
           input: {
             userID: userData.id,
@@ -318,7 +367,7 @@ export const TrackerController = ({ user }) => {
           },
         })
       );
-      API.graphql(
+      let carbGoal = API.graphql(
         graphqlOperation(createParameter, {
           input: {
             userID: userData.id,
@@ -327,7 +376,7 @@ export const TrackerController = ({ user }) => {
           },
         })
       );
-      API.graphql(
+      let proteinGoal = API.graphql(
         graphqlOperation(createParameter, {
           input: {
             userID: userData.id,
@@ -336,6 +385,8 @@ export const TrackerController = ({ user }) => {
           },
         })
       );
+
+      formatGoals(calorieGoal, fatGoal, carbGoal, proteinGoal);
     } catch (e) {
       console.log(e);
     }
@@ -384,7 +435,11 @@ export const TrackerController = ({ user }) => {
           deleteMeal={deleteMeal}
           saveEditMeal={saveEditMeal}
         />
-        <Totals getTotals={getTotals} goals={{}} getPoints={() => "----"} />
+        <Totals
+          getTotals={getTotals}
+          goals={getUserGoals()}
+          getPoints={() => "----"}
+        />
         <Footer />
       </Container>
       <div className={classes.formContainer}>{activeForm()}</div>
