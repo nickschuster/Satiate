@@ -149,6 +149,7 @@ export const TrackerController = ({ user }) => {
       const pretty = currentDay;
       const dayID = Math.floor(pretty);
       const meal = findMealsForDay(dayID, userData);
+      const goals = getGoalsFromDay(dayID, userData) || getGoalsFromUser(userData);
 
       if (meal !== undefined) {
         setMeals(formatMealsForLoad(meal));
@@ -161,6 +162,10 @@ export const TrackerController = ({ user }) => {
                 id: `${dayID} ${userData.id}`,
                 userID: userData.id,
                 pretty: pretty,
+                calorieGoal: goals.calories,
+                carbGoal: goals.carbs,
+                fatGoal: goals.fat,
+                proteinGoal: goals.protein,
               },
             })
           );
@@ -168,6 +173,8 @@ export const TrackerController = ({ user }) => {
           console.log(e);
         }
       }
+
+      setGoals(goals)
     }
   }, [currentDay, userData]);
 
@@ -217,32 +224,6 @@ export const TrackerController = ({ user }) => {
       if (!state) state = OnboardingStates.setGoals;
       else state = parseInt(state.value);
       return state;
-    });
-
-    // Goals.
-    setGoals(() => {
-      let goals = {};
-      let carbGoal = userInfo.parameters.items.find(
-        (param) => param.key === UserParameters.carbGoal
-      );
-      let proteinGoal = userInfo.parameters.items.find(
-        (param) => param.key === UserParameters.proteinGoal
-      );
-      let calorieGoal = userInfo.parameters.items.find(
-        (param) => param.key === UserParameters.calorieGoal
-      );
-      let fatGoal = userInfo.parameters.items.find(
-        (param) => param.key === UserParameters.fatGoal
-      );
-
-      goals = {
-        carbGoal,
-        proteinGoal,
-        calorieGoal,
-        fatGoal,
-      };
-
-      return { ...goals };
     });
   };
 
@@ -325,31 +306,11 @@ export const TrackerController = ({ user }) => {
     saveMeals();
   };
 
-  // Package user goals into a value only object.
-  const getUserGoals = () => {
-    let packaged = {};
-    if (goals && goals.calorieGoal) {
-      packaged["calories"] = goals.calorieGoal.value;
-      packaged["fat"] = goals.fatGoal.value;
-      packaged["carbs"] = goals.carbGoal.value;
-      packaged["protein"] = goals.proteinGoal.value;
-    }
-    return packaged;
-  };
-
-  // Format the save results for local to avoid refetching user.
-  const formatGoals = async (calorieGoal, fatGoal, proteinGoal, carbGoal) => {
-    await calorieGoal;
-    await fatGoal;
-    await proteinGoal;
-    await carbGoal;
-    console.log(calorieGoal);
-  };
-
-  // Save the onboarding goals to the user.
+  // Save the onboarding goals.
   const saveGoalsToUser = (goals) => {
     try {
-      let calorieGoal = API.graphql(
+      // Save to user.
+      API.graphql(
         graphqlOperation(createParameter, {
           input: {
             userID: userData.id,
@@ -358,7 +319,7 @@ export const TrackerController = ({ user }) => {
           },
         })
       );
-      let fatGoal = API.graphql(
+      API.graphql(
         graphqlOperation(createParameter, {
           input: {
             userID: userData.id,
@@ -367,7 +328,7 @@ export const TrackerController = ({ user }) => {
           },
         })
       );
-      let carbGoal = API.graphql(
+      API.graphql(
         graphqlOperation(createParameter, {
           input: {
             userID: userData.id,
@@ -376,7 +337,7 @@ export const TrackerController = ({ user }) => {
           },
         })
       );
-      let proteinGoal = API.graphql(
+      API.graphql(
         graphqlOperation(createParameter, {
           input: {
             userID: userData.id,
@@ -386,11 +347,72 @@ export const TrackerController = ({ user }) => {
         })
       );
 
-      formatGoals(calorieGoal, fatGoal, carbGoal, proteinGoal);
+      // Save to current day.
+      await API.graphql(
+        graphqlOperation(updateDay, {
+          input: {
+            id: `${Math.floor(currentDay)} ${userData.id}`,
+            userID: userData.id,
+            pretty: currentDay,
+            calorieGoal: goals.calories,
+            proteinGoal: goals.protein,
+            fatGoal: goals.fat,
+            carbGoal: goals.carbs,
+          },
+        })
+      );
+
+      // Set goals manually to avoid refetch.
+      setGoals(() => {
+        let packaged = {};
+        packaged["calories"] = goals.calorieGoal.value;
+        packaged["fat"] = goals.fatGoal.value;
+        packaged["carbs"] = goals.carbGoal.value;
+        packaged["protein"] = goals.proteinGoal.value;
+        return { ...packaged };
+      })
     } catch (e) {
       console.log(e);
     }
   };
+
+  // If the current day exists get the goal amounts for it.
+  const getGoalsFromDay = (dayId, userData) => {
+    const days = userData.days.items;
+    const day = days.find((day) => day.id === `${dayId} ${userData.id}`);
+    if(day) {
+      return {
+        calories: day.calorieGoal,
+        fat: day.fatGoal,
+        carbs: day.carbGoal,
+        protein: day.proteinGoal,
+      }
+    }
+    return undefined;
+  }
+  
+  // Get the saved goal amounts from the user profile.
+  const getGoalsFromUser = (userData) => {
+    let calories = userInfo.parameters.items.find(
+      (param) => param.key === UserParameters.calorieGoal
+    ).value;
+    let fat = userInfo.parameters.items.find(
+      (param) => param.key === UserParameters.fatGoal
+    ).value;
+    let carbs = userInfo.parameters.items.find(
+      (param) => param.key === UserParameters.carbsGoal
+    ).value;
+    let protein  = userInfo.parameters.items.find(
+      (param) => param.key === UserParameters.proteinGoal
+    ).value;
+    
+    return {
+      calories,
+      fat,
+      carbs,
+      protein,
+    }
+  }
 
   // Finish the onboarding process.
   const finishOnboarding = () => {
@@ -437,7 +459,7 @@ export const TrackerController = ({ user }) => {
         />
         <Totals
           getTotals={getTotals}
-          goals={getUserGoals()}
+          goals={goals}
           getPoints={() => "----"}
         />
         <Footer />
