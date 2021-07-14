@@ -56,7 +56,7 @@ export const TrackerController = ({ user }) => {
   const [currentDay, setCurrentDay] = useState(moment().unix() / 86400);
   const [savedEditMeal, setEditMeal] = useState(undefined);
   const [userData, setUserData] = useState();
-  const [goals, setGoals] = useState();
+  const [goals, setGoals] = useState({});
   const [onboardingState, setOnboardingState] = useState(undefined);
 
   // Load the current user.
@@ -149,7 +149,8 @@ export const TrackerController = ({ user }) => {
       const pretty = currentDay;
       const dayID = Math.floor(pretty);
       const meal = findMealsForDay(dayID, userData);
-      const goals = getGoalsFromDay(dayID, userData) || getGoalsFromUser(userData);
+      const goals =
+        getGoalsFromDay(dayID, userData) || getGoalsFromUser(userData);
 
       if (meal !== undefined) {
         setMeals(formatMealsForLoad(meal));
@@ -174,7 +175,7 @@ export const TrackerController = ({ user }) => {
         }
       }
 
-      setGoals(goals)
+      setGoals(goals);
     }
   }, [currentDay, userData]);
 
@@ -348,7 +349,7 @@ export const TrackerController = ({ user }) => {
       );
 
       // Save to current day.
-      await API.graphql(
+      API.graphql(
         graphqlOperation(updateDay, {
           input: {
             id: `${Math.floor(currentDay)} ${userData.id}`,
@@ -363,14 +364,7 @@ export const TrackerController = ({ user }) => {
       );
 
       // Set goals manually to avoid refetch.
-      setGoals(() => {
-        let packaged = {};
-        packaged["calories"] = goals.calorieGoal.value;
-        packaged["fat"] = goals.fatGoal.value;
-        packaged["carbs"] = goals.carbGoal.value;
-        packaged["protein"] = goals.proteinGoal.value;
-        return { ...packaged };
-      })
+      setGoals(goals);
     } catch (e) {
       console.log(e);
     }
@@ -380,39 +374,44 @@ export const TrackerController = ({ user }) => {
   const getGoalsFromDay = (dayId, userData) => {
     const days = userData.days.items;
     const day = days.find((day) => day.id === `${dayId} ${userData.id}`);
-    if(day) {
+    if (day) {
       return {
         calories: day.calorieGoal,
         fat: day.fatGoal,
         carbs: day.carbGoal,
         protein: day.proteinGoal,
-      }
+      };
     }
     return undefined;
-  }
-  
+  };
+
   // Get the saved goal amounts from the user profile.
-  const getGoalsFromUser = (userData) => {
+  const getGoalsFromUser = (userInfo) => {
     let calories = userInfo.parameters.items.find(
       (param) => param.key === UserParameters.calorieGoal
-    ).value;
+    );
     let fat = userInfo.parameters.items.find(
       (param) => param.key === UserParameters.fatGoal
-    ).value;
+    );
     let carbs = userInfo.parameters.items.find(
       (param) => param.key === UserParameters.carbsGoal
-    ).value;
-    let protein  = userInfo.parameters.items.find(
+    );
+    let protein = userInfo.parameters.items.find(
       (param) => param.key === UserParameters.proteinGoal
-    ).value;
-    
+    );
+
+    calories = calories ? calories.value : 0;
+    fat = fat ? fat.value : 0;
+    protein = protein ? protein.value : 0;
+    carbs = carbs ? carbs.value : 0;
+
     return {
       calories,
       fat,
       carbs,
       protein,
-    }
-  }
+    };
+  };
 
   // Finish the onboarding process.
   const finishOnboarding = () => {
@@ -457,11 +456,7 @@ export const TrackerController = ({ user }) => {
           deleteMeal={deleteMeal}
           saveEditMeal={saveEditMeal}
         />
-        <Totals
-          getTotals={getTotals}
-          goals={goals}
-          getPoints={() => "----"}
-        />
+        <Totals getTotals={getTotals} goals={goals} getPoints={() => "----"} />
         <Footer />
       </Container>
       <div className={classes.formContainer}>{activeForm()}</div>
