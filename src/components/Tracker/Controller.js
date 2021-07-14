@@ -10,12 +10,21 @@ import { Keygen } from "../../util/keygen";
 import moment from "moment";
 import { API, graphqlOperation } from "@aws-amplify/api";
 import { getUser } from "../../graphql/queries";
-import { createUser, createDay, updateDay } from "../../graphql/mutations";
+import {
+  createUser,
+  createDay,
+  updateDay,
+  updateParameter,
+  createParameter,
+} from "../../graphql/mutations";
 import {
   findMealsForDay,
   formatMealsForLoad,
   formatMealsForSave,
 } from "../../util/mealFormatting";
+import { OnboardingController } from "../Onboarding/Controller";
+import { UserParameters } from "../../util/userParameters";
+import { OnboardingStates } from "../Onboarding/OnboardingStates";
 
 const useStyles = makeStyles((theme) => ({
   mealsContainer: {
@@ -42,11 +51,13 @@ const useStyles = makeStyles((theme) => ({
 
 export const TrackerController = ({ user }) => {
   const classes = useStyles();
-  const [trackerState, setTrackerStateHook] = useState(undefined);
+  const [trackerState, setTrackerStateHook] = useState(TrackerStates.newUser);
   const [meals, setMeals] = useState([]);
   const [currentDay, setCurrentDay] = useState(moment().unix() / 86400);
   const [savedEditMeal, setEditMeal] = useState(undefined);
   const [userData, setUserData] = useState();
+  const [goals, setGoals] = useState({});
+  const [onboardingState, setOnboardingState] = useState(undefined);
 
   // Load the current user.
   useEffect(() => {
@@ -77,12 +88,53 @@ export const TrackerController = ({ user }) => {
 
           // Trigger initial load.
           setCurrentDay(moment().unix() / 86400);
+
+          // Setup the user parameters.
+          populateParameters(userInfo);
         }
       } catch (e) {
         console.log(e);
       }
     })();
   }, [user]);
+
+  // Save the current onboardingState.
+  useEffect(() => {
+    (async () => {
+      try {
+        // Only save if this is not the default state.
+        if (onboardingState !== undefined) {
+          let exists = userData.parameters.items.find(
+            (param) => param.key === UserParameters.onboardingState
+          );
+          if (exists) {
+            await API.graphql(
+              graphqlOperation(updateParameter, {
+                input: {
+                  id: exists.id,
+                  userID: userData.id,
+                  key: UserParameters.onboardingState,
+                  value: `${onboardingState}`,
+                },
+              })
+            );
+          } else {
+            await API.graphql(
+              graphqlOperation(createParameter, {
+                input: {
+                  userID: userData.id,
+                  key: UserParameters.onboardingState,
+                  value: `${onboardingState}`,
+                },
+              })
+            );
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, [onboardingState, userData]);
 
   // Load meals whenever the day changes.
   useEffect(() => {
@@ -97,8 +149,10 @@ export const TrackerController = ({ user }) => {
       const pretty = currentDay;
       const dayID = Math.floor(pretty);
       const meal = findMealsForDay(dayID, userData);
+      const goals =
+        getGoalsFromDay(dayID, userData) || getGoalsFromUser(userData);
 
-      if (meal) {
+      if (meal !== undefined) {
         setMeals(formatMealsForLoad(meal));
       } else {
         try {
@@ -109,6 +163,10 @@ export const TrackerController = ({ user }) => {
                 id: `${dayID} ${userData.id}`,
                 userID: userData.id,
                 pretty: pretty,
+                calorieGoal: goals.calories,
+                carbGoal: goals.carbs,
+                fatGoal: goals.fat,
+                proteinGoal: goals.protein,
               },
             })
           );
@@ -116,6 +174,8 @@ export const TrackerController = ({ user }) => {
           console.log(e);
         }
       }
+
+      setGoals(goals);
     }
   }, [currentDay, userData]);
 
@@ -152,6 +212,20 @@ export const TrackerController = ({ user }) => {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  // Populate the various parameter states depending on
+  // current user information.
+  const populateParameters = (userInfo) => {
+    // Onboarding.
+    setOnboardingState(() => {
+      let state = userInfo.parameters.items.find(
+        (param) => param.key === UserParameters.onboardingState
+      );
+      if (!state) state = OnboardingStates.setGoals;
+      else state = parseInt(state.value);
+      return state;
+    });
   };
 
   // Increase the current day by one.
@@ -233,6 +307,117 @@ export const TrackerController = ({ user }) => {
     saveMeals();
   };
 
+  // Save the onboarding goals.
+  const saveGoalsToUser = (goals) => {
+    try {
+      // Save to user.
+      API.graphql(
+        graphqlOperation(createParameter, {
+          input: {
+            userID: userData.id,
+            key: UserParameters.calorieGoal,
+            value: goals.calories,
+          },
+        })
+      );
+      API.graphql(
+        graphqlOperation(createParameter, {
+          input: {
+            userID: userData.id,
+            key: UserParameters.fatGoal,
+            value: goals.fat,
+          },
+        })
+      );
+      API.graphql(
+        graphqlOperation(createParameter, {
+          input: {
+            userID: userData.id,
+            key: UserParameters.carbGoal,
+            value: goals.carbs,
+          },
+        })
+      );
+      API.graphql(
+        graphqlOperation(createParameter, {
+          input: {
+            userID: userData.id,
+            key: UserParameters.proteinGoal,
+            value: goals.protein,
+          },
+        })
+      );
+
+      // Save to current day.
+      API.graphql(
+        graphqlOperation(updateDay, {
+          input: {
+            id: `${Math.floor(currentDay)} ${userData.id}`,
+            userID: userData.id,
+            pretty: currentDay,
+            calorieGoal: goals.calories,
+            proteinGoal: goals.protein,
+            fatGoal: goals.fat,
+            carbGoal: goals.carbs,
+          },
+        })
+      );
+
+      // Set goals manually to avoid refetch.
+      setGoals(goals);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // If the current day exists get the goal amounts for it.
+  const getGoalsFromDay = (dayId, userData) => {
+    const days = userData.days.items;
+    const day = days.find((day) => day.id === `${dayId} ${userData.id}`);
+    if (day) {
+      return {
+        calories: day.calorieGoal,
+        fat: day.fatGoal,
+        carbs: day.carbGoal,
+        protein: day.proteinGoal,
+      };
+    }
+    return undefined;
+  };
+
+  // Get the saved goal amounts from the user profile.
+  const getGoalsFromUser = (userInfo) => {
+    let calories = userInfo.parameters.items.find(
+      (param) => param.key === UserParameters.calorieGoal
+    );
+    let fat = userInfo.parameters.items.find(
+      (param) => param.key === UserParameters.fatGoal
+    );
+    let carbs = userInfo.parameters.items.find(
+      (param) => param.key === UserParameters.carbsGoal
+    );
+    let protein = userInfo.parameters.items.find(
+      (param) => param.key === UserParameters.proteinGoal
+    );
+
+    calories = calories ? calories.value : 0;
+    fat = fat ? fat.value : 0;
+    protein = protein ? protein.value : 0;
+    carbs = carbs ? carbs.value : 0;
+
+    return {
+      calories,
+      fat,
+      carbs,
+      protein,
+    };
+  };
+
+  // Finish the onboarding process.
+  const finishOnboarding = () => {
+    setTrackerState(TrackerStates.default);
+  };
+
   // Detemine what form to show based on tracker state.
   const activeForm = () => {
     if (trackerState === TrackerStates.addMeal) {
@@ -245,6 +430,15 @@ export const TrackerController = ({ user }) => {
           setTrackerState={setTrackerState}
           addMeal={editMeal}
           editMeal={savedEditMeal.content}
+        />
+      );
+    } else if (trackerState === TrackerStates.newUser) {
+      return (
+        <OnboardingController
+          finishOnboarding={finishOnboarding}
+          onboardingState={onboardingState}
+          setOnboardingState={setOnboardingState}
+          saveGoalsToUser={saveGoalsToUser}
         />
       );
     }
@@ -262,7 +456,7 @@ export const TrackerController = ({ user }) => {
           deleteMeal={deleteMeal}
           saveEditMeal={saveEditMeal}
         />
-        <Totals getTotals={getTotals} goals={{}} getPoints={() => "----"} />
+        <Totals getTotals={getTotals} goals={goals} getPoints={() => "----"} />
         <Footer />
       </Container>
       <div className={classes.formContainer}>{activeForm()}</div>

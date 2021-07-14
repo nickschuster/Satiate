@@ -6,6 +6,18 @@ export const onCreateUser = /* GraphQL */ `
     onCreateUser(owner: $owner) {
       id
       username
+      parameters {
+        items {
+          id
+          userID
+          key
+          value
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       days {
         items {
           userID
@@ -64,10 +76,6 @@ export const onCreateUser = /* GraphQL */ `
         }
         nextToken
       }
-      calorieGoal
-      proteinGoal
-      fatGoal
-      carbGoal
       createdAt
       updatedAt
       owner
@@ -79,6 +87,18 @@ export const onUpdateUser = /* GraphQL */ `
     onUpdateUser(owner: $owner) {
       id
       username
+      parameters {
+        items {
+          id
+          userID
+          key
+          value
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       days {
         items {
           userID
@@ -137,10 +157,6 @@ export const onUpdateUser = /* GraphQL */ `
         }
         nextToken
       }
-      calorieGoal
-      proteinGoal
-      fatGoal
-      carbGoal
       createdAt
       updatedAt
       owner
@@ -152,6 +168,18 @@ export const onDeleteUser = /* GraphQL */ `
     onDeleteUser(owner: $owner) {
       id
       username
+      parameters {
+        items {
+          id
+          userID
+          key
+          value
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       days {
         items {
           userID
@@ -210,10 +238,6 @@ export const onDeleteUser = /* GraphQL */ `
         }
         nextToken
       }
-      calorieGoal
-      proteinGoal
-      fatGoal
-      carbGoal
       createdAt
       updatedAt
       owner
@@ -397,6 +421,45 @@ export const onDeleteSavedIngredient = /* GraphQL */ `
       protein
       fat
       carbs
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateParameter = /* GraphQL */ `
+  subscription OnCreateParameter($owner: String!) {
+    onCreateParameter(owner: $owner) {
+      id
+      userID
+      key
+      value
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateParameter = /* GraphQL */ `
+  subscription OnUpdateParameter($owner: String!) {
+    onUpdateParameter(owner: $owner) {
+      id
+      userID
+      key
+      value
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteParameter = /* GraphQL */ `
+  subscription OnDeleteParameter($owner: String!) {
+    onDeleteParameter(owner: $owner) {
+      id
+      userID
+      key
+      value
       createdAt
       updatedAt
       owner
