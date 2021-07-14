@@ -25,6 +25,22 @@ export const schema = Joi.object().keys({
       "string.pattern.base":
         "Password must contain at least one number, one lower and one uppercase letter, and one special character.",
     }),
+  calories: Joi.number().min(0).messages({
+    "number.min": "Calories cannot be less than zero.",
+    "number.base": "Calories must be a number.",
+  }),
+  fat: Joi.number().min(0).messages({
+    "number.min": "Fat cannot be less than zero.",
+    "number.base": "Fat must be a number.",
+  }),
+  carbs: Joi.number().min(0).messages({
+    "number.min": "Carbs cannot be less than zero.",
+    "number.base": "Carbs must be a number.",
+  }),
+  protein: Joi.number().min(0).messages({
+    "number.min": "Protein cannot be less than zero.",
+    "number.base": "Protein must be a number.",
+  }),
 });
 
 // Validate a form field and update if there are errors.

@@ -9,6 +9,18 @@ export const createUser = /* GraphQL */ `
     createUser(input: $input, condition: $condition) {
       id
       username
+      parameters {
+        items {
+          id
+          userID
+          key
+          value
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       days {
         items {
           userID
@@ -67,10 +79,6 @@ export const createUser = /* GraphQL */ `
         }
         nextToken
       }
-      calorieGoal
-      proteinGoal
-      fatGoal
-      carbGoal
       createdAt
       updatedAt
       owner
@@ -85,6 +93,18 @@ export const updateUser = /* GraphQL */ `
     updateUser(input: $input, condition: $condition) {
       id
       username
+      parameters {
+        items {
+          id
+          userID
+          key
+          value
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       days {
         items {
           userID
@@ -143,10 +163,6 @@ export const updateUser = /* GraphQL */ `
         }
         nextToken
       }
-      calorieGoal
-      proteinGoal
-      fatGoal
-      carbGoal
       createdAt
       updatedAt
       owner
@@ -161,6 +177,18 @@ export const deleteUser = /* GraphQL */ `
     deleteUser(input: $input, condition: $condition) {
       id
       username
+      parameters {
+        items {
+          id
+          userID
+          key
+          value
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       days {
         items {
           userID
@@ -219,10 +247,6 @@ export const deleteUser = /* GraphQL */ `
         }
         nextToken
       }
-      calorieGoal
-      proteinGoal
-      fatGoal
-      carbGoal
       createdAt
       updatedAt
       owner
@@ -433,6 +457,54 @@ export const deleteSavedIngredient = /* GraphQL */ `
       protein
       fat
       carbs
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createParameter = /* GraphQL */ `
+  mutation CreateParameter(
+    $input: CreateParameterInput!
+    $condition: ModelParameterConditionInput
+  ) {
+    createParameter(input: $input, condition: $condition) {
+      id
+      userID
+      key
+      value
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateParameter = /* GraphQL */ `
+  mutation UpdateParameter(
+    $input: UpdateParameterInput!
+    $condition: ModelParameterConditionInput
+  ) {
+    updateParameter(input: $input, condition: $condition) {
+      id
+      userID
+      key
+      value
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteParameter = /* GraphQL */ `
+  mutation DeleteParameter(
+    $input: DeleteParameterInput!
+    $condition: ModelParameterConditionInput
+  ) {
+    deleteParameter(input: $input, condition: $condition) {
+      id
+      userID
+      key
+      value
       createdAt
       updatedAt
       owner

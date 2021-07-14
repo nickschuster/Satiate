@@ -1,7 +1,6 @@
 module.exports = {
   plugins: [
     `gatsby-plugin-react-helmet`,
-    `gatsby-plugin-offline`,
     `gatsby-plugin-sass`,
     {
       resolve: `gatsby-plugin-manifest`,
@@ -9,11 +8,12 @@ module.exports = {
         name: `Satiate`,
         short_name: `Satiate`,
         start_url: `/`,
-        background_color: `#f7f0eb`,
-        theme_color: `#a2466c`,
+        background_color: `#E22635`,
+        theme_color: `#ffffff`,
         display: `standalone`,
         icon: `src/images/logo.png`,
       },
     },
+    `gatsby-plugin-offline`,
   ],
 };
