@@ -7,12 +7,7 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
-import {
-  SaveOutlined,
-  Close,
-  InsertDriveFileOutlined,
-  Add,
-} from "@material-ui/icons";
+import { SaveOutlined, Close, SystemUpdateAlt, Add } from "@material-ui/icons";
 import { TrackerStates } from "./TrackerStates";
 import { Keygen } from "../../util/keygen";
 
@@ -184,7 +179,7 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
             </Grid>
             <Grid item xs={2}>
               <IconButton color="primary" disabled>
-                <InsertDriveFileOutlined />
+                <SystemUpdateAlt />
               </IconButton>
             </Grid>
           </Grid>
@@ -217,7 +212,7 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
                 </Grid>
                 <Grid item xs={2}>
                   <IconButton color="primary" aria-label="" disabled>
-                    <InsertDriveFileOutlined />
+                    <SystemUpdateAlt />
                   </IconButton>
                 </Grid>
                 <Grid item xs={2}>
