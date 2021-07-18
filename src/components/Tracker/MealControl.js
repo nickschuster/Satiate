@@ -70,7 +70,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
+export const MealControl = ({
+  setTrackerState,
+  addMeal,
+  editMeal,
+  loadCommonIngredient,
+  loadCommonMeal,
+  saveCommonIngredient,
+  saveCommonMeal,
+}) => {
   const classes = useStyles();
   const [meal, setMeal] = useState(
     editMeal
@@ -173,12 +181,20 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
               />
             </Grid>
             <Grid item xs={2}>
-              <IconButton color="primary" disabled>
+              <IconButton
+                color="primary"
+                disabled
+                onClick={() => loadCommonMeal()}
+              >
                 <SaveOutlined />
               </IconButton>
             </Grid>
             <Grid item xs={2}>
-              <IconButton color="primary" disabled>
+              <IconButton
+                color="primary"
+                disabled
+                onClick={() => saveCommonMeal()}
+              >
                 <SystemUpdateAlt />
               </IconButton>
             </Grid>
@@ -206,12 +222,21 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
                   />
                 </Grid>
                 <Grid item xs={2}>
-                  <IconButton color="primary" disabled>
+                  <IconButton
+                    color="primary"
+                    disabled
+                    onClick={() => saveCommonIngredient()}
+                  >
                     <SaveOutlined />
                   </IconButton>
                 </Grid>
                 <Grid item xs={2}>
-                  <IconButton color="primary" aria-label="" disabled>
+                  <IconButton
+                    color="primary"
+                    aria-label=""
+                    disabled
+                    onClick={() => loadCommonIngredient()}
+                  >
                     <SystemUpdateAlt />
                   </IconButton>
                 </Grid>

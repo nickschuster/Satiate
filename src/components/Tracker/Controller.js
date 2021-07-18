@@ -413,6 +413,26 @@ export const TrackerController = ({ user }) => {
     };
   };
 
+  // Load an ingredient from the common ingredient list.
+  const loadCommonIngredient = () => {
+    console.log("Load common ingredient");
+  };
+
+  // Load a meal from the common meal list.
+  const loadCommonMeal = () => {
+    console.log("Load common meal");
+  };
+
+  // Save an ingredient to the common ingredient list.
+  const saveCommonIngredient = () => {
+    console.log("Save common ingredient");
+  };
+
+  // Save a meal to the common ingredient list.
+  const saveCommonMeal = () => {
+    console.log("Save common meal");
+  };
+
   // Finish the onboarding process.
   const finishOnboarding = () => {
     setTrackerState(TrackerStates.default);
@@ -430,6 +450,10 @@ export const TrackerController = ({ user }) => {
           setTrackerState={setTrackerState}
           addMeal={editMeal}
           editMeal={savedEditMeal.content}
+          loadCommonIngredient={loadCommonIngredient}
+          loadCommonMeal={loadCommonMeal}
+          saveCommonIngredient={saveCommonIngredient}
+          saveCommonMeal={saveCommonMeal}
         />
       );
     } else if (trackerState === TrackerStates.newUser) {
