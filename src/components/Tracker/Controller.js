@@ -416,21 +416,41 @@ export const TrackerController = ({ user }) => {
   // Load an ingredient from the common ingredient list.
   const loadCommonIngredient = () => {
     console.log("Load common ingredient");
+
+    // Change tracker state.
+
+    // Wait for callback that gets the sleceted ingredient or cancels operation.
+
+    // Pass selected ingredient to meal control.
   };
 
   // Load a meal from the common meal list.
   const loadCommonMeal = () => {
     console.log("Load common meal");
+
+    // Change tracker state.
+
+    // Wait for callback that gets the sleceted meal or cancels operation.
+
+    // Pass selected meal to meal control.
   };
 
   // Save an ingredient to the common ingredient list.
   const saveCommonIngredient = () => {
     console.log("Save common ingredient");
+
+    // API call to save the ingredient.
+
+    // Display notification of status.
   };
 
   // Save a meal to the common ingredient list.
   const saveCommonMeal = () => {
     console.log("Save common meal");
+
+    // API call to save the meal.
+
+    // Display notification of status.
   };
 
   // Finish the onboarding process.
