@@ -181,20 +181,12 @@ export const MealControl = ({
               />
             </Grid>
             <Grid item xs={2}>
-              <IconButton
-                color="primary"
-                disabled
-                onClick={() => loadCommonMeal()}
-              >
+              <IconButton color="primary" onClick={() => loadCommonMeal()}>
                 <SaveOutlined />
               </IconButton>
             </Grid>
             <Grid item xs={2}>
-              <IconButton
-                color="primary"
-                disabled
-                onClick={() => saveCommonMeal()}
-              >
+              <IconButton color="primary" onClick={() => saveCommonMeal()}>
                 <SystemUpdateAlt />
               </IconButton>
             </Grid>
@@ -224,7 +216,6 @@ export const MealControl = ({
                 <Grid item xs={2}>
                   <IconButton
                     color="primary"
-                    disabled
                     onClick={() => saveCommonIngredient()}
                   >
                     <SaveOutlined />
@@ -234,7 +225,6 @@ export const MealControl = ({
                   <IconButton
                     color="primary"
                     aria-label=""
-                    disabled
                     onClick={() => loadCommonIngredient()}
                   >
                     <SystemUpdateAlt />

@@ -25,6 +25,7 @@ import {
 import { OnboardingController } from "../Onboarding/Controller";
 import { UserParameters } from "../../util/userParameters";
 import { OnboardingStates } from "../Onboarding/OnboardingStates";
+import { CommonlyUsed } from "./CommonlyUsed";
 
 const useStyles = makeStyles((theme) => ({
   mealsContainer: {
@@ -428,6 +429,8 @@ export const TrackerController = ({ user }) => {
   const loadCommonMeal = () => {
     console.log("Load common meal");
 
+    setTrackerState(TrackerStates.commonlyUsed);
+
     // Change tracker state.
 
     // Wait for callback that gets the sleceted meal or cancels operation.
@@ -438,6 +441,8 @@ export const TrackerController = ({ user }) => {
   // Save an ingredient to the common ingredient list.
   const saveCommonIngredient = () => {
     console.log("Save common ingredient");
+
+    setTrackerState(TrackerStates.commonlyUsed);
 
     // API call to save the ingredient.
 
@@ -485,6 +490,8 @@ export const TrackerController = ({ user }) => {
           saveGoalsToUser={saveGoalsToUser}
         />
       );
+    } else if (trackerState === TrackerStates.commonlyUsed) {
+      return <CommonlyUsed />;
     }
     return null;
   };
