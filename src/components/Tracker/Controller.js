@@ -467,7 +467,14 @@ export const TrackerController = ({ user }) => {
   const activeForm = () => {
     if (trackerState === TrackerStates.addMeal) {
       return (
-        <MealControl setTrackerState={setTrackerState} addMeal={addMeal} />
+        <MealControl
+          setTrackerState={setTrackerState}
+          addMeal={addMeal}
+          loadCommonIngredient={loadCommonIngredient}
+          loadCommonMeal={loadCommonMeal}
+          saveCommonIngredient={saveCommonIngredient}
+          saveCommonMeal={saveCommonMeal}
+        />
       );
     } else if (trackerState === TrackerStates.editMeal) {
       return (
