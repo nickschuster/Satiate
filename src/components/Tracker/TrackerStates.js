@@ -6,5 +6,4 @@ export const TrackerStates = Object.freeze({
   loadMeal: 4,
   loadIngredient: 5,
   newUser: 6,
-  commonlyUsed: 7,
 });

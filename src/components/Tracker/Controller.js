@@ -25,7 +25,6 @@ import {
 import { OnboardingController } from "../Onboarding/Controller";
 import { UserParameters } from "../../util/userParameters";
 import { OnboardingStates } from "../Onboarding/OnboardingStates";
-import { CommonlyUsed } from "./CommonlyUsed";
 
 const useStyles = makeStyles((theme) => ({
   mealsContainer: {
@@ -414,50 +413,6 @@ export const TrackerController = ({ user }) => {
     };
   };
 
-  // Load an ingredient from the common ingredient list.
-  const loadCommonIngredient = () => {
-    console.log("Load common ingredient");
-
-    // Change tracker state.
-
-    // Wait for callback that gets the sleceted ingredient or cancels operation.
-
-    // Pass selected ingredient to meal control.
-  };
-
-  // Load a meal from the common meal list.
-  const loadCommonMeal = () => {
-    console.log("Load common meal");
-
-    setTrackerState(TrackerStates.commonlyUsed);
-
-    // Change tracker state.
-
-    // Wait for callback that gets the sleceted meal or cancels operation.
-
-    // Pass selected meal to meal control.
-  };
-
-  // Save an ingredient to the common ingredient list.
-  const saveCommonIngredient = () => {
-    console.log("Save common ingredient");
-
-    setTrackerState(TrackerStates.commonlyUsed);
-
-    // API call to save the ingredient.
-
-    // Display notification of status.
-  };
-
-  // Save a meal to the common ingredient list.
-  const saveCommonMeal = () => {
-    console.log("Save common meal");
-
-    // API call to save the meal.
-
-    // Display notification of status.
-  };
-
   // Finish the onboarding process.
   const finishOnboarding = () => {
     setTrackerState(TrackerStates.default);
@@ -467,14 +422,7 @@ export const TrackerController = ({ user }) => {
   const activeForm = () => {
     if (trackerState === TrackerStates.addMeal) {
       return (
-        <MealControl
-          setTrackerState={setTrackerState}
-          addMeal={addMeal}
-          loadCommonIngredient={loadCommonIngredient}
-          loadCommonMeal={loadCommonMeal}
-          saveCommonIngredient={saveCommonIngredient}
-          saveCommonMeal={saveCommonMeal}
-        />
+        <MealControl setTrackerState={setTrackerState} addMeal={addMeal} />
       );
     } else if (trackerState === TrackerStates.editMeal) {
       return (
@@ -482,10 +430,6 @@ export const TrackerController = ({ user }) => {
           setTrackerState={setTrackerState}
           addMeal={editMeal}
           editMeal={savedEditMeal.content}
-          loadCommonIngredient={loadCommonIngredient}
-          loadCommonMeal={loadCommonMeal}
-          saveCommonIngredient={saveCommonIngredient}
-          saveCommonMeal={saveCommonMeal}
         />
       );
     } else if (trackerState === TrackerStates.newUser) {
@@ -497,8 +441,6 @@ export const TrackerController = ({ user }) => {
           saveGoalsToUser={saveGoalsToUser}
         />
       );
-    } else if (trackerState === TrackerStates.commonlyUsed) {
-      return <CommonlyUsed />;
     }
     return null;
   };

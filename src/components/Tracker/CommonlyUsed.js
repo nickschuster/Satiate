@@ -1,11 +1,14 @@
 import React from "react";
+import { Grid } from "@material-ui/core";
 
 export const CommonlyUsed = () => {
   return (
     <>
-      <div>
-        <h1>Load a common ingreident or meal.</h1>
-      </div>
+      <form>
+        <Grid container>
+          <h1>Load a common ingreident or meal.</h1>
+        </Grid>
+      </form>
     </>
   );
 };

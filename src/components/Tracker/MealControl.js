@@ -10,6 +10,7 @@ import {
 import { SaveOutlined, Close, SystemUpdateAlt, Add } from "@material-ui/icons";
 import { TrackerStates } from "./TrackerStates";
 import { Keygen } from "../../util/keygen";
+import { CommonlyUsed } from "./CommonlyUsed";
 
 const useStyles = makeStyles((theme) => ({
   input1: {
@@ -70,15 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const MealControl = ({
-  setTrackerState,
-  addMeal,
-  editMeal,
-  loadCommonIngredient,
-  loadCommonMeal,
-  saveCommonIngredient,
-  saveCommonMeal,
-}) => {
+export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
   const classes = useStyles();
   const [meal, setMeal] = useState(
     editMeal
@@ -96,6 +89,7 @@ export const MealControl = ({
           },
         }
   );
+  const [loadCommon, setLoadCommon] = useState(false);
 
   useEffect(() => {
     if (!meal || Object.keys(meal.ingredients) === 0) {
@@ -157,6 +151,48 @@ export const MealControl = ({
         },
       };
     });
+  };
+
+  // Load an ingredient from the common ingredient list.
+  const loadCommonIngredient = () => {
+    console.log("Load common ingredient");
+
+    // Change tracker state.
+    setLoadCommon(true);
+
+    // Wait for callback that gets the selected ingredient or cancels operation.
+
+    // Pass selected ingredient to meal control.
+  };
+
+  // Load a meal from the common meal list.
+  const loadCommonMeal = () => {
+    console.log("Load common meal");
+
+    // Change state.
+    setLoadCommon(true);
+
+    // Wait for callback that gets the selected meal or cancels operation.
+
+    // Pass selected meal to meal control.
+  };
+
+  // Save an ingredient to the common ingredient list.
+  const saveCommonIngredient = () => {
+    console.log("Save common ingredient");
+
+    // API call to save the ingredient.
+
+    // Display notification of status.
+  };
+
+  // Save a meal to the common ingredient list.
+  const saveCommonMeal = () => {
+    console.log("Save common meal");
+
+    // API call to save the meal.
+
+    // Display notification of status.
   };
 
   return (
@@ -336,6 +372,12 @@ export const MealControl = ({
           </Grid>
         </Grid>
       </form>
+
+      {loadCommon ? (
+        <div className={classes.commonlyUsed}>
+          <CommonlyUsed />
+        </div>
+      ) : null}
     </>
   );
 };
