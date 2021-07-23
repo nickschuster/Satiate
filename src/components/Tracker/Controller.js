@@ -25,6 +25,7 @@ import {
 import { OnboardingController } from "../Onboarding/Controller";
 import { UserParameters } from "../../util/userParameters";
 import { OnboardingStates } from "../Onboarding/OnboardingStates";
+import { CommonlyUsed } from "./CommonlyUsed";
 
 const useStyles = makeStyles((theme) => ({
   mealsContainer: {
@@ -394,7 +395,7 @@ export const TrackerController = ({ user }) => {
       (param) => param.key === UserParameters.fatGoal
     );
     let carbs = userInfo.parameters.items.find(
-      (param) => param.key === UserParameters.carbsGoal
+      (param) => param.key === UserParameters.carbGoal
     );
     let protein = userInfo.parameters.items.find(
       (param) => param.key === UserParameters.proteinGoal
@@ -441,6 +442,8 @@ export const TrackerController = ({ user }) => {
           saveGoalsToUser={saveGoalsToUser}
         />
       );
+    } else if (trackerState === TrackerStates.commonlyUsed) {
+      return <CommonlyUsed />;
     }
     return null;
   };

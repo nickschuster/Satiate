@@ -10,7 +10,6 @@ import {
 import { SaveOutlined, Close, SystemUpdateAlt, Add } from "@material-ui/icons";
 import { TrackerStates } from "./TrackerStates";
 import { Keygen } from "../../util/keygen";
-import { CommonlyUsed } from "./CommonlyUsed";
 
 const useStyles = makeStyles((theme) => ({
   input1: {
@@ -89,7 +88,6 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
           },
         }
   );
-  const [loadCommon, setLoadCommon] = useState(false);
 
   useEffect(() => {
     if (!meal || Object.keys(meal.ingredients) === 0) {
@@ -157,8 +155,8 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
   const loadCommonIngredient = () => {
     console.log("Load common ingredient");
 
-    // Change tracker state.
-    setLoadCommon(true);
+    // Change state.
+    setTrackerState(TrackerStates.commonlyUsed);
 
     // Wait for callback that gets the selected ingredient or cancels operation.
 
@@ -170,7 +168,7 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
     console.log("Load common meal");
 
     // Change state.
-    setLoadCommon(true);
+    setTrackerState(TrackerStates.commonlyUsed);
 
     // Wait for callback that gets the selected meal or cancels operation.
 
@@ -372,12 +370,6 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
           </Grid>
         </Grid>
       </form>
-
-      {loadCommon ? (
-        <div className={classes.commonlyUsed}>
-          <CommonlyUsed />
-        </div>
-      ) : null}
     </>
   );
 };
