@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   fatGoal: {
     color: theme.palette.fat.main,
   },
-  carbsGoal: {
+  carbGoal: {
     color: theme.palette.carbs.main,
   },
   score: {
@@ -50,7 +50,7 @@ export const Totals = ({ getTotals, goals, getPoints }) => {
             </Typography>
           </Grid>
           <Grid item>
-            <Typography variant="h5" className={classes.carbsGoal}>
+            <Typography variant="h5" className={classes.carbGoal}>
               {getTotals("carbs")}/{goals.carbs || "----"}
             </Typography>
           </Grid>
