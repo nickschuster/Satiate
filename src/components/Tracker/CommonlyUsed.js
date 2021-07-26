@@ -5,12 +5,14 @@ const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: "50vh",
     width: "500px",
-    height: "500px",
+    height: "502px",
     border: "1px solid black",
+    borderRadius: 15,
   },
-  controlls: {
+  controlBG: {
+    maxHeight: "50vh",
     width: 75,
-    heigth: "100%",
+    height: 500,
     float: "left",
     border: "1px solid",
     backgroundColor: theme.palette.primary.main,
@@ -18,7 +20,9 @@ const useStyles = makeStyles((theme) => ({
     borderTopLeftRadius: 15,
     borderBottomLeftRadius: 15,
   },
-  details: {
+  detailBG: {
+    maxHeight: "50vh",
+    height: 500,
     border: "1px solid",
     borderColor: theme.palette.secondary.main,
     width: "calc(100% - 75px)",
@@ -27,25 +31,50 @@ const useStyles = makeStyles((theme) => ({
     borderTopRightRadius: 15,
     borderBottomRightRadius: 15,
   },
+  content: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.2)",
+    textAlign: "center",
+    overflowX: "auto",
+  },
+  controll: {
+    float: "left",
+    width: 75,
+  },
+  detail: {
+    float: "right",
+    width: "calc(100% - 75px)",
+  },
 }));
 
 export const CommonlyUsed = () => {
   const classes = useStyles();
 
-  const meals = ["test", "test", "test"];
+  const meals = [
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+  ];
 
   return (
     <>
       <div className={classes.container}>
-        <div className={classes.controlls}>
-          {meals.map(() => (
-            <h1>&gt;</h1>
-          ))}
-        </div>
-        <div className={classes.details}>
+        <div className={classes.controlBG}></div>
+        <div className={classes.detailBG}></div>
+        <div className={classes.content}>
           {meals.map(() => (
             <Grid container>
-              <h1>Content</h1>
+              <div className={classes.controll}>&gt;</div>
+              <div className={classes.detail}>CONTENT</div>
             </Grid>
           ))}
         </div>
