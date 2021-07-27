@@ -1,20 +1,21 @@
 import React from "react";
 import { makeStyles, Grid } from "@material-ui/core";
+import Arrow from "../../images/arrow.png";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: "50vh",
     width: "500px",
     height: "502px",
-    border: "1px solid black",
     borderRadius: 15,
+    overflow: "hidden",
   },
   controlBG: {
     maxHeight: "50vh",
     width: 75,
     height: 500,
     float: "left",
-    border: "1px solid",
+    border: "2px solid",
     backgroundColor: theme.palette.primary.main,
     borderColor: theme.palette.secondary.main,
     borderTopLeftRadius: 15,
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   detailBG: {
     maxHeight: "50vh",
     height: 500,
-    border: "1px solid",
+    border: "2px solid",
     borderColor: theme.palette.secondary.main,
     width: "calc(100% - 75px)",
     float: "right",
@@ -32,20 +33,27 @@ const useStyles = makeStyles((theme) => ({
     borderBottomRightRadius: 15,
   },
   content: {
+    maxHeight: "50vh",
     position: "absolute",
-    width: "100%",
-    height: "100%",
-    background: "rgba(0,0,0,0.2)",
+    width: "490px",
+    height: "99%",
     textAlign: "center",
     overflowX: "auto",
+    paddingTop: 20,
+    borderRadius: 15,
   },
-  controll: {
+  control: {
     float: "left",
     width: 75,
   },
   detail: {
     float: "right",
     width: "calc(100% - 75px)",
+  },
+  arrow: {
+    height: 50,
+    padding: 5,
+    rotate: "180deg",
   },
 }));
 
@@ -73,8 +81,13 @@ export const CommonlyUsed = () => {
         <div className={classes.content}>
           {meals.map(() => (
             <Grid container>
-              <div className={classes.controll}>&gt;</div>
-              <div className={classes.detail}>CONTENT</div>
+              <div className={classes.control}>
+                <img className={classes.arrow} src={Arrow} alt=">" />
+              </div>
+              <div className={classes.detail}>
+                <h1>content</h1>
+                <div></div>
+              </div>
             </Grid>
           ))}
         </div>
