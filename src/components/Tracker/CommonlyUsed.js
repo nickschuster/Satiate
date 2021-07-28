@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, Grid } from "@material-ui/core";
 import Arrow from "../../images/arrow.png";
+import transitions from "@material-ui/core/styles/transitions";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -53,12 +54,18 @@ const useStyles = makeStyles((theme) => ({
   arrow: {
     height: 50,
     padding: 5,
-    rotate: "180deg",
+    transform: "rotate(180deg)",
+    transition: "transform 0.5s ease",
+  },
+  arrowActive: {
+    transform: "rotate(270deg)",
   },
 }));
 
 export const CommonlyUsed = () => {
   const classes = useStyles();
+
+  const [expansions, setExpansions] = useState([]);
 
   const meals = [
     "test",
@@ -73,23 +80,55 @@ export const CommonlyUsed = () => {
     "test",
   ];
 
+  // Fill with state.
+  useEffect(() => {
+    let size = meals.length;
+    let array = [];
+    while (--size) array[size] = false;
+
+    setExpansions(array);
+  }, []);
+
+  // Toggle the expansion of a particular item.
+  const toggleExpansion = (key) => {
+    // Don't forget to check if it is even expandable.
+    setExpansions((prev) => {
+      prev[key] = !prev[key];
+      return { ...prev };
+    });
+  };
+
   return (
     <>
       <div className={classes.container}>
         <div className={classes.controlBG}></div>
         <div className={classes.detailBG}></div>
         <div className={classes.content}>
-          {meals.map(() => (
-            <Grid container>
-              <div className={classes.control}>
-                <img className={classes.arrow} src={Arrow} alt=">" />
-              </div>
-              <div className={classes.detail}>
-                <h1>content</h1>
-                <div></div>
-              </div>
-            </Grid>
-          ))}
+          {meals.map((value, key) => {
+            return (
+              <Grid container key={key}>
+                <div
+                  className={classes.control}
+                  role="button"
+                  tabIndex="0"
+                  onClick={() => toggleExpansion(key)}
+                  onKeyPress={() => toggleExpansion(key)}
+                >
+                  <img
+                    className={`${classes.arrow} ${
+                      expansions[key] ? classes.arrowActive : ""
+                    }`}
+                    src={Arrow}
+                    alt=">"
+                  />
+                </div>
+                <div className={classes.detail}>
+                  <div className={classes.detailTitle}>CONTENT TITLE</div>
+                  <div className={classes.detailContent}>CONTENT</div>
+                </div>
+              </Grid>
+            );
+          })}
         </div>
       </div>
     </>
