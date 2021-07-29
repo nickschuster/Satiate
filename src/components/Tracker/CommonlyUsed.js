@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles, Grid } from "@material-ui/core";
 import Arrow from "../../images/arrow.png";
-import transitions from "@material-ui/core/styles/transitions";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: "50vh",
+    maxWidth: "90vw",
     width: "500px",
     height: "502px",
     borderRadius: 15,
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     maxHeight: "50vh",
     position: "absolute",
-    width: "490px",
+    width: "calc(100% - 10px)",
     height: "99%",
     textAlign: "center",
     overflowX: "auto",
@@ -50,6 +50,18 @@ const useStyles = makeStyles((theme) => ({
   detail: {
     float: "right",
     width: "calc(100% - 75px)",
+  },
+  detailContent: {
+    maxHeight: 0,
+    overflow: "hidden",
+    transition: "max-height 0.5s ease",
+  },
+  detailContentActive: {
+    maxHeight: 250,
+  },
+  detailScroll: {
+    maxHeight: "inherit",
+    overflowX: "auto",
   },
   arrow: {
     height: 50,
@@ -82,12 +94,13 @@ export const CommonlyUsed = () => {
 
   // Fill with state.
   useEffect(() => {
+    console.log("Populate");
     let size = meals.length;
     let array = [];
     while (--size) array[size] = false;
 
     setExpansions(array);
-  }, []);
+  }, [meals.length]);
 
   // Toggle the expansion of a particular item.
   const toggleExpansion = (key) => {
@@ -124,7 +137,18 @@ export const CommonlyUsed = () => {
                 </div>
                 <div className={classes.detail}>
                   <div className={classes.detailTitle}>CONTENT TITLE</div>
-                  <div className={classes.detailContent}>CONTENT</div>
+                  <div
+                    className={`${classes.detailContent} ${
+                      expansions[key] ? classes.detailContentActive : ""
+                    }`}
+                  >
+                    <div className={classes.detailScroll}>
+                      <h1>Content</h1>
+                      <h1>Content</h1>
+                      <h1>Content</h1>
+                      <h1>Content</h1>CONTENT
+                    </div>
+                  </div>
                 </div>
               </Grid>
             );
