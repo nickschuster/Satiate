@@ -443,7 +443,7 @@ export const TrackerController = ({ user }) => {
         />
       );
     } else if (trackerState === TrackerStates.commonlyUsed) {
-      return <CommonlyUsed />;
+      return <CommonlyUsed setTrackerState={setTrackerState} />;
     }
     return null;
   };

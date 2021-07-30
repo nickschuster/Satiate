@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, Grid } from "@material-ui/core";
+import { makeStyles, Grid, IconButton } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 import Arrow from "../../images/arrow.png";
+import { TrackerStates } from "./TrackerStates";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -72,25 +74,20 @@ const useStyles = makeStyles((theme) => ({
   arrowActive: {
     transform: "rotate(270deg)",
   },
+  close: {
+    position: "absolute",
+    top: 2,
+    right: 2,
+    zIndex: 5000,
+  },
 }));
 
-export const CommonlyUsed = () => {
+export const CommonlyUsed = ({ setTrackerState }) => {
   const classes = useStyles();
 
   const [expansions, setExpansions] = useState([]);
 
-  const meals = [
-    "test",
-    "test",
-    "test",
-    "test",
-    "test",
-    "test",
-    "test",
-    "test",
-    "test",
-    "test",
-  ];
+  const meals = ["test", "test", "test", "test", "test", "test"];
 
   // Fill with state.
   useEffect(() => {
@@ -114,6 +111,14 @@ export const CommonlyUsed = () => {
   return (
     <>
       <div className={classes.container}>
+        <div className={classes.close}>
+          <IconButton
+            color="primary"
+            onClick={() => setTrackerState(TrackerStates.addMeal)}
+          >
+            <Close fontSize="large" />
+          </IconButton>
+        </div>
         <div className={classes.controlBG}></div>
         <div className={classes.detailBG}></div>
         <div className={classes.content}>
