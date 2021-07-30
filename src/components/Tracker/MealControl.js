@@ -70,7 +70,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
+export const MealControl = ({
+  setTrackerState,
+  addMeal,
+  editMeal,
+  loadCommonlyUsed,
+}) => {
   const classes = useStyles();
   const [meal, setMeal] = useState(
     editMeal
@@ -152,11 +157,10 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
   };
 
   // Load an ingredient from the common ingredient list.
-  const loadCommonIngredient = () => {
+  const loadCommonIngredient = (key) => {
     console.log("Load common ingredient");
 
-    // Change state.
-    setTrackerState(TrackerStates.commonlyUsed);
+    loadCommonlyUsed(setMeal, meal, key);
 
     // Wait for callback that gets the selected ingredient or cancels operation.
 
@@ -167,8 +171,7 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
   const loadCommonMeal = () => {
     console.log("Load common meal");
 
-    // Change state.
-    setTrackerState(TrackerStates.commonlyUsed);
+    loadCommonlyUsed(setMeal, meal, key);
 
     // Wait for callback that gets the selected meal or cancels operation.
 
@@ -259,7 +262,7 @@ export const MealControl = ({ setTrackerState, addMeal, editMeal }) => {
                   <IconButton
                     color="primary"
                     aria-label=""
-                    onClick={() => loadCommonIngredient()}
+                    onClick={() => loadCommonIngredient(key)}
                   >
                     <SystemUpdateAlt />
                   </IconButton>
