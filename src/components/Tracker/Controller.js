@@ -64,6 +64,7 @@ export const TrackerController = ({ user }) => {
   const [userData, setUserData] = useState();
   const [goals, setGoals] = useState({});
   const [onboardingState, setOnboardingState] = useState(undefined);
+  const [commonlyUsedState, setCommonlyUsedState] = useState(undefined);
 
   // Load the current user.
   useEffect(() => {
@@ -425,8 +426,12 @@ export const TrackerController = ({ user }) => {
   };
 
   // Get and set a commonly used ingredient or meal.
-  const loadCommonlyUsed = (updateMeal, previousMeal, ingredientkey) => {
+  const loadCommonlyUsed = (previousMeal, ingredientkey) => {
     setTrackerState(TrackerStates.commonlyUsed);
+    setCommonlyUsedState({
+      previousMeal,
+      ingredientkey,
+    });
   };
 
   // Save an ingredient or meal to commonly used.
@@ -464,6 +469,12 @@ export const TrackerController = ({ user }) => {
     addNotification("Item saved to your commonly used list!");
   };
 
+  // If a common meal was picked or canceled, return the previous state.
+  const getPreviousMeal = () => {
+    if (commonlyUsedState) return commonlyUsedState.previousMeal;
+    return undefined;
+  };
+
   // Detemine what form to show based on tracker state.
   const activeForm = () => {
     if (trackerState === TrackerStates.addMeal) {
@@ -471,6 +482,7 @@ export const TrackerController = ({ user }) => {
         <MealControl
           setTrackerState={setTrackerState}
           addMeal={addMeal}
+          editMeal={getPreviousMeal()}
           loadCommonlyUsed={loadCommonlyUsed}
           saveCommonlyUsed={saveCommonlyUsed}
         />
@@ -500,6 +512,8 @@ export const TrackerController = ({ user }) => {
           setTrackerState={setTrackerState}
           commonMeals={userData.savedMeals}
           commonIngredients={userData.savedIngredients}
+          commonlyUsedState={commonlyUsedState}
+          setCommonlyUsedState={setCommonlyUsedState}
         />
       );
     }

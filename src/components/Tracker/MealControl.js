@@ -159,20 +159,12 @@ export const MealControl = ({
 
   // Load an ingredient from the common ingredient list.
   const loadCommonIngredient = (key) => {
-    loadCommonlyUsed(setMeal, meal, key);
-
-    // Wait for callback that gets the selected ingredient or cancels operation.
-
-    // Pass selected ingredient to meal control.
+    loadCommonlyUsed(meal, key);
   };
 
   // Load a meal from the common meal list.
   const loadCommonMeal = () => {
-    loadCommonlyUsed(setMeal, meal);
-
-    // Wait for callback that gets the selected meal or cancels operation.
-
-    // Pass selected meal to meal control.
+    loadCommonlyUsed(meal);
   };
 
   // Save an ingredient to the common ingredient list.

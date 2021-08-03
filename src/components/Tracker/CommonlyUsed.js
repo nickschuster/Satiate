@@ -52,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
   detail: {
     float: "right",
     width: "calc(100% - 75px)",
+    "&:hover": {
+      backgroundColor: "rgba(0,0,0,0.2)",
+    },
   },
   detailContent: {
     maxHeight: 0,
@@ -86,23 +89,25 @@ export const CommonlyUsed = ({
   setTrackerState,
   commonMeals,
   commonIngredients,
+  commonlyUsedState,
+  setCommonlyUsedState,
 }) => {
   const classes = useStyles();
 
   const [expansions, setExpansions] = useState([]);
-
-  const meals = ["test", "test", "test", "test", "test", "test"];
+  const [display, setDisplay] = useState([]);
 
   // Fill with state.
   useEffect(() => {
     console.log("Populate");
     console.log(commonMeals, commonIngredients);
-    let size = meals.length;
+    let size = commonMeals.length + commonIngredients;
     let array = [];
     while (--size) array[size] = false;
+    setDisplay([...commonMeals.items, ...commonIngredients.items]);
 
     setExpansions(array);
-  }, [meals.length, commonMeals, commonIngredients]);
+  }, [commonMeals, commonIngredients]);
 
   // Toggle the expansion of a particular item.
   const toggleExpansion = (key) => {
@@ -113,50 +118,63 @@ export const CommonlyUsed = ({
     });
   };
 
+  // Exit commonly used.
+  const close = () => {
+    setTrackerState(TrackerStates.addMeal);
+  };
+
   return (
     <>
       <div className={classes.container}>
         <div className={classes.close}>
-          <IconButton
-            color="primary"
-            onClick={() => setTrackerState(TrackerStates.addMeal)}
-          >
+          <IconButton color="primary" onClick={() => close()}>
             <Close fontSize="large" />
           </IconButton>
         </div>
         <div className={classes.controlBG}></div>
         <div className={classes.detailBG}></div>
         <div className={classes.content}>
-          {meals.map((value, key) => {
+          {display.map((value, key) => {
             return (
               <Grid container key={key}>
-                <div
-                  className={classes.control}
-                  role="button"
-                  tabIndex="0"
-                  onClick={() => toggleExpansion(key)}
-                  onKeyPress={() => toggleExpansion(key)}
-                >
-                  <img
-                    className={`${classes.arrow} ${
-                      expansions[key] ? classes.arrowActive : ""
-                    }`}
-                    src={Arrow}
-                    alt=">"
-                  />
-                </div>
+                {value.ingredients ? (
+                  <div
+                    className={classes.control}
+                    role="button"
+                    tabIndex="0"
+                    onClick={() => toggleExpansion(key)}
+                    onKeyPress={() => toggleExpansion(key)}
+                  >
+                    <img
+                      className={`${classes.arrow} ${
+                        expansions[key] ? classes.arrowActive : ""
+                      }`}
+                      src={Arrow}
+                      alt=">"
+                    />
+                  </div>
+                ) : (
+                  <div className={classes.control}></div>
+                )}
                 <div className={classes.detail}>
-                  <div className={classes.detailTitle}>CONTENT TITLE</div>
+                  <div className={classes.detailTitle}>
+                    {value.name || "Not provided."}
+                  </div>
                   <div
                     className={`${classes.detailContent} ${
                       expansions[key] ? classes.detailContentActive : ""
                     }`}
                   >
                     <div className={classes.detailScroll}>
-                      <h1>Content</h1>
-                      <h1>Content</h1>
-                      <h1>Content</h1>
-                      <h1>Content</h1>CONTENT
+                      {value.ingredients ? (
+                        <div>
+                          {value.ingredients.map((value, key) => (
+                            <h1 key={key}>{value.name || "Not provided."}</h1>
+                          ))}
+                        </div>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </div>
                 </div>
