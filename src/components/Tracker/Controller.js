@@ -28,6 +28,7 @@ import { OnboardingController } from "../Onboarding/Controller";
 import { UserParameters } from "../../util/userParameters";
 import { OnboardingStates } from "../Onboarding/OnboardingStates";
 import { CommonlyUsed } from "./CommonlyUsed";
+import { useNotification } from "../Notification";
 
 const useStyles = makeStyles((theme) => ({
   mealsContainer: {
@@ -54,6 +55,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const TrackerController = ({ user }) => {
   const classes = useStyles();
+  const { addNotification } = useNotification();
+
   const [trackerState, setTrackerStateHook] = useState(TrackerStates.newUser);
   const [meals, setMeals] = useState([]);
   const [currentDay, setCurrentDay] = useState(moment().unix() / 86400);
@@ -438,6 +441,10 @@ export const TrackerController = ({ user }) => {
           },
         })
       );
+      setUserData((prev) => {
+        prev.savedIngredients.items.push(data);
+        return { ...prev };
+      });
     } else {
       data.ingredients = Object.values(data.ingredients);
       await API.graphql(
@@ -448,7 +455,13 @@ export const TrackerController = ({ user }) => {
           },
         })
       );
+      setUserData((prev) => {
+        prev.savedMeals.items.push(data);
+        return { ...prev };
+      });
     }
+
+    addNotification("Item saved to your commonly used list!");
   };
 
   // Detemine what form to show based on tracker state.
