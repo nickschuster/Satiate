@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, Grid, IconButton } from "@material-ui/core";
+import { makeStyles, Grid, IconButton, Typography } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import Arrow from "../../images/arrow.png";
 import { TrackerStates } from "./TrackerStates";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    maxHeight: "50vh",
+    maxHeight: "90vh",
     maxWidth: "90vw",
     width: "500px",
     height: "502px",
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
   },
   controlBG: {
-    maxHeight: "50vh",
+    maxHeight: "90vh",
     width: 75,
     height: 500,
     float: "left",
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottomLeftRadius: 15,
   },
   detailBG: {
-    maxHeight: "50vh",
+    maxHeight: "90vh",
     height: 500,
     border: "2px solid",
     borderColor: theme.palette.secondary.main,
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottomRightRadius: 15,
   },
   content: {
-    maxHeight: "50vh",
+    maxHeight: "90vh",
     position: "absolute",
     width: "calc(100% - 10px)",
     height: "99%",
@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "auto",
     paddingTop: 20,
     borderRadius: 15,
+  },
+  contentItem: {
+    paddingTop: 10,
   },
   control: {
     float: "left",
@@ -55,6 +58,9 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "rgba(0,0,0,0.1)",
     },
+  },
+  detailItem: {
+    padding: 10,
   },
   detailContent: {
     maxHeight: 0,
@@ -71,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
   arrow: {
     height: 50,
     padding: 5,
+    marginTop: 10,
     transform: "rotate(180deg)",
     transition: "transform 0.5s ease",
   },
@@ -83,13 +90,25 @@ const useStyles = makeStyles((theme) => ({
     right: 2,
     zIndex: 5000,
   },
+  calories: {
+    fontWeight: "bold",
+    color: theme.palette.primary.main,
+  },
+  protein: {
+    color: theme.palette.protein.main,
+  },
+  fat: {
+    color: theme.palette.fat.main,
+  },
+  carbs: {
+    color: theme.palette.carbs.main,
+  },
 }));
 
 export const CommonlyUsed = ({
   setTrackerState,
   commonMeals,
   commonIngredients,
-  commonlyUsedState,
   setCommonlyUsedState,
 }) => {
   const classes = useStyles();
@@ -99,8 +118,6 @@ export const CommonlyUsed = ({
 
   // Fill with state.
   useEffect(() => {
-    console.log("Populate");
-    console.log(commonMeals, commonIngredients);
     let size = commonMeals.length + commonIngredients;
     let array = [];
     while (--size) array[size] = false;
@@ -123,6 +140,37 @@ export const CommonlyUsed = ({
     setTrackerState(TrackerStates.addMeal);
   };
 
+  // Calculate the total for a meal or return the ingredient value.
+  const calculateTotal = (value, type) => {
+    if (value.ingredients) {
+      let total = 0;
+      for (const ing of value.ingredients) total += Number(ing[type]);
+      return total;
+    } else {
+      return value[type];
+    }
+  };
+
+  // Update the commonly used state with the selected item.
+  const handleSelection = (value) => {
+    if (value.ingredients) {
+      setCommonlyUsedState({
+        previousMeal: value,
+      });
+    } else {
+      setCommonlyUsedState((prev) => {
+        console.log(prev);
+        prev.previousMeal.ingredients[prev.ingredientKey] = { ...value };
+        const refCopy = { ...prev.previousMeal };
+        return {
+          previousMeal: refCopy,
+        };
+      });
+    }
+
+    close();
+  };
+
   return (
     <>
       <div className={classes.container}>
@@ -136,7 +184,7 @@ export const CommonlyUsed = ({
         <div className={classes.content}>
           {display.map((value, key) => {
             return (
-              <Grid container key={key}>
+              <Grid container key={key} className={classes.contentItem}>
                 {value.ingredients ? (
                   <div
                     className={classes.control}
@@ -144,6 +192,7 @@ export const CommonlyUsed = ({
                     tabIndex="0"
                     onClick={() => toggleExpansion(key)}
                     onKeyPress={() => toggleExpansion(key)}
+                    justify="center"
                   >
                     <img
                       className={`${classes.arrow} ${
@@ -156,9 +205,47 @@ export const CommonlyUsed = ({
                 ) : (
                   <div className={classes.control}></div>
                 )}
-                <div className={classes.detail}>
+                <div
+                  className={classes.detail}
+                  role="button"
+                  tabIndex="0"
+                  onClick={() => handleSelection(value)}
+                  onKeyPress={() => handleSelection(value)}
+                >
                   <div className={classes.detailTitle}>
-                    {value.name || "Not provided."}
+                    <Grid container>
+                      <Grid container justify="center">
+                        <Grid item>
+                          <Typography noWrap className={classes.title}>
+                            {value.name || "Not provided."}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid container justify="center">
+                        <Grid item>
+                          <Typography className={classes.calories}>
+                            {calculateTotal(value, "calories")}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid container justify="space-evenly">
+                        <Grid item>
+                          <Typography className={classes.protein}>
+                            {calculateTotal(value, "protein")}
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography className={classes.fat}>
+                            {calculateTotal(value, "fat")}
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography className={classes.carbs}>
+                            {calculateTotal(value, "carbs")}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
                   </div>
                   <div
                     className={`${classes.detailContent} ${
@@ -169,7 +256,38 @@ export const CommonlyUsed = ({
                       {value.ingredients ? (
                         <div>
                           {value.ingredients.map((value, key) => (
-                            <h1 key={key}>{value.name || "Not provided."}</h1>
+                            <Grid
+                              container
+                              justify="space-between"
+                              key={key}
+                              className={classes.detailItem}
+                            >
+                              <Grid item xs={12} sm={3}>
+                                <Typography className={classes.name}>
+                                  {value.name || "Not provided."}
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography className={classes.calories}>
+                                  {value.calories}
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography className={classes.protein}>
+                                  {value.protein}
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography className={classes.fat}>
+                                  {value.fat}
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography className={classes.carbs}>
+                                  {value.carbs}
+                                </Typography>
+                              </Grid>
+                            </Grid>
                           ))}
                         </div>
                       ) : (

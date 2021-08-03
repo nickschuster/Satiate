@@ -426,11 +426,11 @@ export const TrackerController = ({ user }) => {
   };
 
   // Get and set a commonly used ingredient or meal.
-  const loadCommonlyUsed = (previousMeal, ingredientkey) => {
+  const loadCommonlyUsed = (previousMeal, ingredientKey) => {
     setTrackerState(TrackerStates.commonlyUsed);
     setCommonlyUsedState({
       previousMeal,
-      ingredientkey,
+      ingredientKey,
     });
   };
 
@@ -472,6 +472,7 @@ export const TrackerController = ({ user }) => {
   // If a common meal was picked or canceled, return the previous state.
   const getPreviousMeal = () => {
     if (commonlyUsedState) return commonlyUsedState.previousMeal;
+    if (trackerState === TrackerStates.editMeal) return savedEditMeal.content;
     return undefined;
   };
 
@@ -492,7 +493,7 @@ export const TrackerController = ({ user }) => {
         <MealControl
           setTrackerState={setTrackerState}
           addMeal={editMeal}
-          editMeal={savedEditMeal.content}
+          editMeal={getPreviousMeal()}
           loadCommonlyUsed={loadCommonlyUsed}
           saveCommonlyUsed={saveCommonlyUsed}
         />
@@ -512,7 +513,6 @@ export const TrackerController = ({ user }) => {
           setTrackerState={setTrackerState}
           commonMeals={userData.savedMeals}
           commonIngredients={userData.savedIngredients}
-          commonlyUsedState={commonlyUsedState}
           setCommonlyUsedState={setCommonlyUsedState}
         />
       );
