@@ -28,6 +28,8 @@ const useStyles = makeStyles((theme) => ({
   },
   mealName: {
     color: theme.palette.text.main,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
   mealCalories: {
     fontWeight: "bold",
@@ -120,7 +122,7 @@ export const Meals = ({
           return (
             <div key={key} className={classes.headerContainer}>
               <Grid container justify="space-between">
-                <Grid item xs={12} sm={"auto"}>
+                <Grid item xs={12} sm={3}>
                   <Typography className={classes.mealName}>
                     {value.name || "Not provided."}
                   </Typography>
