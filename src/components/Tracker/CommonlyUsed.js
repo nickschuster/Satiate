@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     float: "right",
     width: "calc(100% - 75px)",
     "&:hover": {
-      backgroundColor: "rgba(0,0,0,0.2)",
+      backgroundColor: "rgba(0,0,0,0.1)",
     },
   },
   detailContent: {
