@@ -16,6 +16,8 @@ import {
   updateDay,
   updateParameter,
   createParameter,
+  createSavedIngredient,
+  createSavedMeal,
 } from "../../graphql/mutations";
 import {
   findMealsForDay,
@@ -419,11 +421,46 @@ export const TrackerController = ({ user }) => {
     setTrackerState(TrackerStates.default);
   };
 
+  // Get and set a commonly used ingredient or meal.
+  const loadCommonlyUsed = (updateMeal, previousMeal, ingredientkey) => {
+    setTrackerState(TrackerStates.commonlyUsed);
+  };
+
+  // Save an ingredient or meal to commonly used.
+  const saveCommonlyUsed = async (data, isIngredient) => {
+    console.log(data);
+    if (isIngredient) {
+      await API.graphql(
+        graphqlOperation(createSavedIngredient, {
+          input: {
+            userID: userData.id,
+            ...data,
+          },
+        })
+      );
+    } else {
+      data.ingredients = Object.values(data.ingredients);
+      await API.graphql(
+        graphqlOperation(createSavedMeal, {
+          input: {
+            userID: userData.id,
+            ...data,
+          },
+        })
+      );
+    }
+  };
+
   // Detemine what form to show based on tracker state.
   const activeForm = () => {
     if (trackerState === TrackerStates.addMeal) {
       return (
-        <MealControl setTrackerState={setTrackerState} addMeal={addMeal} />
+        <MealControl
+          setTrackerState={setTrackerState}
+          addMeal={addMeal}
+          loadCommonlyUsed={loadCommonlyUsed}
+          saveCommonlyUsed={saveCommonlyUsed}
+        />
       );
     } else if (trackerState === TrackerStates.editMeal) {
       return (
@@ -431,6 +468,8 @@ export const TrackerController = ({ user }) => {
           setTrackerState={setTrackerState}
           addMeal={editMeal}
           editMeal={savedEditMeal.content}
+          loadCommonlyUsed={loadCommonlyUsed}
+          saveCommonlyUsed={saveCommonlyUsed}
         />
       );
     } else if (trackerState === TrackerStates.newUser) {
@@ -443,7 +482,13 @@ export const TrackerController = ({ user }) => {
         />
       );
     } else if (trackerState === TrackerStates.commonlyUsed) {
-      return <CommonlyUsed setTrackerState={setTrackerState} />;
+      return (
+        <CommonlyUsed
+          setTrackerState={setTrackerState}
+          commonMeals={userData.savedMeals}
+          commonIngredients={userData.savedIngredients}
+        />
+      );
     }
     return null;
   };

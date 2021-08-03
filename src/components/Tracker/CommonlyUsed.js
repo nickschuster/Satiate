@@ -82,7 +82,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const CommonlyUsed = ({ setTrackerState }) => {
+export const CommonlyUsed = ({
+  setTrackerState,
+  commonMeals,
+  commonIngredients,
+}) => {
   const classes = useStyles();
 
   const [expansions, setExpansions] = useState([]);
@@ -92,12 +96,13 @@ export const CommonlyUsed = ({ setTrackerState }) => {
   // Fill with state.
   useEffect(() => {
     console.log("Populate");
+    console.log(commonMeals, commonIngredients);
     let size = meals.length;
     let array = [];
     while (--size) array[size] = false;
 
     setExpansions(array);
-  }, [meals.length]);
+  }, [meals.length, commonMeals, commonIngredients]);
 
   // Toggle the expansion of a particular item.
   const toggleExpansion = (key) => {

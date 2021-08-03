@@ -75,6 +75,7 @@ export const MealControl = ({
   addMeal,
   editMeal,
   loadCommonlyUsed,
+  saveCommonlyUsed,
 }) => {
   const classes = useStyles();
   const [meal, setMeal] = useState(
@@ -158,8 +159,6 @@ export const MealControl = ({
 
   // Load an ingredient from the common ingredient list.
   const loadCommonIngredient = (key) => {
-    console.log("Load common ingredient");
-
     loadCommonlyUsed(setMeal, meal, key);
 
     // Wait for callback that gets the selected ingredient or cancels operation.
@@ -169,9 +168,7 @@ export const MealControl = ({
 
   // Load a meal from the common meal list.
   const loadCommonMeal = () => {
-    console.log("Load common meal");
-
-    loadCommonlyUsed(setMeal, meal, key);
+    loadCommonlyUsed(setMeal, meal);
 
     // Wait for callback that gets the selected meal or cancels operation.
 
@@ -179,21 +176,14 @@ export const MealControl = ({
   };
 
   // Save an ingredient to the common ingredient list.
-  const saveCommonIngredient = () => {
-    console.log("Save common ingredient");
-
-    // API call to save the ingredient.
-
-    // Display notification of status.
+  const saveCommonIngredient = (key) => {
+    const ingredient = meal.ingredients[key];
+    saveCommonlyUsed(ingredient, true);
   };
 
   // Save a meal to the common ingredient list.
   const saveCommonMeal = () => {
-    console.log("Save common meal");
-
-    // API call to save the meal.
-
-    // Display notification of status.
+    saveCommonlyUsed(meal, false);
   };
 
   return (
@@ -218,12 +208,12 @@ export const MealControl = ({
               />
             </Grid>
             <Grid item xs={2}>
-              <IconButton color="primary" onClick={() => loadCommonMeal()}>
+              <IconButton color="primary" onClick={() => saveCommonMeal()}>
                 <SaveOutlined />
               </IconButton>
             </Grid>
             <Grid item xs={2}>
-              <IconButton color="primary" onClick={() => saveCommonMeal()}>
+              <IconButton color="primary" onClick={() => loadCommonMeal()}>
                 <SystemUpdateAlt />
               </IconButton>
             </Grid>
@@ -253,7 +243,7 @@ export const MealControl = ({
                 <Grid item xs={2}>
                   <IconButton
                     color="primary"
-                    onClick={() => saveCommonIngredient()}
+                    onClick={() => saveCommonIngredient(key)}
                   >
                     <SaveOutlined />
                   </IconButton>
