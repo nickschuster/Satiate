@@ -16,6 +16,7 @@ type Day @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["
   proteinGoal: Int
   fatGoal: Int
   carbGoal: Int
+  points: Int
 }
 
 type Meal {

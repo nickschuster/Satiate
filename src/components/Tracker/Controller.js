@@ -65,6 +65,7 @@ export const TrackerController = ({ user }) => {
   const [goals, setGoals] = useState({});
   const [onboardingState, setOnboardingState] = useState(undefined);
   const [commonlyUsedState, setCommonlyUsedState] = useState(undefined);
+  const [points, setPoints] = useState(0);
 
   // Load the current user.
   useEffect(() => {
@@ -197,6 +198,7 @@ export const TrackerController = ({ user }) => {
             userID: userData.id,
             pretty: currentDay,
             meals: [...formatMealsForSave(meals)],
+            points: points,
           },
         })
       );
@@ -267,6 +269,28 @@ export const TrackerController = ({ user }) => {
       total += getMealTotal(meal.content, type);
     }
     return total;
+  };
+
+  // Calculate the amount of points for the day.
+  const getPoints = () => {
+    const totalTypes = ["calories", "fat", "protein", "carbs"];
+    let totalPoints = 0;
+    for (const totalType of totalTypes) {
+      const total = getTotals(totalType);
+      const goal = goals[totalType];
+      console.log(goal, total, totalPoints);
+      let points = 0;
+      if (total > goal) {
+        points = (1.0 - (total - goal) / goal) / totalTypes.length;
+      } else {
+        points = total / goal / totalTypes.length;
+        console.log(points);
+      }
+      totalPoints += points;
+    }
+    totalPoints *= 100;
+    setPoints(totalPoints);
+    return totalPoints;
   };
 
   // Set the current tracker state.
@@ -531,7 +555,7 @@ export const TrackerController = ({ user }) => {
           deleteMeal={deleteMeal}
           saveEditMeal={saveEditMeal}
         />
-        <Totals getTotals={getTotals} goals={goals} getPoints={() => "----"} />
+        <Totals getTotals={getTotals} goals={goals} getPoints={getPoints} />
         <Footer />
       </Container>
       <div className={classes.formContainer}>{activeForm()}</div>
