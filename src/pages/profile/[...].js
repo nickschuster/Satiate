@@ -1,18 +1,11 @@
-import { makeStyles, Container } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import Auth from "@aws-amplify/auth";
 import { Footer } from "../../components/Footer";
 import { ProfileController } from "../../components/Profile/Controller.js";
-
-const useStyles = makeStyles({
-  container: {
-    background: "rgba(0,0,0,0.1)",
-  },
-});
+import { navigate } from "gatsby";
 
 const Profile = ({ location }) => {
-  //const { addNotification } = useNotification;
-  const classes = useStyles();
   const [route, setRoute] = useState(undefined);
   const [username, setUsername] = useState(undefined);
   const [isYou, setIsYou] = useState(false);
@@ -24,6 +17,10 @@ const Profile = ({ location }) => {
         const route = location.pathname.split("/")[2];
         const username = (await Auth.currentAuthenticatedUser()).attributes
           .preferred_username;
+
+        if (!route && !username) {
+          navigate("/");
+        }
 
         if (route === username || (username && !route)) {
           setIsYou(true);
