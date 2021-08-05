@@ -65,7 +65,6 @@ export const TrackerController = ({ user }) => {
   const [goals, setGoals] = useState({});
   const [onboardingState, setOnboardingState] = useState(undefined);
   const [commonlyUsedState, setCommonlyUsedState] = useState(undefined);
-  const [points, setPoints] = useState(0);
 
   // Load the current user.
   useEffect(() => {
@@ -198,7 +197,7 @@ export const TrackerController = ({ user }) => {
             userID: userData.id,
             pretty: currentDay,
             meals: [...formatMealsForSave(meals)],
-            points: points,
+            points: getPoints(),
           },
         })
       );
@@ -278,18 +277,16 @@ export const TrackerController = ({ user }) => {
     for (const totalType of totalTypes) {
       const total = getTotals(totalType);
       const goal = goals[totalType];
-      console.log(goal, total, totalPoints);
       let points = 0;
       if (total > goal) {
         points = (1.0 - (total - goal) / goal) / totalTypes.length;
       } else {
         points = total / goal / totalTypes.length;
-        console.log(points);
       }
       totalPoints += points;
     }
     totalPoints *= 100;
-    setPoints(totalPoints);
+    if (totalPoints === undefined || isNaN(totalPoints)) totalPoints = 0;
     return totalPoints;
   };
 

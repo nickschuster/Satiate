@@ -37,6 +37,7 @@ export const onCreateUser = /* GraphQL */ `
           proteinGoal
           fatGoal
           carbGoal
+          points
           createdAt
           updatedAt
           owner
@@ -118,6 +119,7 @@ export const onUpdateUser = /* GraphQL */ `
           proteinGoal
           fatGoal
           carbGoal
+          points
           createdAt
           updatedAt
           owner
@@ -199,6 +201,7 @@ export const onDeleteUser = /* GraphQL */ `
           proteinGoal
           fatGoal
           carbGoal
+          points
           createdAt
           updatedAt
           owner
@@ -264,6 +267,7 @@ export const onCreateDay = /* GraphQL */ `
       proteinGoal
       fatGoal
       carbGoal
+      points
       createdAt
       updatedAt
       owner
@@ -290,6 +294,7 @@ export const onUpdateDay = /* GraphQL */ `
       proteinGoal
       fatGoal
       carbGoal
+      points
       createdAt
       updatedAt
       owner
@@ -316,6 +321,7 @@ export const onDeleteDay = /* GraphQL */ `
       proteinGoal
       fatGoal
       carbGoal
+      points
       createdAt
       updatedAt
       owner

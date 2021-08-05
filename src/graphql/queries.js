@@ -37,6 +37,7 @@ export const getUser = /* GraphQL */ `
           proteinGoal
           fatGoal
           carbGoal
+          points
           createdAt
           updatedAt
           owner
@@ -116,6 +117,7 @@ export const listUsers = /* GraphQL */ `
             proteinGoal
             fatGoal
             carbGoal
+            points
             createdAt
             updatedAt
             owner
@@ -183,6 +185,7 @@ export const getDay = /* GraphQL */ `
       proteinGoal
       fatGoal
       carbGoal
+      points
       createdAt
       updatedAt
       owner
@@ -214,6 +217,7 @@ export const listDays = /* GraphQL */ `
         proteinGoal
         fatGoal
         carbGoal
+        points
         createdAt
         updatedAt
         owner
