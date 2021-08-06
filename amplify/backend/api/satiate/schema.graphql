@@ -1,3 +1,5 @@
+# Model types
+
 type User @model @auth(rules: [{ allow: owner }]) {
   id: ID! # Cognito SUB
   username: String!
@@ -17,19 +19,6 @@ type Day @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["
   fatGoal: Int
   carbGoal: Int
   points: Int
-}
-
-type Meal {
-  name: String
-  ingredients: [Ingredient]
-}
-
-type Ingredient {
-  name: String
-  calories: Int
-  protein: Int
-  fat: Int
-  carbs: Int
 }
 
 type SavedMeal @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fields: ["userID"]) {
@@ -54,5 +43,45 @@ type Parameter @model @auth(rules: [{ allow: owner }]) @key(name: "byUser", fiel
   userID: ID!
   key: String!
   value: String!
+}
+
+# Helper types
+
+type Meal {
+  name: String
+  ingredients: [Ingredient]
+}
+
+type Ingredient {
+  name: String
+  calories: Int
+  protein: Int
+  fat: Int
+  carbs: Int
+}
+
+type PublicProfile {
+  name: String
+  username: String
+  profileImage: String
+  activity: [Activity]
+  private: Boolean
+}
+
+type Activity {
+  dayId: String
+  pretty: Float
+  meals: [Meal]
+  calorieGoal: Int
+  proteinGoal: Int
+  fatGoal: Int
+  carbGoal: Int
+  points: Int
+}
+
+# Lamdba resolvers
+
+type Query {
+  getPublicProfile(id: String!): PublicProfile @function(name: "satiatePublicProfile-${env}")
 }
 
