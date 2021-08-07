@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FinishOnboarding } from "./FinishOnboarding";
 import { OnboardingStates } from "./OnboardingStates";
 import { SetGoals } from "./SetGoals";
+import { ProfileSetup } from "./ProfileSetup";
 
 export const OnboardingController = ({
   finishOnboarding,
@@ -49,6 +50,8 @@ export const OnboardingController = ({
   const getOnboardingState = () => {
     if (onboardingState === OnboardingStates.setGoals) {
       return <SetGoals saveGoals={saveGoals} />;
+    } else if (onboardingState === OnboardingStates.setProfile) {
+      return <ProfileSetup />;
     } else if (onboardingState === OnboardingStates.finish) {
       return <FinishOnboarding isLoading={isLoading} />;
     } else if (onboardingState === OnboardingStates.exit) {

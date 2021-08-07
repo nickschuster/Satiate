@@ -63,7 +63,9 @@ export const TrackerController = ({ user }) => {
   const [savedEditMeal, setEditMeal] = useState(undefined);
   const [userData, setUserData] = useState();
   const [goals, setGoals] = useState({});
-  const [onboardingState, setOnboardingState] = useState(undefined);
+  const [onboardingState, setOnboardingState] = useState(
+    OnboardingStates.setProfile
+  );
   const [commonlyUsedState, setCommonlyUsedState] = useState(undefined);
 
   // Load the current user.
@@ -106,42 +108,42 @@ export const TrackerController = ({ user }) => {
   }, [user]);
 
   // Save the current onboardingState.
-  useEffect(() => {
-    (async () => {
-      try {
-        // Only save if this is not the default state.
-        if (onboardingState !== undefined) {
-          let exists = userData.parameters.items.find(
-            (param) => param.key === UserParameters.onboardingState
-          );
-          if (exists) {
-            await API.graphql(
-              graphqlOperation(updateParameter, {
-                input: {
-                  id: exists.id,
-                  userID: userData.id,
-                  key: UserParameters.onboardingState,
-                  value: `${onboardingState}`,
-                },
-              })
-            );
-          } else {
-            await API.graphql(
-              graphqlOperation(createParameter, {
-                input: {
-                  userID: userData.id,
-                  key: UserParameters.onboardingState,
-                  value: `${onboardingState}`,
-                },
-              })
-            );
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  }, [onboardingState, userData]);
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       // Only save if this is not the default state.
+  //       if (onboardingState !== undefined) {
+  //         let exists = userData.parameters.items.find(
+  //           (param) => param.key === UserParameters.onboardingState
+  //         );
+  //         if (exists) {
+  //           await API.graphql(
+  //             graphqlOperation(updateParameter, {
+  //               input: {
+  //                 id: exists.id,
+  //                 userID: userData.id,
+  //                 key: UserParameters.onboardingState,
+  //                 value: `${onboardingState}`,
+  //               },
+  //             })
+  //           );
+  //         } else {
+  //           await API.graphql(
+  //             graphqlOperation(createParameter, {
+  //               input: {
+  //                 userID: userData.id,
+  //                 key: UserParameters.onboardingState,
+  //                 value: `${onboardingState}`,
+  //               },
+  //             })
+  //           );
+  //         }
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   })();
+  // }, [onboardingState, userData]);
 
   // Load meals whenever the day changes.
   useEffect(() => {
@@ -226,14 +228,14 @@ export const TrackerController = ({ user }) => {
   // current user information.
   const populateParameters = (userInfo) => {
     // Onboarding.
-    setOnboardingState(() => {
-      let state = userInfo.parameters.items.find(
-        (param) => param.key === UserParameters.onboardingState
-      );
-      if (!state) state = OnboardingStates.setGoals;
-      else state = parseInt(state.value);
-      return state;
-    });
+    // setOnboardingState(() => {
+    //   let state = userInfo.parameters.items.find(
+    //     (param) => param.key === UserParameters.onboardingState
+    //   );
+    //   if (!state) state = OnboardingStates.setGoals;
+    //   else state = parseInt(state.value);
+    //   return state;
+    // });
   };
 
   // Increase the current day by one.
