@@ -5,16 +5,32 @@ import {
   makeStyles,
   Button,
   Typography,
+  IconButton,
 } from "@material-ui/core";
+import { EditOutlined } from "@material-ui/icons";
+import ProfilePlaceholder from "../../images/placeholder.png";
+import { useNotification } from "../Notification";
 
 const useStyles = makeStyles((theme) => ({
-  profileImage: {
-    backgroundColor: "grey",
+  profileImageContainer: {
     height: 175,
     width: 175,
     borderRadius: 100,
     marginTop: 40,
     marginBottom: 10,
+  },
+  profileImage: {
+    backgroundImage: `url(${ProfilePlaceholder})`,
+    backgroundSize: "cover",
+    width: "inherit",
+    height: "inherit",
+    borderRadius: 100,
+    border: "1px solid black",
+  },
+  editImage: {
+    position: "absolute",
+    left: "calc(50% + 55px)",
+    top: 170,
   },
   input: {
     width: "100%",
@@ -26,13 +42,80 @@ const useStyles = makeStyles((theme) => ({
 
 export const ProfileSetup = () => {
   const classes = useStyles();
+  const { addNotification } = useNotification();
+
+  // Select an image to upload.
+  const selectImage = () => {
+    const imageInput = document.getElementById("image-upload");
+    imageInput.click();
+  };
+
+  // Upload a selected image.
+  const uploadImage = async () => {
+    try {
+      let image = await new Promise((resolve, reject) => {
+        const filePicker = document.getElementById("image-upload");
+
+        // Make sure an image was selected.
+        if (!filePicker || !filePicker.files || filePicker.files.length <= 0) {
+          reject("No file selected.");
+          return;
+        }
+
+        const image = filePicker.files[0];
+
+        // Limit file size.
+        if (image.size > 2048576) {
+          reject("Image is too big (max. 2 Mb)");
+          return;
+        }
+
+        // Make sure its an image.
+        if (!image.type.includes("image")) {
+          reject("Uploaded file is not a valid image.");
+          return;
+        }
+
+        resolve(image);
+        return;
+      });
+
+      displayImage(image);
+    } catch (e) {
+      let message = e;
+      if (!typeof e === "string") {
+        message = e.message;
+      }
+      addNotification(message);
+    }
+  };
+
+  // Show the uploaded image for preview.
+  const displayImage = (image) => {
+    let display = document.getElementById("profile-image");
+    display.src = URL.createObjectURL(image);
+  };
 
   return (
     <>
       <form>
         <Grid container spacing={3} justify="center">
           <Grid>
-            <div className={classes.profileImage}></div>
+            <div className={classes.profileImageContainer}>
+              <img className={classes.profileImage} id="profile-image" src="" />
+            </div>
+            <div className={classes.editImage}>
+              <input
+                id="image-upload"
+                hidden
+                type="file"
+                accept="image/x-png,image/jpeg,image/gif"
+                onChange={() => uploadImage()}
+              />
+              <IconButton color="primary" onClick={() => selectImage()}>
+                <EditOutlined />
+              </IconButton>
+            </div>
           </Grid>
           <Grid item xs={10}>
             <TextField
