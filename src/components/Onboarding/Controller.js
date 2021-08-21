@@ -4,6 +4,7 @@ import { FinishOnboarding } from "./FinishOnboarding";
 import { OnboardingStates } from "./OnboardingStates";
 import { SetGoals } from "./SetGoals";
 import { ProfileSetup } from "./ProfileSetup";
+import { AddFriends } from "./AddFriends";
 
 export const OnboardingController = ({
   finishOnboarding,
@@ -16,14 +17,14 @@ export const OnboardingController = ({
   // Save the set goals to parent state.
   const saveGoals = (goals) => {
     saveGoalsToUser(goals);
-    setOnboardingState(OnboardingStates.finish);
-    completeTasks();
+    setOnboardingState(OnboardingStates.setProfile);
   };
 
   // Save the profile details to parent state.
-  // const saveProfile = () => {
-  //   console.log("Save profile.");
-  // };
+  const saveProfile = () => {
+    console.log("Save profile.");
+    setOnboardingState(OnboardingStates.addFriends);
+  };
 
   // Wait for all setup tasks to finish. Display status.
   const completeTasks = async () => {
@@ -46,12 +47,21 @@ export const OnboardingController = ({
     finishOnboarding();
   };
 
+  // Go back to the previous onboarding step.
+  const goBack = () => {
+    setOnboardingState((prev) => {
+      return Math.max(prev - 1, 0);
+    });
+  };
+
   // Display the onboarding form based on current onboarding state.
   const getOnboardingState = () => {
     if (onboardingState === OnboardingStates.setGoals) {
       return <SetGoals saveGoals={saveGoals} />;
     } else if (onboardingState === OnboardingStates.setProfile) {
-      return <ProfileSetup />;
+      return <ProfileSetup saveProfile={saveProfile} goBack={goBack} />;
+    } else if (onboardingState === OnboardingStates.addFriends) {
+      return <AddFriends />;
     } else if (onboardingState === OnboardingStates.finish) {
       return <FinishOnboarding isLoading={isLoading} />;
     } else if (onboardingState === OnboardingStates.exit) {

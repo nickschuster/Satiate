@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const ProfileSetup = () => {
+export const ProfileSetup = ({ saveProfile, goBack }) => {
   const classes = useStyles();
   const { addNotification } = useNotification();
 
@@ -48,6 +48,12 @@ export const ProfileSetup = () => {
   const selectImage = () => {
     const imageInput = document.getElementById("image-upload");
     imageInput.click();
+  };
+
+  // Save the updated profile information.
+  const handleSubmit = () => {
+    // TODO form validation.
+    saveProfile();
   };
 
   // Upload a selected image.
@@ -102,6 +108,7 @@ export const ProfileSetup = () => {
         <Grid container spacing={3} justify="center">
           <Grid>
             <div className={classes.profileImageContainer}>
+              {/* eslint-disable-next-line jsx-a11y/alt-text */}
               <img className={classes.profileImage} id="profile-image" src="" />
             </div>
             <div className={classes.editImage}>
@@ -145,14 +152,23 @@ export const ProfileSetup = () => {
             <Grid
               container
               spacing={3}
-              justify="space-between"
+              justify="space-evenly"
               direction="row"
               alignItems="center"
               className={classes.control}
             >
               <Grid item>
+                <Button variant="outlined" color="primary">
+                  <Typography variant="h5" onClick={() => goBack()}>
+                    Back
+                  </Typography>
+                </Button>
+              </Grid>
+              <Grid item>
                 <Button variant="contained" color="primary">
-                  <Typography variant="h5">Next</Typography>
+                  <Typography variant="h5" onClick={() => handleSubmit()}>
+                    Next
+                  </Typography>
                 </Button>
               </Grid>
             </Grid>

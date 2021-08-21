@@ -16,6 +16,7 @@ export const ProfileController = ({ username, route, isYou }) => {
   useEffect(() => {
     (async () => {
       // Some api call that gets publicly viewable activity data.
+      setUserData({});
     })();
   }, []);
 
