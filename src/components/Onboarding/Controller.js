@@ -5,6 +5,7 @@ import { OnboardingStates } from "./OnboardingStates";
 import { SetGoals } from "./SetGoals";
 import { ProfileSetup } from "./ProfileSetup";
 import { AddFriends } from "./AddFriends";
+import { SeeLeaderboard } from "./SeeLeaderboard";
 
 export const OnboardingController = ({
   finishOnboarding,
@@ -24,6 +25,12 @@ export const OnboardingController = ({
   const saveProfile = () => {
     console.log("Save profile.");
     setOnboardingState(OnboardingStates.addFriends);
+  };
+
+  // Save and follow the selected friends.
+  const saveFriends = () => {
+    console.log("Save friends.");
+    setOnboardingState(OnboardingStates.showOnLeaderboard);
   };
 
   // Wait for all setup tasks to finish. Display status.
@@ -61,7 +68,9 @@ export const OnboardingController = ({
     } else if (onboardingState === OnboardingStates.setProfile) {
       return <ProfileSetup saveProfile={saveProfile} goBack={goBack} />;
     } else if (onboardingState === OnboardingStates.addFriends) {
-      return <AddFriends />;
+      return <AddFriends saveFriends={saveFriends} goBack={goBack} />;
+    } else if (onboardingState === OnboardingStates.showOnLeaderboard) {
+      return <SeeLeaderboard />;
     } else if (onboardingState === OnboardingStates.finish) {
       return <FinishOnboarding isLoading={isLoading} />;
     } else if (onboardingState === OnboardingStates.exit) {

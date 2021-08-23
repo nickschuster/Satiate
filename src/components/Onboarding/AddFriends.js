@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const AddFriends = () => {
+export const AddFriends = ({ goBack, saveFriends }) => {
   const classes = useStyles();
 
   const [items, setItems] = useState([
@@ -86,11 +86,18 @@ export const AddFriends = () => {
     },
   ]);
 
+  // Toggle the follow status for a specific profile.
   const followProfile = (key) => {
     setItems((prev) => {
       prev[key].following = !prev[key].following;
       return [...prev];
     });
+  };
+
+  // Save the selected followed friends.
+  const handleSubmit = () => {
+    // TODO Verify
+    saveFriends(items);
   };
 
   return (
@@ -136,12 +143,16 @@ export const AddFriends = () => {
           >
             <Grid item>
               <Button variant="outlined" color="primary">
-                <Typography variant="h5">Back</Typography>
+                <Typography variant="h5" onClick={() => goBack()}>
+                  Back
+                </Typography>
               </Button>
             </Grid>
             <Grid item>
               <Button variant="contained" color="primary">
-                <Typography variant="h5">Next</Typography>
+                <Typography variant="h5" onClick={() => handleSubmit()}>
+                  Next
+                </Typography>
               </Button>
             </Grid>
           </Grid>
