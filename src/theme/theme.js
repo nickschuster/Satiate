@@ -95,6 +95,15 @@ let lightTheme = createMuiTheme({
     carbs: {
       main: themeColorLight.carbs,
     },
+    first: {
+      main: themeColorLight.first,
+    },
+    second: {
+      main: themeColorLight.second,
+    },
+    third: {
+      main: themeColorLight.third,
+    },
   },
 });
 
