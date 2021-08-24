@@ -33,6 +33,13 @@ export const OnboardingController = ({
     setOnboardingState(OnboardingStates.showOnLeaderboard);
   };
 
+  // Start wrapping up onboarding.
+  const saveLeaderboard = () => {
+    console.log("Save leaderboard");
+    setOnboardingState(OnboardingStates.finish);
+    completeTasks();
+  };
+
   // Wait for all setup tasks to finish. Display status.
   const completeTasks = async () => {
     setLoading(true);
@@ -70,7 +77,9 @@ export const OnboardingController = ({
     } else if (onboardingState === OnboardingStates.addFriends) {
       return <AddFriends saveFriends={saveFriends} goBack={goBack} />;
     } else if (onboardingState === OnboardingStates.showOnLeaderboard) {
-      return <SeeLeaderboard />;
+      return (
+        <SeeLeaderboard goBack={goBack} saveLeaderboard={saveLeaderboard} />
+      );
     } else if (onboardingState === OnboardingStates.finish) {
       return <FinishOnboarding isLoading={isLoading} />;
     } else if (onboardingState === OnboardingStates.exit) {
