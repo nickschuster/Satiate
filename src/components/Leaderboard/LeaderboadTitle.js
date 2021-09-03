@@ -1,9 +1,13 @@
-import { Grid, Typography, makeStyles, Link } from "@material-ui/core";
+import { Grid, Typography, makeStyles } from "@material-ui/core";
+import { Link } from "gatsby";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   title: {
     marginTop: "10%",
+  },
+  links: {
+    margin: "5%",
   },
   link: {
     "&:hover": {
@@ -28,16 +32,18 @@ export const LeaderboardTitle = () => {
       <Typography variant="h4" color="secondary" align="center">
         Level up your fitness.
       </Typography>
-      <Typography variant="h6" color="secondary" align="center">
-        <Link to="/profile" className={classes.link} color="secondary">
-          Profile
-        </Link>
-      </Typography>
-      <Typography variant="h6" color="secondary" align="center">
-        <Link to="/" className={classes.link} color="secondary">
-          Tracker
-        </Link>
-      </Typography>
+      <div className={classes.links}>
+        <Typography variant="h6" color="secondary" align="center">
+          <Link to="/profile" className={classes.link}>
+            Profile
+          </Link>
+        </Typography>
+        <Typography variant="h6" color="secondary" align="center">
+          <Link to="/" className={classes.link}>
+            Tracker
+          </Link>
+        </Typography>
+      </div>
     </>
   );
 };
