@@ -65,6 +65,15 @@ let lightTheme = createMuiTheme({
         },
       },
     },
+    MuiTab: {
+      root: {
+        fontSize: "1.25rem",
+        textTransform: "none",
+      },
+      textColorSecondary: {
+        color: themeColorLight.text,
+      },
+    },
   },
   typography: {
     h1: {
