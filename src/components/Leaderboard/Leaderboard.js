@@ -5,19 +5,26 @@ import {
   useMediaQuery,
   Box,
   Typography,
-  useTheme,
+  makeStyles,
 } from "@material-ui/core";
 import React, { useState } from "react";
 
-function a11yProps(index) {
+const useStyles = makeStyles({
+  tabIndicator: {
+    right: "initial",
+  },
+});
+
+// Template code from Material UI. Helper function for tab props.
+const a11yProps = (index) => {
   return {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,
   };
-}
+};
 
 export const Leaderboard = () => {
-  const theme = useTheme();
+  const classes = useStyles();
   const orientTabs = useMediaQuery((theme) => theme.breakpoints.down("xs"));
   const [value, setCurrentTab] = useState(0);
 
@@ -30,6 +37,7 @@ export const Leaderboard = () => {
     <>
       <Grid>
         <Tabs
+          classes={{ indicator: classes.tabIndicator }}
           value={value}
           onChange={handleTabChange}
           aria-label="simple tabs example"
@@ -37,9 +45,16 @@ export const Leaderboard = () => {
           textColor="secondary"
           orientation={orientTabs ? "vertical" : "horizontal"}
         >
-          <Tab textColor="secondary" label="Item One" {...a11yProps(0)} />
-          <Tab textColor="secondary" label="Item Two" {...a11yProps(1)} />
-          <Tab textColor="secondary" label="Item Three" {...a11yProps(2)} />
+          <Tab
+            textColor="secondary"
+            label="Your leaderboard"
+            {...a11yProps(0)}
+          />
+          <Tab
+            textColor="secondary"
+            label="Local leaderboard"
+            {...a11yProps(1)}
+          />
         </Tabs>
         <TabPanel value={value} index={0}>
           Item One
@@ -47,14 +62,12 @@ export const Leaderboard = () => {
         <TabPanel value={value} index={1}>
           Item Two
         </TabPanel>
-        <TabPanel value={value} index={2}>
-          Item Three
-        </TabPanel>
       </Grid>
     </>
   );
 };
 
+// Content container for tabs. Template code from material UI.
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
 
