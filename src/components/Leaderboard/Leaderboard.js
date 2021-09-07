@@ -9,11 +9,32 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   tabIndicator: {
     right: "initial",
   },
-});
+  profileContainer: {
+    overflowY: "auto",
+  },
+  profile: {
+    border: "1px solid black",
+    textAlign: "center",
+  },
+  profileImage: {
+    height: 100,
+    width: 100,
+  },
+  profileName: {},
+  first: {
+    borderColor: theme.palette.first.main,
+  },
+  second: {
+    borderColor: theme.palette.second.main,
+  },
+  third: {
+    borderColor: theme.palette.third.main,
+  },
+}));
 
 // Template code from Material UI. Helper function for tab props.
 const a11yProps = (index) => {
@@ -28,9 +49,39 @@ export const Leaderboard = () => {
   const orientTabs = useMediaQuery((theme) => theme.breakpoints.down("xs"));
   const [value, setCurrentTab] = useState(0);
 
+  // Test data.
+  const leaderboard = [
+    {
+      image: "test",
+      name: "test",
+    },
+    {
+      image: "test",
+      name: "test",
+    },
+    {
+      image: "test",
+      name: "test",
+    },
+    {
+      image: "test",
+      name: "test",
+    },
+  ];
+
   // Switches tabs.
   const handleTabChange = (_, newValue) => {
     setCurrentTab(newValue);
+  };
+
+  // Get the users personal leaderboard.
+  const getYourLeaderboard = () => {
+    return leaderboard;
+  };
+
+  // Get the local leaderboard.
+  const getLocalLeaderboard = () => {
+    return leaderboard;
   };
 
   return (
@@ -57,10 +108,10 @@ export const Leaderboard = () => {
           />
         </Tabs>
         <TabPanel value={value} index={0}>
-          Item One
+          <LeaderboardList profileList={getYourLeaderboard()} />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Item Two
+          <LeaderboardList profileList={getLocalLeaderboard()} />
         </TabPanel>
       </Grid>
     </>
@@ -85,5 +136,31 @@ const TabPanel = (props) => {
         </Box>
       )}
     </div>
+  );
+};
+
+// Leaderboard list display.
+const LeaderboardList = ({ profileList }) => {
+  const classes = useStyles();
+
+  // Set the right border color for 1/2/3 place.
+  const getBorderColor = (place) => {
+    if (place === 0) return classes.first;
+    else if (place === 1) return classes.second;
+    else if (place === 2) return classes.thrid;
+    else return "";
+  };
+
+  return (
+    <>
+      <div className={classes.profileContainer}>
+        {profileList.map((value, key) => (
+          <div className={classes.profile}>
+            <img className={classes.profileImage} />
+            <div className={classes.profileName}>test</div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 };

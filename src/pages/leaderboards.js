@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Leaderboard } from "../components/Leaderboard/Leaderboard";
 import { LeaderboardTitle } from "../components/Leaderboard/LeaderboadTitle";
 import { Auth } from "aws-amplify";
+import { Footer } from "../components/Footer";
 
 const useStyles = makeStyles({});
 
@@ -23,6 +24,7 @@ const Leaderboards = () => {
       <Container>
         <LeaderboardTitle />
         <Leaderboard />
+        <Footer />
       </Container>
     </>
   );
