@@ -8,6 +8,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import React, { useState } from "react";
+import Placeholder from "../../images/placeholder.png";
 
 const useStyles = makeStyles((theme) => ({
   tabIndicator: {
@@ -15,16 +16,36 @@ const useStyles = makeStyles((theme) => ({
   },
   profileContainer: {
     overflowY: "auto",
+    maxHeight: "40vh",
+    height: 500,
   },
   profile: {
-    border: "1px solid black",
-    textAlign: "center",
+    position: "relative",
+    maxWidth: "65vw",
+    width: 320,
+    height: 85,
+    left: "50%",
+    transform: "translate(-50%)",
   },
   profileImage: {
-    height: 100,
-    width: 100,
+    height: 75,
+    width: 75,
+    float: "left",
+    backgroundImage: `url(${Placeholder})`,
+    backgroundSize: "cover",
+    borderRadius: 100,
+    border: "2px solid",
+    margin: 5,
   },
-  profileName: {},
+  profileName: {
+    width: 100,
+    float: "left",
+    marginLeft: 10,
+    marginTop: 26,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
   first: {
     borderColor: theme.palette.first.main,
   },
@@ -53,7 +74,7 @@ export const Leaderboard = () => {
   const leaderboard = [
     {
       image: "test",
-      name: "test",
+      name: "testsssssssssssssssssssss",
     },
     {
       image: "test",
@@ -147,7 +168,7 @@ const LeaderboardList = ({ profileList }) => {
   const getBorderColor = (place) => {
     if (place === 0) return classes.first;
     else if (place === 1) return classes.second;
-    else if (place === 2) return classes.thrid;
+    else if (place === 2) return classes.third;
     else return "";
   };
 
@@ -156,8 +177,12 @@ const LeaderboardList = ({ profileList }) => {
       <div className={classes.profileContainer}>
         {profileList.map((value, key) => (
           <div className={classes.profile}>
-            <img className={classes.profileImage} />
-            <div className={classes.profileName}>test</div>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+
+            <img className={`${classes.profileImage} ${getBorderColor(key)}`} />
+            <div className={classes.profileName}>
+              <Typography variant="h5">{value.name}</Typography>
+            </div>
           </div>
         ))}
       </div>
