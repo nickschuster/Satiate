@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   profileContainer: {
     overflowY: "auto",
     maxHeight: "40vh",
-    height: 500,
+    height: 300,
   },
   profile: {
     position: "relative",

@@ -142,17 +142,21 @@ export const AddFriends = ({ goBack, saveFriends }) => {
             className={classes.buttonContainer}
           >
             <Grid item>
-              <Button variant="outlined" color="primary">
-                <Typography variant="h5" onClick={() => goBack()}>
-                  Back
-                </Typography>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => goBack()}
+              >
+                <Typography variant="h5">Back</Typography>
               </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="primary">
-                <Typography variant="h5" onClick={() => handleSubmit()}>
-                  Next
-                </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleSubmit()}
+              >
+                <Typography variant="h5">Next</Typography>
               </Button>
             </Grid>
           </Grid>

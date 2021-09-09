@@ -8,6 +8,26 @@ const useStyles = makeStyles((theme) => ({
   },
   links: {
     margin: "5%",
+    [theme.breakpoints.down("xs")]: {
+      margin: 5,
+      height: 30,
+    },
+  },
+  profileLink: {
+    [theme.breakpoints.down("xs")]: {
+      width: "50%",
+      float: "left",
+      textAlign: "right",
+      paddingRight: 5,
+    },
+  },
+  trackerLink: {
+    [theme.breakpoints.down("xs")]: {
+      width: "50%",
+      float: "left",
+      textAlign: "left",
+      paddingLeft: 5,
+    },
   },
   link: {
     "&:hover": {
@@ -33,12 +53,22 @@ export const LeaderboardTitle = () => {
         Level up your fitness.
       </Typography>
       <div className={classes.links}>
-        <Typography variant="h6" color="secondary" align="center">
+        <Typography
+          variant="h6"
+          color="secondary"
+          align="center"
+          className={classes.profileLink}
+        >
           <Link to="/profile" className={classes.link}>
             Profile
           </Link>
         </Typography>
-        <Typography variant="h6" color="secondary" align="center">
+        <Typography
+          variant="h6"
+          color="secondary"
+          align="center"
+          className={classes.trackerLink}
+        >
           <Link to="/" className={classes.link}>
             Tracker
           </Link>

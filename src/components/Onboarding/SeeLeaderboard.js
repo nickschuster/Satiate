@@ -117,15 +117,15 @@ export const SeeLeaderboard = ({ goBack, saveLeaderboard }) => {
             justify="space-evenly"
             className={classes.buttonContainer}
           >
-            <Button variant="outlined" color="primary">
-              <Typography variant="h5" onClick={() => goBack()}>
-                Back
-              </Typography>
+            <Button variant="outlined" color="primary" onClick={() => goBack()}>
+              <Typography variant="h5">Back</Typography>
             </Button>
-            <Button variant="contained" color="primary">
-              <Typography variant="h5" onClick={() => saveLeaderboard()}>
-                Next
-              </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => saveLeaderboard()}
+            >
+              <Typography variant="h5">Next</Typography>
             </Button>
           </Grid>
         </Grid>
