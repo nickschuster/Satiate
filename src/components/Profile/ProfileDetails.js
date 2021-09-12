@@ -11,22 +11,24 @@ import React from "react";
 import Placeholder from "../../images/placeholder.png";
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    marginTop: 50,
-  },
   profilePicture: {
-    margin: 20,
     display: "block",
-    height: "175px",
-    width: "175px",
+    height: "100%",
+    width: "100%",
     backgroundColor: "grey",
     borderRadius: 100,
     border: "1px solid black",
   },
+  settingParent: {
+    height: "min(175px, 40vw)",
+    width: "min(175px, 40vw)",
+    margin: 20,
+  },
   settings: {
-    position: "absolute",
-    top: 210,
-    left: "calc(50% + 60px)",
+    position: "relative",
+    bottom: 30,
+    right: "-50%",
+    width: 48,
   },
   follow: {
     padding: 10,
@@ -39,20 +41,22 @@ export const ProfileDetails = ({ name, username, isYou }) => {
   return (
     <Grid container align="center" justify="center" direction="column">
       <Grid item>
-        <img
-          src={Placeholder}
-          alt="Profile"
-          className={classes.profilePicture}
-        />
-        {isYou ? (
-          <div className={classes.settings}>
-            <IconButton color="secondary">
-              <Settings />
-            </IconButton>
-          </div>
-        ) : (
-          ""
-        )}
+        <div className={classes.settingParent}>
+          <img
+            src={Placeholder}
+            alt="Profile"
+            className={classes.profilePicture}
+          />
+          {isYou ? (
+            <div className={classes.settings}>
+              <IconButton color="secondary">
+                <Settings />
+              </IconButton>
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
       </Grid>
       <Grid item>
         <Typography variant="h4" color="secondary">
@@ -71,6 +75,8 @@ export const ProfileDetails = ({ name, username, isYou }) => {
           </Button>
         </Grid>
       )}
+
+      <Grid item></Grid>
     </Grid>
   );
 };

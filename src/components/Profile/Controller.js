@@ -4,7 +4,7 @@ import { ProfileDetails } from "./ProfileDetails";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    marginTop: 50,
+    marginTop: "2%",
   },
 }));
 
@@ -27,6 +27,7 @@ export const ProfileController = ({ username, route, isYou }) => {
           name={userData.name}
           image={userData.image}
           username={userData.username}
+          isYou={isYou}
         />
         <Grid container>{/* Activity */}</Grid>
       </Grid>

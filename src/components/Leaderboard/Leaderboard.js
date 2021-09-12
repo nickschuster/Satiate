@@ -178,7 +178,6 @@ const LeaderboardList = ({ profileList }) => {
         {profileList.map((value, key) => (
           <div className={classes.profile}>
             {/* eslint-disable-next-line jsx-a11y/alt-text */}
-
             <img className={`${classes.profileImage} ${getBorderColor(key)}`} />
             <div className={classes.profileName}>
               <Typography variant="h5">{value.name}</Typography>

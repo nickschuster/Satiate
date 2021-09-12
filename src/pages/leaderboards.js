@@ -5,11 +5,7 @@ import { LeaderboardTitle } from "../components/Leaderboard/LeaderboadTitle";
 import { Auth } from "aws-amplify";
 import { Footer } from "../components/Footer";
 
-const useStyles = makeStyles({});
-
 const Leaderboards = () => {
-  const classes = useStyles();
-
   const [user, setUser] = useState(undefined);
 
   useEffect(() => {
