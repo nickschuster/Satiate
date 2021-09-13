@@ -1,6 +1,7 @@
 import { Grid, makeStyles } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { ProfileDetails } from "./ProfileDetails";
+import { ProfileActivity } from "./ProfileActivity";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -29,7 +30,7 @@ export const ProfileController = ({ username, route, isYou }) => {
           username={userData.username}
           isYou={isYou}
         />
-        <Grid container>{/* Activity */}</Grid>
+        <ProfileActivity />
       </Grid>
     </>
   );

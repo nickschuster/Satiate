@@ -75,8 +75,6 @@ export const ProfileDetails = ({ name, username, isYou }) => {
           </Button>
         </Grid>
       )}
-
-      <Grid item></Grid>
     </Grid>
   );
 };
