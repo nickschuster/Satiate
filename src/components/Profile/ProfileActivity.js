@@ -1,66 +1,78 @@
-import React, { useState } from "react";
-import { Grid } from "@material-ui/core";
-import CalendarHeatmap from "react-calendar-heatmap";
-import ReactTooltip from "react-tooltip";
+import React, { useEffect, useState } from "react";
+import { Grid, makeStyles } from "@material-ui/core";
 import moment from "moment";
 
 import "react-calendar-heatmap/dist/styles.css";
 
+const useStyles = makeStyles({
+  calendar: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  col: {
+    float: "left",
+    width: 62,
+    border: "1px solid black",
+  },
+  row: {
+    height: 50,
+    width: 50,
+    margin: 5,
+    border: "1px solid black",
+  },
+});
+
 export const ProfileActivity = () => {
-  const [endDate, setEndDate] = useState(new Date());
+  const classes = useStyles();
+  const [endDate, setEndDate] = useState(moment());
+  const [values, setValues] = useState([]);
+
+  // Populate values.
+  useEffect(() => {
+    setValues(getValues());
+  }, []);
 
   // Calculate the start date for the heatmap.
   const getStartDate = () => {
-    return endDate.subtract(100, "d");
+    return getShiftedDate(30, endDate);
   };
 
-  // Get the values for the heatmap.
-  const getValues = getRange(200).map((index) => {
-    return {
-      date: shiftDate(endDate, -index),
-      count: getRandomInt(1, 3),
-    };
-  });
+  // Shift a date by an amount of days.
+  const getShiftedDate = (amount, date) => {
+    return moment(date).subtract(amount, "days");
+  };
 
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  function getRange(count) {
-    return Array.from({ length: count }, (_, i) => i);
-  }
-
-  function shiftDate(date, numDays) {
-    const newDate = new Date(date);
-    newDate.setDate(newDate.getDate() + numDays);
-    return newDate;
-  }
+  const getValues = () => {
+    const values = [];
+    for (let i = 0; i < 5; i++) {
+      values.push([]);
+      for (let j = 0; j < 6; j++) {
+        console.log(i * 6 + j);
+        values[i].push({
+          date: getShiftedDate(i * 5 + j, endDate),
+          value: 0,
+        });
+      }
+    }
+    return values;
+  };
 
   return (
     <>
-      <Grid container>
-        <CalendarHeatmap
-          startDate={shiftDate(endDate, -150)}
-          endDate={endDate}
-          values={getValues}
-          classForValue={(value) => {
-            if (!value) {
-              return "color-empty";
-            }
-            return `color-github-${value.count}`;
-          }}
-          tooltipDataAttrs={(value) => {
-            return {
-              "data-tip": `${value.date
-                .toISOString()
-                .slice(0, 10)} has count: ${value.count}`,
-            };
-          }}
-          onClick={(value) =>
-            alert(`Clicked on value with count: ${value.count}`)
-          }
-        />
-        <ReactTooltip />
+      <Grid container justify="center" alignItems="center">
+        <Grid item>
+          <div className={classes.calendar}>
+            {values.map((col, colIndex) => (
+              <div className={classes.col} key={colIndex}>
+                {col.map((row, rowIndex) => (
+                  <div className={classes.row} key={rowIndex * (colIndex + 1)}>
+                    {row.date.format("DD")}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </Grid>
       </Grid>
     </>
   );
