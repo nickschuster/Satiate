@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Grid, makeStyles, Typography } from "@material-ui/core";
 import moment from "moment";
+import Arrow from "../../images/arrow.png";
 
 import "react-calendar-heatmap/dist/styles.css";
 
@@ -8,6 +9,16 @@ const useStyles = makeStyles((theme) => ({
   calendar: {
     marginTop: 20,
     marginBottom: 20,
+  },
+  controls: {
+    marginTop: 20,
+  },
+  next: {
+    height: 25,
+    transform: "rotate(180deg)",
+  },
+  prev: {
+    height: 25,
   },
   col: {
     height: 64,
@@ -22,9 +33,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 100,
     textAlign: "center",
   },
-  value1: {
-    backgroundColor: theme.palette.text.main + "0C",
-  },
+  value1: { backgroundColor: theme.palette.text.main + "0C" },
   value2: { backgroundColor: theme.palette.text.main + "7F" },
   value3: { backgroundColor: theme.palette.text.main + "BF" },
   value4: { backgroundColor: theme.palette.text.main + "FF" },
@@ -57,7 +66,7 @@ export const ProfileActivity = () => {
   const getValues = () => {
     const values = [];
     let index = 0;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
       values.push([]);
       for (let j = 0; j < 6; j++) {
         values[i].push({
@@ -102,11 +111,19 @@ export const ProfileActivity = () => {
     <>
       <Grid container justify="center" alignItems="center">
         <Grid item>
-          <div>
-            <Typography variant="h5" color="secondary">
-              {getCurrentMonth()}
-            </Typography>
-          </div>
+          <Grid container justify="space-evenly" className={classes.controls}>
+            <Grid item>
+              <img src={Arrow} className={classes.prev} alt="prev month." />
+            </Grid>
+            <Grid item>
+              <Typography variant="h5" color="secondary">
+                {getCurrentMonth()}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <img src={Arrow} className={classes.next} alt="next month." />
+            </Grid>
+          </Grid>
           <div className={classes.calendar}>
             {values.map((col, colIndex) => (
               <div className={classes.col} key={colIndex}>
