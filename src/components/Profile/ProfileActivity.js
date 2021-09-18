@@ -16,9 +16,15 @@ const useStyles = makeStyles((theme) => ({
   next: {
     height: 25,
     transform: "rotate(180deg)",
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
   prev: {
     height: 25,
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
   row: {
     height: 64,
@@ -35,6 +41,10 @@ const useStyles = makeStyles((theme) => ({
     float: "left",
     borderRadius: 100,
     textAlign: "center",
+    "&:hover": {
+      cursor: "pointer",
+      boxShadow: `0px 0px 5px 2px ${theme.palette.text.main}`,
+    },
   },
   value1: { backgroundColor: theme.palette.text.main + "0C" },
   value2: { backgroundColor: theme.palette.text.main + "7F" },
@@ -125,6 +135,11 @@ export const ProfileActivity = () => {
     setEndDate(getShiftedDate(days, endDate));
   };
 
+  // Show the activity for a particular date.
+  const viewActivity = (item) => {
+    console.log(item);
+  };
+
   return (
     <>
       <Grid container justify="center" alignItems="center">
@@ -171,7 +186,13 @@ export const ProfileActivity = () => {
                     )} ${isPartOfActiveMonth(item.date, true)}`}
                     key={itemIndex * (colIndex + 1)}
                   >
-                    <div className={classes.itemTitle}>
+                    <div
+                      className={classes.itemTitle}
+                      role="button"
+                      tabIndex={-1 * (itemIndex * (colIndex + 1)) - 2}
+                      onKeyPress={() => viewActivity(item)}
+                      onClick={() => viewActivity(item)}
+                    >
                       {item.date.format("D")}
                     </div>
                   </div>
