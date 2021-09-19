@@ -1,11 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Grid, makeStyles, Typography } from "@material-ui/core";
+import { Grid, IconButton, makeStyles, Typography } from "@material-ui/core";
 import moment from "moment";
 import Arrow from "../../images/arrow.png";
 
 import "react-calendar-heatmap/dist/styles.css";
+import { Close } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
+  viewActivity: {
+    maxWidth: "90vw",
+    maxHeight: "90vh",
+    width: 400,
+    height: 500,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: theme.palette.secondary.main,
+    borderRadius: 15,
+    padding: 30,
+  },
+  exitActivity: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
   calendar: {
     marginTop: 20,
     marginBottom: 20,
@@ -64,6 +83,7 @@ export const ProfileActivity = () => {
   const classes = useStyles();
   const [endDate, setEndDate] = useState(moment());
   const [values, setValues] = useState([]);
+  const [activityView, setActivityView] = useState(undefined);
 
   // Populate values.
   useEffect(() => {
@@ -137,7 +157,12 @@ export const ProfileActivity = () => {
 
   // Show the activity for a particular date.
   const viewActivity = (item) => {
-    console.log(item);
+    setActivityView(item);
+  };
+
+  // Close activity view;
+  const closeActivity = () => {
+    setActivityView(undefined);
   };
 
   return (
@@ -185,14 +210,12 @@ export const ProfileActivity = () => {
                       item.value
                     )} ${isPartOfActiveMonth(item.date, true)}`}
                     key={itemIndex * (colIndex + 1)}
+                    role="button"
+                    tabIndex={-1 * (itemIndex * (colIndex + 1)) - 2}
+                    onKeyPress={() => viewActivity(item)}
+                    onClick={() => viewActivity(item)}
                   >
-                    <div
-                      className={classes.itemTitle}
-                      role="button"
-                      tabIndex={-1 * (itemIndex * (colIndex + 1)) - 2}
-                      onKeyPress={() => viewActivity(item)}
-                      onClick={() => viewActivity(item)}
-                    >
+                    <div className={classes.itemTitle}>
                       {item.date.format("D")}
                     </div>
                   </div>
@@ -202,6 +225,21 @@ export const ProfileActivity = () => {
           </div>
         </Grid>
       </Grid>
+
+      {activityView !== undefined ? (
+        <div className={classes.viewActivity}>
+          <div className={classes.exitActivity}>
+            <IconButton color="primary" onClick={closeActivity}>
+              <Close />
+            </IconButton>
+          </div>
+          <Typography variant="h5" color="primary" align="center">
+            {activityView.date.format("LL")}
+          </Typography>
+        </div>
+      ) : (
+        ""
+      )}
     </>
   );
 };
