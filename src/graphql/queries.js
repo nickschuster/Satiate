@@ -1,6 +1,35 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getPublicProfile = /* GraphQL */ `
+  query GetPublicProfile($username: String) {
+    getPublicProfile(username: $username) {
+      name
+      username
+      profileImage
+      activity {
+        dayId
+        pretty
+        meals {
+          name
+          ingredients {
+            name
+            calories
+            protein
+            fat
+            carbs
+          }
+        }
+        calorieGoal
+        proteinGoal
+        fatGoal
+        carbGoal
+        points
+      }
+      private
+    }
+  }
+`;
 export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {

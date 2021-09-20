@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "Satiate": {}
+      },
+      "function": {
+        "satiateResolver": {
+          "deploymentBucketName": "amplify-amplifyfcd99ef104554-staging-11220-deployment",
+          "s3Key": "amplify-builds/satiateResolver-356e51585355426d5436-build.zip"
+        }
       }
     }
   }

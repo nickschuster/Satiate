@@ -79,9 +79,9 @@ type Activity {
   points: Int
 }
 
-# Lamdba resolvers
+# Lamdba resolver
 
 type Query {
-  getPublicProfile(id: String!): PublicProfile @function(name: "satiatePublicProfile-${env}")
+  getPublicProfile(username: String): PublicProfile @function(name: "satiateResolver-${env}")
 }
 

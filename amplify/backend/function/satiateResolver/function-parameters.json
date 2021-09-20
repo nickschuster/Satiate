@@ -28,6 +28,18 @@
         "update",
         "delete"
       ],
+      "SavedMeal:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "SavedIngredient:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
       "Parameter:@model(appsync)": [
         "create",
         "read",
